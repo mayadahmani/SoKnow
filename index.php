@@ -31,12 +31,12 @@ switch ($page) {
         break;
 
     case 'search':
-        // C'est ici que Gerald travaillera
+      
         include 'views/search.php';
         break;
 
     case 'agenda':
-        // C'est ici que Koalima et Jonida travailleront
+        
         include 'views/agenda.php';
         break;
 
