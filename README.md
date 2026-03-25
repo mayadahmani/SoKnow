@@ -1,5 +1,5 @@
 The Team
-* **Maya** (France) - Lead Developer(
+* **Maya** (France) - Lead Developer
 * **Jonida** (Albania) - Full-stack Dev (Module 4: Agenda)
 * **Gerald** (Albania) - 
 * **Koalima** (Vietnam) - Full-stack Dev (Module 4: Agenda)
