@@ -17,7 +17,7 @@ To keep the code clean and avoid conflicts, we use a **Front Controller** patter
 * **`/sql`**: Contains the `structure.sql` file to initialize the database.
 * **`index.php`**: The unique entry point (The Controller).
 
-modules:
+## modules:
 * **`1)Auth & Multilingual:`** Sign-up, login, and the 3-language system.
 * **`2)Profile & Search:`** User profiles, skills (#hashtags), and the search engine.
 * **`3)The Map:`** Integrating the interactive map to locate experts (using JS/Leaflet).
