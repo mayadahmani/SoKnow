@@ -3,7 +3,7 @@ The Team
 * **Jonida** (Albania) - Full-stack Dev (Module 4: Agenda)
 * **Gerald** (Albania) - 
 * **Koalima** (Vietnam) - Full-stack Dev (Module 4: Agenda)
-* **Viacheslav** -
+* **Viacheslav**(France)  -
 
 ##  Project Structure (MVC-ish)
 To keep the code clean and avoid conflicts, we use a **Front Controller** pattern:
