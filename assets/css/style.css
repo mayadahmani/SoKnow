@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary:       #431FC4;
+  --primary-dark:  #3520A8;
+  --primary-hover: #5535E8;
+  --primary-tint:  #FAF5FF;
+  --text-heading:  #0D0830;
+  --text-body:     #374151;
+  --text-muted:    #9CA3AF;
+  --text-label:    #111827;
+  --border:        #CAD5E2;
+  --radius-input:  10px;
+  --radius-card:   16px;
+  --radius-btn:    10px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  color: var(--text-body);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #fff;
+}
+
+/* ──────────────────────────────────────
+   HEADER
+────────────────────────────────────── */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: #fff;
+  border-bottom: 2px solid #F3E8FF;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.site-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.4px;
+  text-decoration: none;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.lang-btn:hover { background: transparent; }
+
+.lang-btn svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+}
+
+/* ──────────────────────────────────────
+   TWO-COLUMN LAYOUT
+────────────────────────────────────── */
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: calc(100vh - 58px);
+}
+
+/* ──────────────────────────────────────
+   LEFT PANEL
+   Gradient removed — photo added here
+────────────────────────────────────── */
+.left-panel {
+  background-image: linear-gradient(0deg, var(--primary) 0%, rgba(0, 0, 0, 0.6) 60%), url(../img/marie.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 44px 48px;
+}
+
+.left-panel img {
+  height: 100%;
+  width: 100%;
+}
+
+.left-content {
+  position: relative;
+  color: #fff;
+  max-width: 480px;
+}
+
+.left-brand {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 14px;
+}
+
+.left-quote {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.left-cite {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ──────────────────────────────────────
+   RIGHT PANEL
+────────────────────────────────────── */
+.right-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  background: #F3F0FF4D;
+}
+
+/* ──────────────────────────────────────
+   FORM CARD  (wider to match mockup)
+────────────────────────────────────── */
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  border: 1px solid #F3E8FF;
+  border-radius: var(--radius-card);
+  padding: 33px;
+  box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+}
+
+.group {
+  gap: 0;
+}
+
+.form-card-title {
+  line-height: 36px;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-heading);
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.form-card-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ──────────────────────────────────────
+   FORM ELEMENTS
+────────────────────────────────────── */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-body);
+  background: #fff;
+  outline: none;
+  box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 47, 212, 0.12),
+              0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Two-column input row */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ──────────────────────────────────────
+   CHECKBOX
+────────────────────────────────────── */
+.checkbox-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-top: -2px;
+  cursor: pointer;
+}
+
+.checkbox-wrap input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin-top: 2px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.checkbox-wrap span {
+  font-size: 13px;
+  color: var(--text-body);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────
+   BUTTONS  (weight 500 — not bold)
+────────────────────────────────────── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--primary);
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  text-decoration: none;
+  box-shadow: 0px 2px 4px -2px #0000001A, 0px 4px 6px -1px #0000001A;
+}
+
+.btn-primary:hover  { background: var(--primary-hover); }
+.btn-primary:active { transform: scale(0.99); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #fff;
+  color: var(--text-body);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover { background: transparent; }
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-row .btn-primary { flex: 1; }
+
+/* ──────────────────────────────────────
+   FORM FOOTER LINK
+────────────────────────────────────── */
+.form-footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding-top: 27px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.form-footer a {
+  color: var(--text-body);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.form-footer a:hover { color: var(--primary); }
+
+/* ──────────────────────────────────────
+   STEP INDICATOR
+   Taller bar (4 px), border-radius,
+   fully filled on step 2
+────────────────────────────────────── */
+.step-indicator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.step-item {
+  position: relative;
+  padding-bottom: 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.step-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.step-item.active {
+  color: var(--primary);
+}
+
+.step-item.active::after {
+  background: var(--primary);
+}
+
+.step-item:last-child {
+  text-align: right;
+}
+
+/* ──────────────────────────────────────
+   ROLE SELECTION CARDS
+────────────────────────────────────── */
+.role-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 10px;
+}
+
+.role-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.role-card {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 14px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.role-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.role-card:hover {
+  border-color: #c4b5f5;
+}
+
+.role-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-tint);
+}
+
+/* SVG icon linked from file */
+.role-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+
+  border-radius: 10px;
+}
+
+.role-icon img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+
+  border-radius: 500px;
+}
+
+.role-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 4px;
+}
+
+.role-card-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ──────────────────────────────────────
+   SKILL TAGS
+   White bg, grey border only
+────────────────────────────────────── */
+.skills-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 10px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.skill-tag {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.skill-tag:hover {
+  border-color: #c4b5f5;
+}
+
+.skill-tag.selected {
+  background: rgba(74, 47, 212, 0.07);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
