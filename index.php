@@ -104,22 +104,14 @@ switch ($page) {
         }
         break;
 
-    case 'dashboard':
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: index.php?page=login");
-            exit;
-        }
-        $vue = new VueDashboard();
-        $vue->afficher($donnees);
+    case 'search':
+        // C'est ici que Gerald travaillera
+        include 'views/search.php';
         break;
 
-    case 'profile':
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: index.php?page=login");
-            exit;
-        }
-        $vue = new VueProfil();
-        $vue->afficher($donnees);
+    case 'agenda':
+        // C'est ici que Koalima et Jonida travailleront
+        include 'views/agenda.php';
         break;
 
      case 'map':
@@ -159,3 +151,12 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
         echo "404 - Page non trouvée";
         break;
 }
+echo '</div>';
+
+
+// ==========================================
+// --- LE FOOTER (Bas de page) ---
+// S'affichera sur toutes les pages
+// ==========================================
+include 'includes/footer.php'; 
+?>
