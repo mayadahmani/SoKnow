@@ -77,4 +77,27 @@ class Event {
         ]);
     }
 
+    // --- 5. DASHBOARD WIDGET ---
+    // Returns the next N upcoming events for a given user (own + public + shared/invited)
+    public function getUpcomingEvents($user_id, $limit = 3) {
+        $sql = "SELECT e.*, u.first_name, u.last_name 
+                FROM events e
+                JOIN users u ON e.organizer_id = u.id
+                LEFT JOIN event_participants ep ON e.id = ep.event_id AND ep.user_id = :user_id
+                WHERE e.start_date >= NOW()
+                  AND (
+                      e.organizer_id = :user_id
+                      OR e.event_type = 'public'
+                      OR (e.event_type = 'shared' AND ep.status = 'accepted')
+                  )
+                ORDER BY e.start_date ASC
+                LIMIT :lim";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':lim',     $limit,   PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 } // End of Event class
