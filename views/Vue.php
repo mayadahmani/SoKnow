@@ -22,11 +22,12 @@ abstract class Vue {
             
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
             
-            <link rel="stylesheet" href="css/style.css">
+            <link rel="stylesheet" href="assets/css/style.css">
+            <link rel="stylesheet" href="assets/css/header.css">
             
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         </head>
-        <body>
+        <body class="sk-body">
 
             <?php include 'includes/header.php'; ?>
 
