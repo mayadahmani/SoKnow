@@ -10,7 +10,7 @@ class Event {
 
     // --- 1. EVENT CREATION ---
     public function create($organizer_id, $data) {
-        $sql = "INSERT INTO events (organizer_id, title, description, event_type, start_date, end_date) 
+        $sql = "INSERT INTO events (organizer_id, title, description, event_type, start_datetime, end_datetime) 
                 VALUES (:org_id, :title, :desc, :type, :start, :end)";
         
         $stmt = $this->pdo->prepare($sql);
@@ -19,8 +19,8 @@ class Event {
             'title'  => $data['title'],
             'desc'   => $data['description'] ?? null,
             'type'   => $data['event_type'] ?? 'private',
-            'start'  => $data['start_date'],
-            'end'    => $data['end_date']
+            'start'  => $data['start_datetime'],
+            'end'    => $data['end_datetime']
         ]);
 
         return $success ? $this->pdo->lastInsertId() : false;
@@ -36,7 +36,7 @@ class Event {
                 WHERE e.organizer_id = :user_id 
                    OR e.event_type = 'public'
                    OR (e.event_type = 'shared' AND ep.user_id IS NOT NULL)
-                ORDER BY e.start_date ASC";
+                ORDER BY e.start_datetime ASC";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['user_id' => $user_id]);
@@ -49,7 +49,7 @@ class Event {
                                    FROM events e 
                                    JOIN users u ON e.organizer_id = u.id 
                                    WHERE e.event_type = 'public' 
-                                   ORDER BY e.start_date ASC");
+                                   ORDER BY e.start_datetime ASC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -84,13 +84,13 @@ class Event {
                 FROM events e
                 JOIN users u ON e.organizer_id = u.id
                 LEFT JOIN event_participants ep ON e.id = ep.event_id AND ep.user_id = :user_id
-                WHERE e.start_date >= NOW()
+                WHERE e.start_datetime >= NOW()
                   AND (
                       e.organizer_id = :user_id
                       OR e.event_type = 'public'
                       OR (e.event_type = 'shared' AND ep.status = 'accepted')
                   )
-                ORDER BY e.start_date ASC
+                ORDER BY e.start_datetime ASC
                 LIMIT :lim";
 
         $stmt = $this->pdo->prepare($sql);
@@ -100,4 +100,19 @@ class Event {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Get pending invitations for a user
+    public function getPendingInvites($user_id) {
+        $sql = "SELECT e.*, u.first_name, u.last_name 
+                FROM events e
+                JOIN users u ON e.organizer_id = u.id
+                JOIN event_participants ep ON e.id = ep.event_id
+                WHERE ep.user_id = ? AND ep.status = 'pending'
+                ORDER BY e.start_datetime ASC";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 } // End of Event class
+?>
