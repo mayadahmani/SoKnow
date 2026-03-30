@@ -1,0 +1,5 @@
+# Prevent execution of any uploaded file as server-side code.
+# This directory only serves static assets.
+Options -ExecCGI
+RemoveHandler .php .php3 .php4 .php5 .php7 .phtml .phar .pl .py .cgi
+AddType text/plain .php .php3 .php4 .php5 .php7 .phtml .phar

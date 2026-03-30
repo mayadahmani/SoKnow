@@ -65,6 +65,9 @@ return [
     'modal_create' => 'Créer',
     'modal_close' => 'Fermer',
     'modal_end_before_start' => 'La date de fin doit être postérieure à la date de début.',
+    'cal_event_start' => 'Début',
+    'cal_event_end' => 'Fin',
+    'cal_event_organizer' => 'Organisateur',
 
     // Dashboard
     'dash_create_request' => 'Créer une demande',
@@ -79,6 +82,20 @@ return [
     'dash_upcoming_events' => 'Événements à venir',
     'dash_published_ago' => 'Publié il y a',
     'dash_today' => 'Aujourd\'hui',
+    'dash_me' => 'Moi',
+    'dash_no_posts' => 'Aucune demande publiée pour le moment. Soyez le premier !',
+    'dash_modal_title_prefix' => 'Proposer votre aide à',
+    'dash_modal_intro_label'  => 'Votre message d\'introduction',
+    'dash_modal_placeholder'  => 'Décrivez comment vous pouvez aider...',
+    'dash_modal_cancel'       => 'Annuler',
+    'dash_modal_send'         => 'Envoyer la proposition',
+    'dash_no_rdv' => 'Aucun rendez-vous à venir.',
+    'dash_no_events' => 'Aucun événement à venir.',
+    'dash_re_post' => 'En réponse à la demande :',
+    'dash_ago_days' => 'j',
+    'dash_ago_hours' => 'h',
+    'dash_ago_min' => 'min',
+    'dash_few_seconds' => 'quelques secondes',
 
     // Messages
     'msg_page_title' => 'Messages - SoKnow',

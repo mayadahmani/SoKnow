@@ -125,10 +125,36 @@ class VueMessages extends Vue {
                     <?php else: ?>
                     <?php foreach ($messages as $msg): ?>
 
+                        <?php
+                        // Parse post preview from initial help proposal messages
+                        $postPreview = null;
+                        $displayText = $msg['text'];
+                        if (!empty($msg['is_initial']) && preg_match('/^\[post_preview:(\{.*?\})\]\s*/s', $msg['text'], $pvMatch)) {
+                            $decoded = json_decode($pvMatch[1], true);
+                            if ($decoded && isset($decoded['post_id'])) {
+                                $postPreview = $decoded;
+                            }
+                            $displayText = trim(substr($msg['text'], strlen($pvMatch[0])));
+                        }
+                        ?>
+
                         <?php if ($msg['type'] === 'sent'): ?>
                             <div class="msg-row msg-sent">
+                                <?php if ($postPreview): ?>
+                                    <a href="index.php?page=dashboard#post-<?php echo (int)$postPreview['post_id']; ?>" class="msg-post-card">
+                                        <div class="msg-post-card-header">
+                                            <span class="msg-post-card-icon">📋</span>
+                                            <span class="msg-post-card-label"><?php echo htmlspecialchars(__('dash_re_post')); ?></span>
+                                            <span class="msg-post-card-arrow">→</span>
+                                        </div>
+                                        <div class="msg-post-card-body"><?php echo htmlspecialchars($postPreview['body'] ?? ''); ?></div>
+                                        <?php if (!empty($postPreview['tags'])): ?>
+                                            <div class="msg-post-card-tags"><?php echo htmlspecialchars($postPreview['tags']); ?></div>
+                                        <?php endif; ?>
+                                    </a>
+                                <?php endif; ?>
                                 <div class="bubble bubble-sent">
-                                    <?php echo htmlspecialchars($msg['text']); ?>
+                                    <?php echo nl2br(htmlspecialchars($displayText)); ?>
                                 </div>
                                 <div class="msg-meta msg-meta-sent">
                                     <?php echo htmlspecialchars($msg['time']); ?>
@@ -145,8 +171,21 @@ class VueMessages extends Vue {
 
                         <?php elseif ($msg['type'] === 'received'): ?>
                             <div class="msg-row msg-received">
+                                <?php if ($postPreview): ?>
+                                    <a href="index.php?page=dashboard#post-<?php echo (int)$postPreview['post_id']; ?>" class="msg-post-card">
+                                        <div class="msg-post-card-header">
+                                            <span class="msg-post-card-icon">📋</span>
+                                            <span class="msg-post-card-label"><?php echo htmlspecialchars(__('dash_re_post')); ?></span>
+                                            <span class="msg-post-card-arrow">→</span>
+                                        </div>
+                                        <div class="msg-post-card-body"><?php echo htmlspecialchars($postPreview['body'] ?? ''); ?></div>
+                                        <?php if (!empty($postPreview['tags'])): ?>
+                                            <div class="msg-post-card-tags"><?php echo htmlspecialchars($postPreview['tags']); ?></div>
+                                        <?php endif; ?>
+                                    </a>
+                                <?php endif; ?>
                                 <div class="bubble bubble-received">
-                                    <?php echo htmlspecialchars($msg['text']); ?>
+                                    <?php echo nl2br(htmlspecialchars($displayText)); ?>
                                 </div>
                                 <div class="msg-meta msg-meta-received">
                                     <?php echo htmlspecialchars($msg['time']); ?>
@@ -170,7 +209,7 @@ class VueMessages extends Vue {
                         </svg>
                     </button>
                     <input type="text" name="message" class="chat-input"
-                              placeholder="<?php echo htmlspecialchars(__('msg_write_message')); ?>" autocomplete="off">
+                              placeholder="<?php echo htmlspecialchars(__('msg_write_message')); ?>" autocomplete="off" required>
                           <button type="submit" class="chat-send-btn" title="<?php echo htmlspecialchars(__('msg_send')); ?>">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -184,8 +223,6 @@ class VueMessages extends Vue {
             </div><!-- /.chat-area -->
 
         </div><!-- /.messages-page -->
-
-        <link rel="stylesheet" href="assets/css/messages.css">
 
         <script>
         (function () {

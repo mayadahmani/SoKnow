@@ -10,12 +10,22 @@ class VueCalendrier extends Vue {
         $upcoming = $donnees['upcoming'] ?? [];
         $user     = $_SESSION['user'] ?? ['first_name' => 'Utilisateur'];
 
-        // Build calendar events JSON: "YYYY-M-D" => ["HH:MM Title", ...]
+        // Build calendar events JSON: "YYYY-M-D" => [{full event data}, ...]
         $calEvents = [];
+        $visibilityIcons = ['private' => '🔒', 'shared' => '👥', 'public' => '🌐'];
         foreach ($events as $ev) {
             $ts  = strtotime($ev['start_datetime']);
             $key = date('Y', $ts) . '-' . (int)date('m', $ts) . '-' . (int)date('d', $ts);
-            $calEvents[$key][] = date('H:i', $ts) . ' ' . mb_strimwidth($ev['title'], 0, 18, '…');
+            $calEvents[$key][] = [
+                'label'       => date('H:i', $ts) . ' ' . mb_strimwidth($ev['title'], 0, 18, '…'),
+                'title'       => $ev['title'],
+                'description' => $ev['description'] ?? '',
+                'start'       => date('d/m/Y H:i', $ts),
+                'end'         => date('d/m/Y H:i', strtotime($ev['end_datetime'])),
+                'type'        => $ev['event_type'] ?? 'private',
+                'type_icon'   => $visibilityIcons[$ev['event_type'] ?? 'private'] ?? '🔒',
+                'organizer'   => trim(($ev['first_name'] ?? '') . ' ' . ($ev['last_name'] ?? '')),
+            ];
         }
         $calEventsJson = json_encode($calEvents, JSON_UNESCAPED_UNICODE);
 
@@ -36,7 +46,7 @@ class VueCalendrier extends Vue {
                 'titre'       => $ev['title'],
                 'heure_debut' => date('H:i', strtotime($ev['start_datetime'])),
                 'heure_fin'   => date('H:i', strtotime($ev['end_datetime'])),
-                'avec'        => htmlspecialchars($ev['first_name'] . ' ' . $ev['last_name']),
+                'avec'        => $ev['first_name'] . ' ' . $ev['last_name'],
                 'type'        => ($ev['event_type'] ?? 'private') === 'public' ? 'presentiel' : 'visio',
                 'quand'       => $quand,
             ];
@@ -119,8 +129,16 @@ class VueCalendrier extends Vue {
                         <div class="rdv-list">
                             <?php foreach ($rendezVous as $rdv): ?>
                                 <?php
-                                    $badgeClass = ($rdv['quand'] === 'today') ? 'badge-today' : 'badge-tomorrow';
-                                    $badgeLabel = ($rdv['quand'] === 'today') ? __('cal_today') : __('cal_tomorrow');
+                                    if ($rdv['quand'] === 'today') {
+                                        $badgeClass = 'badge-today';
+                                        $badgeLabel = __('cal_today');
+                                    } elseif ($rdv['quand'] === 'tomorrow') {
+                                        $badgeClass = 'badge-tomorrow';
+                                        $badgeLabel = __('cal_tomorrow');
+                                    } else {
+                                        $badgeClass = 'badge-tomorrow';
+                                        $badgeLabel = date('d/m', strtotime($rdv['quand']));
+                                    }
                                     $isVisio    = ($rdv['type'] === 'visio');
                                 ?>
                                 <div class="rdv-item">
@@ -182,7 +200,7 @@ class VueCalendrier extends Vue {
                  rounded inputs, uppercase labels,
                  emoji visibility selector, two CTA buttons.
             ══════════════════════════════════════════ -->
-            <div id="modal-new-event" class="modal-overlay" style="max-width: 600px !important;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div id="modal-new-event" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
                 <div class="modal-box">
 
                     <!-- ── Header ── -->
@@ -279,9 +297,60 @@ class VueCalendrier extends Vue {
                 </div>
             </div><!-- /#modal-new-event -->
 
-        </div><!-- /.calendrier-container -->
+            <!-- ══ EVENT DETAIL POPUP ══ -->
+            <div id="event-detail-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="evdet-title">
+                <div class="modal-box evdet-box">
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="evdet-title"></h2>
+                        <button class="modal-close" id="evdetCloseBtn" aria-label="<?= __('modal_close') ?>">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                                <line x1="18" y1="6"  x2="6"  y2="18"/>
+                                <line x1="6"  y1="6"  x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="evdet-body">
+                        <div class="evdet-row" id="evdet-desc-row">
+                            <span class="evdet-icon">📝</span>
+                            <div>
+                                <div class="evdet-label"><?= __('modal_desc') ?></div>
+                                <div class="evdet-value" id="evdet-desc"></div>
+                            </div>
+                        </div>
+                        <div class="evdet-row">
+                            <span class="evdet-icon">🕐</span>
+                            <div>
+                                <div class="evdet-label"><?= __('cal_event_start') ?></div>
+                                <div class="evdet-value" id="evdet-start"></div>
+                            </div>
+                        </div>
+                        <div class="evdet-row">
+                            <span class="evdet-icon">🕑</span>
+                            <div>
+                                <div class="evdet-label"><?= __('cal_event_end') ?></div>
+                                <div class="evdet-value" id="evdet-end"></div>
+                            </div>
+                        </div>
+                        <div class="evdet-row">
+                            <span class="evdet-icon" id="evdet-type-icon">🔒</span>
+                            <div>
+                                <div class="evdet-label"><?= __('modal_visibility') ?></div>
+                                <div class="evdet-value" id="evdet-type"></div>
+                            </div>
+                        </div>
+                        <div class="evdet-row">
+                            <span class="evdet-icon">👤</span>
+                            <div>
+                                <div class="evdet-label"><?= __('cal_event_organizer') ?></div>
+                                <div class="evdet-value" id="evdet-organizer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <link rel="stylesheet" href="assets/css/calendar.css">
+        </div><!-- /.calendrier-container -->
 
         <!-- ── Calendar + Modal JS ── -->
         <script>
@@ -351,10 +420,21 @@ class VueCalendrier extends Vue {
 
                         const key = yr + '-' + (mo + 1) + '-' + dayNum;
                         if (!isOther && EVENTS[key]) {
-                            EVENTS[key].forEach(function (label) {
+                            EVENTS[key].forEach(function (ev) {
                                 const pill = document.createElement('span');
                                 pill.className   = 'event-pill';
-                                pill.textContent = label;
+                                pill.textContent = ev.label;
+                                pill.dataset.evTitle       = ev.title;
+                                pill.dataset.evDesc        = ev.description;
+                                pill.dataset.evStart       = ev.start;
+                                pill.dataset.evEnd         = ev.end;
+                                pill.dataset.evType        = ev.type;
+                                pill.dataset.evTypeIcon    = ev.type_icon;
+                                pill.dataset.evOrganizer   = ev.organizer;
+                                pill.addEventListener('click', function (e) {
+                                    e.stopPropagation();
+                                    showEventDetail(this.dataset);
+                                });
                                 td.appendChild(pill);
                             });
                         }
@@ -384,6 +464,46 @@ class VueCalendrier extends Vue {
             });
 
             renderCalendar(current);
+
+            /* ── Event detail popup ── */
+            var TYPE_LABELS = {
+                'private': <?= json_encode(__('modal_private')) ?>,
+                'shared':  <?= json_encode(__('modal_shared')) ?>,
+                'public':  <?= json_encode(__('modal_public')) ?>
+            };
+            var detailOverlay = document.getElementById('event-detail-overlay');
+
+            function showEventDetail(d) {
+                document.getElementById('evdet-title').textContent = d.evTitle;
+                var descRow = document.getElementById('evdet-desc-row');
+                var descEl  = document.getElementById('evdet-desc');
+                if (d.evDesc) {
+                    descEl.textContent = d.evDesc;
+                    descRow.style.display = '';
+                } else {
+                    descRow.style.display = 'none';
+                }
+                document.getElementById('evdet-start').textContent     = d.evStart;
+                document.getElementById('evdet-end').textContent       = d.evEnd;
+                document.getElementById('evdet-type').textContent      = TYPE_LABELS[d.evType] || d.evType;
+                document.getElementById('evdet-type-icon').textContent = d.evTypeIcon;
+                document.getElementById('evdet-organizer').textContent = d.evOrganizer;
+                detailOverlay.classList.add('is-open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDetail() {
+                detailOverlay.classList.remove('is-open');
+                document.body.style.overflow = '';
+            }
+
+            document.getElementById('evdetCloseBtn').addEventListener('click', closeDetail);
+            detailOverlay.addEventListener('click', function (e) {
+                if (e.target === detailOverlay) closeDetail();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && detailOverlay.classList.contains('is-open')) closeDetail();
+            });
 
             /* ── Modal ── */
             var modal     = document.getElementById('modal-new-event');

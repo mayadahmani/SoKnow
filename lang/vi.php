@@ -67,6 +67,9 @@ return [
     'modal_create' => 'Tạo',
     'modal_close' => 'Đóng',
     'modal_end_before_start' => 'Ngày kết thúc phải sau ngày bắt đầu.',
+    'cal_event_start' => 'Bắt đầu',
+    'cal_event_end' => 'Kết thúc',
+    'cal_event_organizer' => 'Người tổ chức',
 
     // Dashboard
     'dash_create_request' => 'Tạo yêu cầu',
@@ -81,6 +84,20 @@ return [
     'dash_upcoming_events' => 'Sự kiện sắp tới',
     'dash_published_ago' => 'Đã đăng',
     'dash_today' => 'Hôm nay',
+    'dash_me' => 'Tôi',
+    'dash_no_posts' => 'Chưa có yêu cầu nào được đăng. Hãy là người đầu tiên!',
+    'dash_no_rdv' => 'Không có lịch hẹn sắp tới.',
+    'dash_no_events' => 'Không có sự kiện sắp tới.',
+    'dash_re_post' => 'Phản hồi yêu cầu:',
+    'dash_modal_title_prefix' => 'Đề xuất giúp đỡ',
+    'dash_modal_intro_label'  => 'Tin nhắn giới thiệu của bạn',
+    'dash_modal_placeholder'  => 'Mô tả cách bạn có thể giúp đỡ...',
+    'dash_modal_cancel'       => 'Hủy',
+    'dash_modal_send'         => 'Gửi đề xuất',
+    'dash_ago_days' => 'ngày',
+    'dash_ago_hours' => 'giờ',
+    'dash_ago_min' => 'phút',
+    'dash_few_seconds' => 'vài giây',
 
     // Messages
     'msg_page_title' => 'Tin nhắn - SoKnow',

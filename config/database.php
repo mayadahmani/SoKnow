@@ -1,13 +1,11 @@
 <?php
 
 
-$host = 'localhost';
+$host = 'localhost'; 
+$dbname = '12400095_Soknow'; 
+$username = '12400095'; 
+$password = '193063303GF'; 
 
-$dbname = 'soknow';
-
-$username = 'root';
-
-$password = '';
 
 
 try {

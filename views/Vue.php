@@ -24,6 +24,9 @@ abstract class Vue {
             
             <link rel="stylesheet" href="assets/css/style.css">
             <link rel="stylesheet" href="assets/css/header.css">
+            <link rel="stylesheet" href="assets/css/dashboard.css">
+            <link rel="stylesheet" href="assets/css/messages.css">
+            <link rel="stylesheet" href="assets/css/calendar.css">
             
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         </head>

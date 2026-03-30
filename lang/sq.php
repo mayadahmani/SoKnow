@@ -63,6 +63,9 @@ return [
     'modal_create' => 'Krijo',
     'modal_close' => 'Mbyll',
     'modal_end_before_start' => 'Data e përfundimit duhet të jetë pas datës së fillimit.',
+    'cal_event_start' => 'Fillimi',
+    'cal_event_end' => 'Fundi',
+    'cal_event_organizer' => 'Organizatori',
 
     // Dashboard
     'dash_create_request' => 'Krijo një kërkesë',
@@ -77,6 +80,20 @@ return [
     'dash_upcoming_events' => 'Ngjarjet e ardhshme',
     'dash_published_ago' => 'Publikuar',
     'dash_today' => 'Sot',
+    'dash_me' => 'Unë',
+    'dash_no_posts' => 'Nuk ka kërkesa të publikuara ende. Bëhuni i pari!',
+    'dash_no_rdv' => 'Nuk ka takime të ardhshme.',
+    'dash_no_events' => 'Nuk ka ngjarje të ardhshme.',
+    'dash_re_post' => 'Në përgjigje të kërkesës:',
+    'dash_modal_title_prefix' => 'Ofroni ndihmën tuaj për',
+    'dash_modal_intro_label'  => 'Mesazhi juaj i prezantimit',
+    'dash_modal_placeholder'  => 'Përshkruani se si mund të ndihmoni...',
+    'dash_modal_cancel'       => 'Anulo',
+    'dash_modal_send'         => 'Dërgo propozimin',
+    'dash_ago_days' => 'ditë',
+    'dash_ago_hours' => 'orë',
+    'dash_ago_min' => 'min',
+    'dash_few_seconds' => 'disa sekonda',
 
     // Messages
     'msg_page_title' => 'Mesazhet - SoKnow',

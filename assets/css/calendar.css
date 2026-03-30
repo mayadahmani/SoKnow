@@ -563,6 +563,55 @@ input[type="datetime-local"].mf-input::-webkit-calendar-picker-indicator {
 
 
 /* ============================================================
+   EVENT DETAIL POPUP
+   ============================================================ */
+.evdet-box {
+    max-width: 460px;
+}
+
+.evdet-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.evdet-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.evdet-row:last-child {
+    border-bottom: none;
+}
+
+.evdet-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+    margin-top: 1px;
+}
+
+.evdet-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 3px;
+}
+
+.evdet-value {
+    font-size: .92rem;
+    color: var(--text);
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 

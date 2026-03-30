@@ -42,6 +42,66 @@ switch ($page) {
             header("Location: index.php?page=login");
             exit;
         }
+
+        $userId = (int)$_SESSION['user_id'];
+        $postModel = new Post($pdo);
+        $action = $_GET['action'] ?? 'view';
+        $searchQuery = trim($_GET['q'] ?? '');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'offerHelp') {
+            $receiverId = (int)($_POST['receiver_id'] ?? 0);
+            $message = trim($_POST['message'] ?? '');
+            $postId = (int)($_POST['post_id'] ?? 0);
+            $postBody = trim($_POST['post_body'] ?? '');
+            $postTags = trim($_POST['post_tags'] ?? '');
+
+            if ($receiverId > 0 && $message !== '' && $receiverId !== $userId) {
+                // Embed post preview as a JSON line at the start of the message
+                $preview = json_encode([
+                    'post_id' => $postId,
+                    'body' => mb_strimwidth($postBody, 0, 120, '…'),
+                    'tags' => $postTags
+                ], JSON_UNESCAPED_UNICODE);
+                $fullMessage = "[post_preview:" . $preview . "]\n" . $message;
+
+                $messageModel = new Message($pdo);
+                $messageModel->sendMessage($userId, $receiverId, $fullMessage, true);
+            }
+
+            header('Location: index.php?page=messages&conv=' . $receiverId);
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'createPost') {
+            $content = trim($_POST['content'] ?? '');
+
+            if ($content !== '') {
+                $imagePath = null;
+                $docPath = null;
+
+                if ($postModel->supportsAttachments()) {
+                    $imagePath = $postModel->handleUpload($_FILES['post_image'] ?? null, 'image');
+                    $docPath   = $postModel->handleUpload($_FILES['post_doc']   ?? null, 'doc');
+                }
+
+                $postModel->create($userId, $content, $imagePath, $docPath);
+            }
+
+            $redirectUrl = 'index.php?page=dashboard';
+            if ($searchQuery !== '') {
+                $redirectUrl .= '&q=' . urlencode($searchQuery);
+            }
+
+            header('Location: ' . $redirectUrl);
+            exit;
+        }
+
+        $donnees['search_query'] = $searchQuery;
+        $donnees['posts'] = $postModel->getRecent(20, $searchQuery);
+
+        $eventModel = new Event($pdo);
+        $donnees['upcoming_events'] = $eventModel->getUpcomingEvents($userId, 5);
+
         $vue = new VueDashboard();
         $vue->afficher($donnees);
         break;
@@ -244,14 +304,22 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
 
         // Handle new event creation
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
-            $eventData = [
-                'title'          => $_POST['title'] ?? '',
-                'description'    => $_POST['description'] ?? '',
-                'event_type'     => $_POST['event_type'] ?? 'private',
-                'start_datetime' => $_POST['start_datetime'] ?? '',
-                'end_datetime'   => $_POST['end_datetime'] ?? ''
-            ];
-            $eventModel->create($userId, $eventData);
+            $title = trim($_POST['title'] ?? '');
+            $startDt = $_POST['start_datetime'] ?? '';
+            $endDt = $_POST['end_datetime'] ?? '';
+            $eventType = $_POST['event_type'] ?? 'private';
+
+            if ($title !== '' && $startDt !== '' && $endDt !== '' && strtotime($endDt) >= strtotime($startDt)
+                && in_array($eventType, ['private', 'shared', 'public'], true)) {
+                $eventData = [
+                    'title'          => $title,
+                    'description'    => trim($_POST['description'] ?? ''),
+                    'event_type'     => $eventType,
+                    'start_datetime' => $startDt,
+                    'end_datetime'   => $endDt
+                ];
+                $eventModel->create($userId, $eventData);
+            }
             header("Location: index.php?page=calendar");
             exit;
         }
@@ -324,7 +392,7 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
                 'name' => $displayName,
                 'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
                 'online' => false,
-                'preview' => $conv['last_content'] ?: __('msg_no_message_preview'),
+                'preview' => preg_replace('/^\[post_preview:\{.*?\}\]\s*/s', '', $conv['last_content']) ?: __('msg_no_message_preview'),
                 'time' => $formatConversationTime($conv['last_created_at']),
                 'active' => $contactId === $activeContactId,
                 'unread_count' => (int)($conv['unread_count'] ?? 0),
