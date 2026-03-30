@@ -5,6 +5,17 @@
         
         <?php if (isset($_SESSION['user_id'])): ?>
             <?php $currentPage = $_GET['page'] ?? 'home'; ?>
+            <?php
+                $unreadChatsCount = 0;
+                if (isset($pdo)) {
+                    try {
+                        $messageModelForHeader = new Message($pdo);
+                        $unreadChatsCount = $messageModelForHeader->getUnreadChatsCount((int)$_SESSION['user_id']);
+                    } catch (Throwable $e) {
+                        $unreadChatsCount = 0;
+                    }
+                }
+            ?>
             <button class="sk-burger" id="skBurger" aria-label="Menu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -46,10 +57,9 @@
                     <a href="index.php?page=messages" class="sk-nav-item <?= $currentPage === 'messages' ? 'sk-nav-active' : '' ?>">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         <span><?= __('nav_messages') ?></span>
-                    </a>
-                    <a href="index.php?page=profile" class="sk-nav-item <?= $currentPage === 'profile' ? 'sk-nav-active' : '' ?>">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <span><?= __('nav_profile') ?></span>
+                        <?php if ($unreadChatsCount > 0): ?>
+                            <span class="sk-nav-unread"><?= $unreadChatsCount > 99 ? '99+' : $unreadChatsCount ?></span>
+                        <?php endif; ?>
                     </a>
                     <a href="index.php?page=logout" class="sk-nav-item sk-nav-item-logout">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>

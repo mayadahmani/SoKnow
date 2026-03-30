@@ -82,6 +82,25 @@ return [
     'dash_published_ago' => 'Đã đăng',
     'dash_today' => 'Hôm nay',
 
+    // Messages
+    'msg_page_title' => 'Tin nhắn - SoKnow',
+    'msg_search_placeholder' => 'Tìm kiếm...',
+    'msg_no_conversations' => 'Chưa có cuộc trò chuyện nào.',
+    'msg_status_online' => 'Đang trực tuyến',
+    'msg_choose_conversation' => 'Hãy chọn một cuộc trò chuyện.',
+    'msg_audio_call' => 'Cuộc gọi âm thanh',
+    'msg_video_call' => 'Cuộc gọi video',
+    'msg_info' => 'Thông tin',
+    'msg_select_conversation' => 'Chọn một cuộc trò chuyện để hiển thị tin nhắn.',
+    'msg_no_messages_yet' => 'Chưa có tin nhắn nào. Hãy gửi tin nhắn đầu tiên.',
+    'msg_attachment' => 'Tệp đính kèm',
+    'msg_write_message' => 'Viết tin nhắn của bạn...',
+    'msg_send' => 'Gửi',
+    'msg_user_prefix' => 'Người dùng',
+    'msg_no_message_preview' => 'Không có tin nhắn',
+    'msg_start_conversation' => 'Bắt đầu cuộc trò chuyện',
+    'msg_no_contacts_found' => 'Không tìm thấy tài khoản nào cho tìm kiếm này.',
+
 
     'footer_desc' => 'Mạng xã hội tương trợ công nghệ đa thế hệ đầu tiên.',
     'footer_links' => 'Liên kết nhanh',

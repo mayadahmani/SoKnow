@@ -265,6 +265,143 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
         $vue->afficher($donnees);
         break;
 
+    case 'messages':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+        $messageModel = new Message($pdo);
+        $action = $_GET['action'] ?? 'view';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send') {
+            $receiverId = (int)($_POST['conv_id'] ?? 0);
+            $content = trim($_POST['message'] ?? '');
+
+            if ($receiverId > 0 && $content !== '') {
+                $messageModel->sendMessage($userId, $receiverId, $content, false);
+            }
+
+            header("Location: index.php?page=messages&conv=" . $receiverId);
+            exit;
+        }
+
+        $activeContactId = (int)($_GET['conv'] ?? 0);
+        $searchQuery = trim($_GET['q'] ?? '');
+
+        $formatConversationTime = function ($datetime) {
+            if (empty($datetime)) {
+                return '';
+            }
+
+            $ts = strtotime($datetime);
+            if ($ts === false) {
+                return '';
+            }
+
+            return date('d/m H:i', $ts);
+        };
+
+        $conversationsRaw = $messageModel->getConversations($userId);
+        $contactsRaw = $messageModel->searchContacts($userId, $searchQuery, 200);
+
+        if ($activeContactId <= 0 && !empty($conversationsRaw)) {
+            $activeContactId = (int)$conversationsRaw[0]['contact_id'];
+        }
+
+        $conversations = [];
+        $conversationById = [];
+        foreach ($conversationsRaw as $conv) {
+            $contactId = (int)$conv['contact_id'];
+            $displayName = trim(($conv['first_name'] ?? '') . ' ' . ($conv['last_name'] ?? ''));
+            if ($displayName === '') {
+                $displayName = __('msg_user_prefix') . ' #' . $contactId;
+            }
+
+            $item = [
+                'id' => $contactId,
+                'name' => $displayName,
+                'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
+                'online' => false,
+                'preview' => $conv['last_content'] ?: __('msg_no_message_preview'),
+                'time' => $formatConversationTime($conv['last_created_at']),
+                'active' => $contactId === $activeContactId,
+                'unread_count' => (int)($conv['unread_count'] ?? 0),
+            ];
+
+            $conversations[] = $item;
+            $conversationById[$contactId] = true;
+        }
+
+        foreach ($contactsRaw as $contact) {
+            $contactId = (int)$contact['id'];
+            if (isset($conversationById[$contactId])) {
+                continue;
+            }
+
+            $displayName = trim(($contact['first_name'] ?? '') . ' ' . ($contact['last_name'] ?? ''));
+            if ($displayName === '') {
+                $displayName = __('msg_user_prefix') . ' #' . $contactId;
+            }
+
+            $conversations[] = [
+                'id' => $contactId,
+                'name' => $displayName,
+                'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
+                'online' => false,
+                'preview' => __('msg_start_conversation'),
+                'time' => '',
+                'active' => $contactId === $activeContactId,
+                'unread_count' => 0,
+            ];
+        }
+
+        $activeContact = null;
+        $messages = [];
+
+        if ($activeContactId > 0) {
+            $activeContactRaw = $messageModel->getContact($userId, $activeContactId);
+
+            if ($activeContactRaw) {
+                $activeContactName = trim(($activeContactRaw['first_name'] ?? '') . ' ' . ($activeContactRaw['last_name'] ?? ''));
+                if ($activeContactName === '') {
+                    $activeContactName = __('msg_user_prefix') . ' #' . $activeContactId;
+                }
+
+                $activeContact = [
+                    'id' => $activeContactId,
+                    'name' => $activeContactName,
+                    'avatar' => 'https://i.pravatar.cc/150?u=' . $activeContactId,
+                    'online' => false,
+                ];
+
+                $messageModel->markConversationAsRead($userId, $activeContactId);
+
+                $messagesRaw = $messageModel->getConversationMessages($userId, $activeContactId);
+                foreach ($messagesRaw as $msg) {
+                    $messages[] = [
+                        'type' => ((int)$msg['sender_id'] === $userId) ? 'sent' : 'received',
+                        'text' => $msg['content'],
+                        'time' => date('H:i', strtotime($msg['created_at'])),
+                        'read' => (bool)$msg['is_read'],
+                        'is_initial' => (bool)$msg['is_initial'],
+                    ];
+                }
+            }
+        }
+
+        $donnees = [
+            'conversations' => $conversations,
+            'messages' => $messages,
+            'active_contact' => $activeContact,
+            'search_query' => $searchQuery,
+        ];
+
+        $vue = new VueMessages();
+        $vue->afficher($donnees);
+        break;
+
     default:
         http_response_code(404);
         echo "404 - Page non trouvée";
