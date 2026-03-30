@@ -8,6 +8,26 @@ require_once __DIR__ . '/config/autoloader.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// ── Language handling ──
+$allowedLangs = ['fr', 'en', 'sq', 'vi'];
+if (isset($_GET['lang']) && in_array($_GET['lang'], $allowedLangs, true)) {
+    $_SESSION['lang'] = $_GET['lang'];
+    // Redirect to the same page without the lang param to keep URL clean
+    $params = $_GET;
+    unset($params['lang']);
+    $redirect = 'index.php' . ($params ? '?' . http_build_query($params) : '');
+    header("Location: $redirect");
+    exit;
+}
+$currentLang = $_SESSION['lang'] ?? 'fr';
+$lang = require __DIR__ . '/lang/' . $currentLang . '.php';
+
+// Helper function to get a translation
+function __($key) {
+    global $lang;
+    return $lang[$key] ?? $key;
+}
+
 $page = $_GET['page'] ?? 'home';
 $donnees = []; 
 
@@ -211,6 +231,39 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
         session_destroy();
         header("Location: index.php?page=home");
         exit;
+
+    case 'calendar':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $eventModel = new Event($pdo);
+        $action = $_GET['action'] ?? 'view';
+
+        // Handle new event creation
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
+            $eventData = [
+                'title'          => $_POST['title'] ?? '',
+                'description'    => $_POST['description'] ?? '',
+                'event_type'     => $_POST['event_type'] ?? 'private',
+                'start_datetime' => $_POST['start_datetime'] ?? '',
+                'end_datetime'   => $_POST['end_datetime'] ?? ''
+            ];
+            $eventModel->create($userId, $eventData);
+            header("Location: index.php?page=calendar");
+            exit;
+        }
+
+        $donnees = [
+            'events'          => $eventModel->getEventsByUser($userId),
+            'upcoming'        => $eventModel->getUpcomingEvents($userId, 5),
+        ];
+
+        $vue = new VueCalendrier();
+        $vue->afficher($donnees);
+        break;
 
     default:
         http_response_code(404);

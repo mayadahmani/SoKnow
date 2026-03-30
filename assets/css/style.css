@@ -1056,3 +1056,180 @@ body { font-family: 'Inter', sans-serif; color: #131313; display: flex; flex-dir
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     object-fit: cover;
 }
+
+/* =========================================
+   RESPONSIVE — AGENDA / DASHBOARD
+========================================= */
+
+/* Tablet — stack sidebar below feed */
+@media (max-width: 900px) {
+    .grid-layout {
+        flex-direction: column;
+    }
+    .col-feed,
+    .col-widgets {
+        flex: unset;
+        width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 16px 0;
+    }
+    .grid-layout {
+        padding: 0 10px;
+        gap: 16px;
+    }
+
+    /* Agenda header: stack title + button */
+    .agenda-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px;
+    }
+    .agenda-new-btn {
+        width: 100%;
+    }
+
+    /* Month navigation */
+    .agenda-nav {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .agenda-month-label {
+        font-size: 14px !important;
+    }
+
+    /* Calendar grid — compact cells */
+    .agenda-grid {
+        gap: 4px !important;
+    }
+    .agenda-day-header {
+        font-size: 10px !important;
+        padding-bottom: 6px !important;
+    }
+    .agenda-day-cell {
+        min-height: 60px !important;
+        padding: 4px !important;
+        border-radius: 6px !important;
+    }
+    .agenda-day-cell span {
+        font-size: 12px !important;
+    }
+    .agenda-event-pill {
+        font-size: 9px !important;
+        padding: 2px 4px !important;
+    }
+
+    /* Card padding */
+    .card {
+        padding: 16px;
+    }
+    .card-title {
+        font-size: 14px;
+    }
+
+    /* Modal */
+    .agenda-modal-box {
+        max-width: 95vw !important;
+        padding: 20px !important;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .agenda-modal-dates {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* Invites widget buttons */
+    .widget-rdv {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+    .agenda-grid {
+        gap: 2px !important;
+    }
+    .agenda-day-cell {
+        min-height: 48px !important;
+        padding: 3px !important;
+    }
+    .agenda-day-cell span {
+        font-size: 10px !important;
+    }
+    .agenda-event-pill {
+        font-size: 8px !important;
+        padding: 1px 3px !important;
+    }
+    .agenda-day-header {
+        font-size: 9px !important;
+    }
+}
+
+/* ──────────────────────────────────────
+   FOOTER
+────────────────────────────────────── */
+.sk-footer {
+    background: #fff;
+    padding: 60px 0 20px 0;
+    margin-top: 100px;
+    border-top: 1px solid #eee;
+}
+
+.sk-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .sk-footer {
+        padding: 40px 0 16px 0;
+        margin-top: 60px;
+    }
+    .sk-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 30px;
+        font-size: 0.85rem;
+    }
+    .sk-footer-brand {
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    /* Links + Contact side by side below brand */
+    .sk-footer-links,
+    .sk-footer-contact {
+        display: inline;
+    }
+    .sk-footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
+    .sk-footer-brand {
+        grid-column: 1;
+    }
+    /* Wrap the two bottom columns in a sub-grid */
+    .sk-footer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+    }
+    .sk-footer-brand {
+        grid-column: 1 / -1;
+    }
+    .sk-footer-grid h3 {
+        font-size: 1.1rem;
+    }
+    .sk-footer-grid h4 {
+        font-size: 0.85rem;
+    }
+}

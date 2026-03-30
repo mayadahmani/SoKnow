@@ -38,34 +38,34 @@ class VueAgenda extends Vue {
             <div class="grid-layout">
                 <div class="col-feed">
                     <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div class="agenda-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <div>
                                 <h1 class="card-title" style="font-size: 24px;">Mon Calendrier</h1>
                                 <p class="post-time">Gérez vos rendez-vous et sessions d'entraide.</p>
                             </div>
-                            <button class="btn-primary" onclick="document.getElementById('modal-new-event').style.display='flex'">
+                            <button class="btn-primary agenda-new-btn" onclick="document.getElementById('modal-new-event').style.display='flex'">
                                 + Nouvel événement
                             </button>
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div class="agenda-nav" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <a href="?page=agenda&month=<?= $prevMonth ?>&year=<?= $prevYear ?>" class="btn-outline">&#8249;</a>
-                            <span style="font-weight: 700; font-size: 16px;"><?= $monthName ?></span>
+                            <span class="agenda-month-label" style="font-weight: 700; font-size: 16px;"><?= $monthName ?></span>
                             <div style="display: flex; gap: 10px;">
                                 <a href="?page=agenda" class="btn-outline">Aujourd'hui</a>
                                 <a href="?page=agenda&month=<?= $nextMonth ?>&year=<?= $nextYear ?>" class="btn-outline">&#8250;</a>
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                        <div class="agenda-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
                             <!-- Day headers -->
                             <?php foreach (['LUN','MAR','MER','JEU','VEN','SAM','DIM'] as $d): ?>
-                                <div style="text-align: center; font-size: 12px; font-weight: 700; color: #6B7280; padding-bottom: 10px;"><?= $d ?></div>
+                                <div class="agenda-day-header" style="text-align: center; font-size: 12px; font-weight: 700; color: #6B7280; padding-bottom: 10px;"><?= $d ?></div>
                             <?php endforeach; ?>
 
                             <!-- Empty cells before day 1 -->
                             <?php for ($i = 1; $i < $startWeekday; $i++): ?>
-                                <div style="min-height: 100px; border: 1px solid #E5E7EB; border-radius: 8px; background: #F9FAFB;"></div>
+                                <div class="agenda-day-cell agenda-day-empty" style="min-height: 100px; border: 1px solid #E5E7EB; border-radius: 8px; background: #F9FAFB;"></div>
                             <?php endfor; ?>
 
                             <!-- Day cells -->
@@ -74,11 +74,11 @@ class VueAgenda extends Vue {
                                 $isToday  = ($dateStr === $today);
                                 $dayEvents = $eventsByDay[$dateStr] ?? [];
                             ?>
-                                <div style="min-height: 100px; border: 1px solid <?= $isToday ? '#4A2BBD' : '#E5E7EB' ?>; border-radius: 8px; padding: 8px; <?= $isToday ? 'background: #F3F0FF;' : '' ?>">
+                                <div class="agenda-day-cell" style="min-height: 100px; border: 1px solid <?= $isToday ? '#4A2BBD' : '#E5E7EB' ?>; border-radius: 8px; padding: 8px; <?= $isToday ? 'background: #F3F0FF;' : '' ?>">
                                     <span style="font-size: 14px; font-weight: <?= $isToday ? '800' : '500' ?>; color: <?= $isToday ? '#4A2BBD' : '#374151' ?>;"><?= $day ?></span>
                                     <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
                                     <?php foreach ($dayEvents as $ev): ?>
-                                        <div style="font-size: 11px; padding: 4px 6px; border-radius: 4px; background: <?= $ev['event_type']=='shared' ? '#FEF3C7' : ($ev['event_type']=='public' ? '#D1FAE5' : '#E0E7FF') ?>; color: <?= $ev['event_type']=='shared' ? '#92400E' : ($ev['event_type']=='public' ? '#065F46' : '#3730A3') ?>;" title="<?= htmlspecialchars($ev['title']) ?>">
+                                        <div class="agenda-event-pill" style="font-size: 11px; padding: 4px 6px; border-radius: 4px; background: <?= $ev['event_type']=='shared' ? '#FEF3C7' : ($ev['event_type']=='public' ? '#D1FAE5' : '#E0E7FF') ?>; color: <?= $ev['event_type']=='shared' ? '#92400E' : ($ev['event_type']=='public' ? '#065F46' : '#3730A3') ?>;" title="<?= htmlspecialchars($ev['title']) ?>">
                                             <?= htmlspecialchars(mb_strimwidth($ev['title'], 0, 18, '…')) ?>
                                         </div>
                                     <?php endforeach; ?>
@@ -138,8 +138,8 @@ class VueAgenda extends Vue {
         </div>
 
         <!-- New Event Modal -->
-        <div id="modal-new-event" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-            <div class="card" style="width: 100%; max-width: 500px; padding: 30px;">
+        <div id="modal-new-event" class="agenda-modal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+            <div class="card agenda-modal-box" style="width: 100%; max-width: 600px; padding: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 class="card-title">Nouvel événement</h2>
                     <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="document.getElementById('modal-new-event').style.display='none'">&times;</button>
@@ -153,7 +153,7 @@ class VueAgenda extends Vue {
                         <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Description</label>
                         <textarea name="description" class="input-textarea" style="margin-top: 6px;" rows="3" placeholder="Description optionnelle"></textarea>
                     </div>
-                    <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                    <div class="agenda-modal-dates" style="display: flex; gap: 16px; margin-bottom: 16px;">
                         <div style="flex: 1;">
                             <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Début</label>
                             <input type="datetime-local" name="start_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
