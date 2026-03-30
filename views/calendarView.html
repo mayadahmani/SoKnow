@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon Calendrier</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  PHP INJECTION POINT — Events data
+  ────────────────────────────────────────────────────────────────
+  Replace the JS array below with your PHP-generated JSON, e.g.:
+    window.CALENDAR_EVENTS = <?= json_encode($events) ?>;
+
+  Each object must match the `events` table columns:
+    id           : int
+    organizer_id : int
+    title        : string  (max 255)
+    description  : string
+    event_type   : 'private' | 'shared' | 'public'
+    start_date   : string  ISO-8601  "YYYY-MM-DDTHH:MM"
+    end_date     : string  ISO-8601  "YYYY-MM-DDTHH:MM"
+  ════════════════════════════════════════════════════════════════
+-->
+<script>
+  window.CALENDAR_EVENTS = [
+    {
+      id: 1, organizer_id: 3,
+      title: "Appel d'entraide \u2013 Imprimante",
+      description: "Aide pour configurer l\u2019imprimante r\u00e9seau.",
+      event_type: "shared",
+      participants: "Eleanor & John",        // ← add here
+      start_date: "2026-03-25T14:00",
+      end_date:   "2026-03-25T14:30"
+    },
+    {
+      id: 2, organizer_id: 3,
+      title: "Configuration Wi-Fi",
+      description: "Session d\u2019aide Wi-Fi avec Marie.",
+      event_type: "shared",
+      participants: "Marie L.",              // ← add here
+      start_date: "2026-03-26T10:00",
+      end_date:   "2026-03-26T11:00"
+    },
+    {
+      id: 3, organizer_id: 3,
+      title: "R\u00e9vision Python",
+      description: "Session de r\u00e9vision des bases Python.",
+      event_type: "private",
+      // no participants field — private event, "Avec …" row won't appear
+      start_date: "2026-03-30T09:00",
+      end_date:   "2026-03-30T10:00"
+    },
+    {
+      id: 4, organizer_id: 3,
+      title: "Atelier s\u00e9curit\u00e9 mot de passe",
+      description: "\u00c9v\u00e9nement communautaire ouvert \u00e0 tous.",
+      event_type: "public",
+      // no participants field
+      start_date: "2026-03-30T15:00",
+      end_date:   "2026-03-30T16:30"
+    }
+  ];
+</script>
+<!--
+  ════════════════════════════════════════════════════════════════
+  PHP INJECTION POINT — Current user ID (from session)
+  Replace with: window.CURRENT_USER_ID = <?= (int)$_SESSION['user_id'] ?>;
+  ════════════════════════════════════════════════════════════════
+-->
+<script>
+  window.CURRENT_USER_ID = 3;
+</script>
+
+<main class="cal-page">
+
+  <!-- ── Page header ── -->
+  <div class="cal-page-header">
+    <div class="cal-page-title">
+      <h1>Mon Calendrier</h1>
+      <p>G&eacute;rez vos rendez-vous et sessions d&rsquo;entraide</p>
+    </div>
+    <!--
+      .btn-primary  — existing style.css class
+      .btn-inline   — new addition: overrides width:100% for header context
+    -->
+    <button class="btn-primary btn-inline" id="btnOpenModal">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nouvel &eacute;v&eacute;nement
+    </button>
+  </div>
+
+  <!-- ── Two-column layout ── -->
+  <div class="cal-layout">
+
+    <!-- Calendar card -->
+    <div class="cal-card">
+      <div class="cal-nav">
+        <span class="cal-nav-month" id="calMonthLabel"></span>
+        <div class="cal-nav-controls">
+          <button class="btn-nav" id="btnPrevMonth" aria-label="Mois pr&eacute;c&eacute;dent">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <button class="btn-today" id="btnGoToday">Aujourd&rsquo;hui</button>
+          <button class="btn-nav" id="btnNextMonth" aria-label="Mois suivant">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="cal-grid" id="calGrid">
+        <!-- Day headers — static -->
+        <div class="cal-day-header">LUN</div>
+        <div class="cal-day-header">MAR</div>
+        <div class="cal-day-header">MER</div>
+        <div class="cal-day-header">JEU</div>
+        <div class="cal-day-header">VEN</div>
+        <div class="cal-day-header">SAM</div>
+        <div class="cal-day-header">DIM</div>
+        <!-- Day cells injected by renderCalendar() -->
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="cal-sidebar">
+      <div class="cal-sidebar-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#431FC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Prochains rendez-vous
+      </div>
+      <!-- Upcoming events injected by renderSidebar() -->
+      <div id="sidebarEvents"></div>
+    </div>
+
+  </div>
+</main>
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  MODAL — Nouvel événement
+  ────────────────────────────────────────────────────────────────
+  POSTs to calendar_handler.php.
+  All <input name="..."> match the `events` table columns exactly.
+  organizer_id: set from the PHP injection point above, or
+                override server-side from $_SESSION['user_id'].
+  ════════════════════════════════════════════════════════════════
+-->
+<div class="cal-modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitleText">
+  <div class="cal-modal">
+
+    <div class="cal-modal-header">
+      <div>
+        <div class="cal-modal-title" id="modalTitleText">Nouvel &eacute;v&eacute;nement</div>
+        <div class="cal-modal-subtitle">Planifiez une session ou un rendez-vous</div>
+      </div>
+      <button class="cal-modal-close" id="btnCloseModal" aria-label="Fermer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!--
+      ACTION: set action="calendar_handler.php" or your PHP route.
+      For AJAX, see the commented fetch() block in the JS below.
+    -->
+    <form id="eventForm" action="calendar_handler.php" method="POST">
+
+      <!--
+        organizer_id — PHP team: replace value with <?= (int)$_SESSION['user_id'] ?>
+        JS fills it from window.CURRENT_USER_ID as client-side fallback.
+      -->
+      <input type="hidden" name="organizer_id" id="formOrganizerId" value="" />
+
+      <!--
+        event_id — empty = INSERT; filled = UPDATE.
+        PHP handler: if (!empty($_POST['event_id'])) → UPDATE ELSE INSERT.
+      -->
+      <input type="hidden" name="event_id" id="formEventId" value="" />
+
+      <!-- event_type — ENUM 'private' | 'shared' | 'public' -->
+      <div class="form-group">
+        <label class="form-label">Type d&rsquo;&eacute;v&eacute;nement</label>
+        <div class="cal-type-cards">
+
+          <label class="cal-type-card sel-private" id="typeCardPrivate">
+            <input type="radio" name="event_type" value="private" checked />
+            <span class="cal-type-card-icon">&#x1F512;</span>
+            <span class="cal-type-card-label">Priv&eacute;</span>
+            <span class="cal-type-card-desc">Visible uniquement par vous</span>
+          </label>
+
+          <label class="cal-type-card" id="typeCardShared">
+            <input type="radio" name="event_type" value="shared" />
+            <span class="cal-type-card-icon">&#x1F465;</span>
+            <span class="cal-type-card-label">Partag&eacute;</span>
+            <span class="cal-type-card-desc">Rendez-vous avec d&rsquo;autres membres</span>
+          </label>
+
+          <label class="cal-type-card" id="typeCardPublic">
+            <input type="radio" name="event_type" value="public" />
+            <span class="cal-type-card-icon">&#x1F310;</span>
+            <span class="cal-type-card-label">Public</span>
+            <span class="cal-type-card-desc">Ouvert &agrave; toute la communaut&eacute;</span>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- title — VARCHAR(255) -->
+      <div class="form-group">
+        <label class="form-label" for="formTitle">
+          Titre <span style="color:#EF4444" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-input"
+          id="formTitle"
+          name="title"
+          placeholder="Ex&nbsp;: Aide configuration imprimante"
+          maxlength="255"
+          required
+        />
+      </div>
+
+      <!-- description — TEXT -->
+      <div class="form-group">
+        <label class="form-label" for="formDescription">Description</label>
+        <textarea
+          class="form-textarea"
+          id="formDescription"
+          name="description"
+          placeholder="D&eacute;crivez l&rsquo;objet de la session ou de la demande d&rsquo;aide&hellip;"
+        ></textarea>
+      </div>
+
+      <!-- start_date / end_date — DATETIME -->
+      <!-- .form-row reuses existing style.css class -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="formStartDate">
+            D&eacute;but <span style="color:#EF4444" aria-hidden="true">*</span>
+          </label>
+          <input
+            type="datetime-local"
+            class="form-input"
+            id="formStartDate"
+            name="start_date"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="formEndDate">
+            Fin <span style="color:#EF4444" aria-hidden="true">*</span>
+          </label>
+          <input
+            type="datetime-local"
+            class="form-input"
+            id="formEndDate"
+            name="end_date"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- .cal-modal-footer — .btn-secondary and .btn-primary reuse existing classes -->
+      <div class="cal-modal-footer">
+        <button type="button" class="btn-secondary" id="btnCancelModal">Annuler</button>
+        <button type="submit" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Enregistrer
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CALENDAR ENGINE
+   Reads window.CALENDAR_EVENTS (PHP-injected JSON array).
+   Call window.refreshCalendar() after AJAX updates from PHP.
+════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  const today     = new Date();
+  let   viewYear  = today.getFullYear();
+  let   viewMonth = today.getMonth(); // 0-indexed
+
+  const MONTHS_FR = ['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin',
+    'Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
+
+  function isoDateOf(dt) {
+    const d = dt instanceof Date ? dt : new Date(dt);
+    return d.getFullYear() + '-' +
+           String(d.getMonth()+1).padStart(2,'0') + '-' +
+           String(d.getDate()).padStart(2,'0');
+  }
+
+  function fmt(isoStr) {
+    const d = new Date(isoStr);
+    return String(d.getHours()).padStart(2,'0') + ':' +
+           String(d.getMinutes()).padStart(2,'0');
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── Render grid ── */
+  function renderCalendar() {
+    const grid   = document.getElementById('calGrid');
+    const label  = document.getElementById('calMonthLabel');
+    const events = window.CALENDAR_EVENTS || [];
+
+    label.textContent = MONTHS_FR[viewMonth] + ' ' + viewYear;
+
+    const headers = Array.from(grid.querySelectorAll('.cal-day-header'));
+    grid.innerHTML = '';
+    headers.forEach(h => grid.appendChild(h));
+
+    let startDow = new Date(viewYear, viewMonth, 1).getDay();
+    startDow = startDow === 0 ? 6 : startDow - 1;
+
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    const daysInPrev  = new Date(viewYear, viewMonth, 0).getDate();
+
+    const cells = [];
+    for (let i = startDow-1; i >= 0; i--) {
+      const m = viewMonth === 0 ? 11 : viewMonth-1;
+      const y = viewMonth === 0 ? viewYear-1 : viewYear;
+      cells.push({ day: daysInPrev-i, month: m, year: y, other: true });
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      cells.push({ day: d, month: viewMonth, year: viewYear, other: false });
+    }
+    const totalCellsToFill = 42 - cells.length;
+    if (totalCellsToFill > 0) {
+      for (let d = 1; d <= totalCellsToFill; d++) {
+        const m = viewMonth === 11 ? 0 : viewMonth + 1;
+        const y = viewMonth === 11 ? viewYear + 1 : viewYear;
+        cells.push({ day: d, month: m, year: y, other: true });
+      }
+    }
+
+    const byDate = {};
+    events.forEach(ev => {
+      const k = isoDateOf(ev.start_date);
+      (byDate[k] = byDate[k]||[]).push(ev);
+    });
+
+    cells.forEach(c => {
+      const key     = c.year + '-' + String(c.month+1).padStart(2,'0') + '-' + String(c.day).padStart(2,'0');
+      const isToday = key === isoDateOf(today);
+      const evs     = byDate[key] || [];
+
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell' + (c.other ? ' other-month' : '') + (isToday ? ' today' : '');
+      cell.dataset.date = key;
+
+      const num = document.createElement('span');
+      num.className   = 'cal-date-num';
+      num.textContent = c.day;
+      cell.appendChild(num);
+
+      evs.slice(0,2).forEach(ev => {
+        const chip = document.createElement('div');
+        chip.className       = 'cal-event-chip';
+        chip.dataset.type    = ev.event_type;
+        chip.dataset.eventId = ev.id;
+        chip.title           = ev.title;
+        chip.textContent     = fmt(ev.start_date) + ' ' + ev.title;
+        cell.appendChild(chip);
+      });
+
+      if (evs.length > 2) {
+        const more = document.createElement('div');
+        more.className    = 'cal-event-chip';
+        more.dataset.type = 'private';
+        more.textContent  = '+' + (evs.length-2) + ' autre(s)';
+        cell.appendChild(more);
+      }
+
+      grid.appendChild(cell);
+    });
+  }
+
+  /* ── Render sidebar ── */
+  function renderSidebar() {
+    const container = document.getElementById('sidebarEvents');
+    const events    = window.CALENDAR_EVENTS || [];
+    const todayIso  = isoDateOf(today);
+
+    const upcoming = events
+      .filter(ev => isoDateOf(ev.start_date) >= todayIso)
+      .sort((a, b) => new Date(a.start_date) - new Date(b.start_date))
+      .slice(0, 6);
+
+    if (!upcoming.length) {
+      container.innerHTML = '<p style="font-size:13px;color:var(--text-muted);text-align:center;padding:20px 0">Aucun évènement à venir</p>';
+      return;
+    }
+
+    const tomorrowIso = isoDateOf(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1));
+
+    /* SVG icons per event_type — matches mockup */
+    const typeIconSVG = {
+      shared:  `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`,
+      private: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+      public:  `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`
+    };
+
+    let html = '';
+    let first = true;
+
+    upcoming.forEach((ev, i) => {
+      const evIso = isoDateOf(ev.start_date);
+      const lbl   = evIso === todayIso      ? "Aujourd'hui"
+                  : evIso === tomorrowIso   ? 'Demain'
+                  : (() => { const d = new Date(ev.start_date); return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0'); })();
+
+      /* Divider between blocks */
+      if (!first) html += '<hr class="cal-sidebar-divider" />';
+      first = false;
+
+      const participants = ev.participants ? esc(ev.participants) : '';
+
+      html += `
+        <div class="cal-rdv-block" data-event-id="${ev.id}">
+          <div class="cal-rdv-top">
+            <span class="cal-day-label">${esc(lbl)}</span>
+            <div class="cal-rdv-type-icon" title="${ev.event_type}">
+              ${typeIconSVG[ev.event_type] || ''}
+            </div>
+          </div>
+          <div class="cal-rdv-title">${esc(ev.title)}</div>
+          <div class="cal-event-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            ${fmt(ev.start_date)} – ${fmt(ev.end_date)}
+          </div>
+          ${participants ? `
+          <div class="cal-event-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Avec ${participants}
+          </div>` : ''}
+        </div>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  /* ── Navigation ── */
+  document.getElementById('btnPrevMonth').addEventListener('click', () => {
+    if (--viewMonth < 0) { viewMonth = 11; viewYear--; }
+    renderCalendar();
+  });
+  document.getElementById('btnNextMonth').addEventListener('click', () => {
+    if (++viewMonth > 11) { viewMonth = 0; viewYear++; }
+    renderCalendar();
+  });
+  document.getElementById('btnGoToday').addEventListener('click', () => {
+    viewYear  = today.getFullYear();
+    viewMonth = today.getMonth();
+    renderCalendar();
+  });
+
+  renderCalendar();
+  renderSidebar();
+
+  /* Public API — call after AJAX updates window.CALENDAR_EVENTS */
+  window.refreshCalendar = function () {
+    renderCalendar();
+    renderSidebar();
+  };
+
+}());
+
+
+/* ════════════════════════════════════════════════════════════════
+   MODAL CONTROLLER
+════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  const overlay = document.getElementById('modalOverlay');
+  const form    = document.getElementById('eventForm');
+
+  const cards = {
+    private: document.getElementById('typeCardPrivate'),
+    shared:  document.getElementById('typeCardShared'),
+    public:  document.getElementById('typeCardPublic')
+  };
+
+  function setType(type) {
+    Object.keys(cards).forEach(t => cards[t].classList.remove('sel-private','sel-shared','sel-public'));
+    cards[type].classList.add('sel-' + type);
+  }
+
+  function open() {
+    document.getElementById('formOrganizerId').value = window.CURRENT_USER_ID || '';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    form.reset();
+    setType('private');
+    document.getElementById('formEventId').value = '';
+  }
+
+  Object.keys(cards).forEach(t => { cards[t].addEventListener('click', () => setType(t)); });
+
+  document.getElementById('btnOpenModal').addEventListener('click', open);
+  document.getElementById('btnCloseModal').addEventListener('click', close);
+  document.getElementById('btnCancelModal').addEventListener('click', close);
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+  /*
+   ── OPTIONAL AJAX SUBMISSION ─────────────────────────────────
+   PHP team: uncomment to submit without page reload.
+   calendar_handler.php must return JSON:
+     { "success": true,  "event": { ...eventObject } }   on INSERT
+     { "success": false, "error": "..." }                 on failure
+
+   form.addEventListener('submit', async function(e) {
+     e.preventDefault();
+     try {
+       const res  = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+       const json = await res.json();
+       if (json.success) {
+         window.CALENDAR_EVENTS.push(json.event);
+         window.refreshCalendar();
+         close();
+       } else {
+         alert(json.error || 'Une erreur est survenue.');
+       }
+     } catch (err) {
+       alert('Erreur r\u00e9seau.');
+     }
+   });
+  */
+
+}());
+</script>
+
+</body>
+</html>
