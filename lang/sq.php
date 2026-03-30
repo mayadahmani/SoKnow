@@ -78,6 +78,25 @@ return [
     'dash_published_ago' => 'Publikuar',
     'dash_today' => 'Sot',
 
+    // Messages
+    'msg_page_title' => 'Mesazhet - SoKnow',
+    'msg_search_placeholder' => 'Kërko...',
+    'msg_no_conversations' => 'Nuk ka ende biseda.',
+    'msg_status_online' => 'Online',
+    'msg_choose_conversation' => 'Zgjidhni një bisedë.',
+    'msg_audio_call' => 'Thirrje audio',
+    'msg_video_call' => 'Thirrje video',
+    'msg_info' => 'Informacione',
+    'msg_select_conversation' => 'Zgjidhni një bisedë për të shfaqur mesazhet.',
+    'msg_no_messages_yet' => 'Nuk ka ende mesazhe. Dërgoni mesazhin e parë.',
+    'msg_attachment' => 'Bashkëngjitje',
+    'msg_write_message' => 'Shkruani mesazhin tuaj...',
+    'msg_send' => 'Dërgo',
+    'msg_user_prefix' => 'Përdoruesi',
+    'msg_no_message_preview' => 'Nuk ka mesazh',
+    'msg_start_conversation' => 'Nis një bisedë',
+    'msg_no_contacts_found' => 'Nuk u gjet asnjë llogari për këtë kërkim.',
+
 
     'footer_desc' => 'Rrjeti i parë social i ndihmës teknologjike ndërgjeneracionale.',
     'footer_links' => 'Lidhje të shpejta',

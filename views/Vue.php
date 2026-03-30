@@ -31,11 +31,15 @@ abstract class Vue {
 
             <?php include 'includes/header.php'; ?>
 
+            <?php $currentPage = $_GET['page'] ?? 'home'; ?>
+
             <main class="container">
                 <?php echo $contenu; ?>
             </main>
 
-            <?php include 'includes/footer.php'; ?>
+            <?php if ($currentPage !== 'messages'): ?>
+                <?php include 'includes/footer.php'; ?>
+            <?php endif; ?>
 
             <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
             <script src="js/main.js"></script>

@@ -80,6 +80,25 @@ return [
     'dash_published_ago' => 'Publié il y a',
     'dash_today' => 'Aujourd\'hui',
 
+    // Messages
+    'msg_page_title' => 'Messages - SoKnow',
+    'msg_search_placeholder' => 'Rechercher...',
+    'msg_no_conversations' => 'Aucune conversation pour le moment.',
+    'msg_status_online' => 'En ligne',
+    'msg_choose_conversation' => 'Choisissez une conversation.',
+    'msg_audio_call' => 'Appel audio',
+    'msg_video_call' => 'Appel vidéo',
+    'msg_info' => 'Informations',
+    'msg_select_conversation' => 'Sélectionnez une conversation pour afficher les messages.',
+    'msg_no_messages_yet' => 'Aucun message pour le moment. Envoyez le premier message.',
+    'msg_attachment' => 'Pièce jointe',
+    'msg_write_message' => 'Écrivez votre message...',
+    'msg_send' => 'Envoyer',
+    'msg_user_prefix' => 'Utilisateur',
+    'msg_no_message_preview' => 'Aucun message',
+    'msg_start_conversation' => 'Démarrer une conversation',
+    'msg_no_contacts_found' => 'Aucun compte trouvé pour cette recherche.',
+
     // Footer
     'footer_desc' => 'Le premier réseau social d\'entraide technologique intergénérationnelle.',
     'footer_links' => 'Liens rapides',
