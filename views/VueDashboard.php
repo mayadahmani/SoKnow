@@ -3,7 +3,7 @@
 
 class VueDashboard extends Vue {
     
-    protected $titre = "Tableau de Bord - SoKnow";
+    protected $titre = "SoKnow";
 
     protected function afficherContenu($donnees) {
         $posts = $donnees['posts'] ?? [];
@@ -17,16 +17,16 @@ class VueDashboard extends Vue {
                 <div class="col-feed">
                     
                     <div class="card">
-                        <h3 class="card-title">Créer une demande</h3>
+                        <h3 class="card-title"><?= __('dash_create_request') ?></h3>
                         <form action="index.php?action=createPost" method="POST">
-                            <textarea name="content" class="input-textarea" placeholder="Décrivez votre problème technique ici..."></textarea>
+                            <textarea name="content" class="input-textarea" placeholder="<?= __('dash_describe_problem') ?>"></textarea>
                             <div class="post-actions-bar">
                                 <div class="post-icons">
                                     <span class="icon-action">🖼️</span>
                                     <span class="icon-action">📎</span>
                                     <span class="icon-action">#️⃣</span>
                                 </div>
-                                <button type="submit" class="btn-primary btn-small">Publier</button>
+                                <button type="submit" class="btn-primary btn-small"><?= __('dash_publish') ?></button>
                             </div>
                         </form>
                     </div>
@@ -34,10 +34,10 @@ class VueDashboard extends Vue {
                     <div class="search-filter-bar">
                         <div class="search-box">
                             <span class="search-icon">🔍</span>
-                            <input type="text" placeholder="Chercher un sujet, une personne à aider...">
+                            <input type="text" placeholder="<?= __('dash_search_placeholder') ?>">
                         </div>
                         <button class="btn-outline btn-filter">
-                            ♈ Filtres
+                            ♈ <?= __('dash_filters') ?>
                         </button>
                     </div>
 
@@ -47,7 +47,7 @@ class VueDashboard extends Vue {
                                 <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="avatar">
                                 <div>
                                     <h4 class="post-name">Eleanor & John</h4>
-                                    <div class="post-time">Publié il y a 10 min</div>
+                                    <div class="post-time"><?= __('dash_published_ago') ?> 10 min</div>
                                 </div>
                             </div>
                             <p class="post-text">
@@ -73,7 +73,7 @@ class VueDashboard extends Vue {
                                 </div>
                                 <p class="post-text"><?php echo htmlspecialchars($post['content']); ?></p>
                                 <div class="post-footer">
-                                    <button class="btn-outline">Proposer son aide</button>
+                                    <button class="btn-outline"><?= __('dash_offer_help') ?></button>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -83,7 +83,7 @@ class VueDashboard extends Vue {
                 <div class="col-widgets">
                     
                     <div class="card">
-                        <h3 class="card-title">📅 Rendez-vous à venir</h3>
+                        <h3 class="card-title">📅 <?= __('dash_upcoming_rdv') ?></h3>
                         <div class="widget-rdv">
                             <div class="rdv-info">
                                 <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="avatar avatar-small">
@@ -92,20 +92,20 @@ class VueDashboard extends Vue {
                                     <div class="rdv-time">14:00 - Visio</div>
                                 </div>
                             </div>
-                            <span class="badge-today">Aujourd'hui</span>
+                            <span class="badge-today"><?= __('dash_today') ?></span>
                         </div>
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">📍 Membres à proximité</h3>
+                        <h3 class="card-title">📍 <?= __('dash_nearby_members') ?></h3>
                         <div class="mini-map-preview">
                             <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80" alt="Carte preview">
                         </div>
-                        <a href="index.php?page=map" class="btn-outline btn-full">Explorer la carte</a>
+                        <a href="index.php?page=map" class="btn-outline btn-full"><?= __('dash_explore_map') ?></a>
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">📅 Événements à venir</h3>
+                        <h3 class="card-title">📅 <?= __('dash_upcoming_events') ?></h3>
                         <div class="widget-event">
                             <div class="event-date-box">
                                 <div class="event-month">Oct</div>

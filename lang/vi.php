@@ -4,6 +4,12 @@ return [
     'nav_register' => 'Đăng ký',
     'nav_profile' => 'Hồ sơ của tôi',
     'nav_logout' => 'Đăng xuất',
+
+    // Navigation & Header
+    'nav_login' => 'Đăng nhập',
+    'nav_register' => 'Đăng ký',
+    'nav_profile' => 'Hồ sơ của tôi',
+    'nav_logout' => 'Đăng xuất',
     
     'hero_badge' => 'Số 1 về tương trợ giữa các thế hệ',
     'hero_title' => 'Hỗ trợ công nghệ chuyên nghiệp và nhân văn',
@@ -25,11 +31,64 @@ return [
     'event_desc' => 'Khám phá các hội thảo và cuộc họp trực tuyến hoặc gần bạn sắp tới của chúng tôi.',
     'event_btn' => 'Xem thêm →',
 
+    'nav_dashboard' => 'Bảng điều khiển',
+    'nav_map' => 'Danh bạ & Bản đồ',
+    'nav_calendar' => 'Lịch của tôi',
+    'nav_messages' => 'Tin nhắn',
+    'nav_close' => 'Đóng',
+
+    // Calendar
+    'cal_title' => 'Lịch của tôi',
+    'cal_subtitle' => 'Quản lý lịch hẹn và buổi hỗ trợ của bạn',
+    'cal_new_event' => 'Sự kiện mới',
+    'cal_today' => 'Hôm nay',
+    'cal_prev_month' => 'Tháng trước',
+    'cal_next_month' => 'Tháng sau',
+    'cal_upcoming' => 'Lịch hẹn sắp tới',
+    'cal_no_upcoming' => 'Không có lịch hẹn sắp tới.',
+    'cal_with' => 'Với',
+    'cal_tomorrow' => 'Ngày mai',
+    'cal_months' => 'Tháng 1,Tháng 2,Tháng 3,Tháng 4,Tháng 5,Tháng 6,Tháng 7,Tháng 8,Tháng 9,Tháng 10,Tháng 11,Tháng 12',
+    'cal_days' => 'T2,T3,T4,T5,T6,T7,CN',
+
+    // Modal new event
+    'modal_new_event' => 'Sự kiện mới',
+    'modal_title' => 'Tiêu đề',
+    'modal_title_placeholder' => 'Tiêu đề sự kiện',
+    'modal_desc' => 'Mô tả',
+    'modal_desc_placeholder' => 'Mô tả tùy chọn',
+    'modal_start' => 'Bắt đầu',
+    'modal_end' => 'Kết thúc',
+    'modal_visibility' => 'Hiển thị',
+    'modal_private' => 'Riêng tư',
+    'modal_shared' => 'Chia sẻ',
+    'modal_public' => 'Công khai',
+    'modal_cancel' => 'Hủy',
+    'modal_create' => 'Tạo',
+    'modal_close' => 'Đóng',
+    'modal_end_before_start' => 'Ngày kết thúc phải sau ngày bắt đầu.',
+
+    // Dashboard
+    'dash_create_request' => 'Tạo yêu cầu',
+    'dash_describe_problem' => 'Mô tả vấn đề kỹ thuật của bạn ở đây...',
+    'dash_publish' => 'Đăng',
+    'dash_search_placeholder' => 'Tìm kiếm chủ đề, người cần giúp...',
+    'dash_filters' => 'Bộ lọc',
+    'dash_offer_help' => 'Đề xuất giúp đỡ',
+    'dash_upcoming_rdv' => 'Lịch hẹn sắp tới',
+    'dash_nearby_members' => 'Thành viên gần đây',
+    'dash_explore_map' => 'Khám phá bản đồ',
+    'dash_upcoming_events' => 'Sự kiện sắp tới',
+    'dash_published_ago' => 'Đã đăng',
+    'dash_today' => 'Hôm nay',
+
+
     'footer_desc' => 'Mạng xã hội tương trợ công nghệ đa thế hệ đầu tiên.',
     'footer_links' => 'Liên kết nhanh',
     'footer_contact' => 'Liên hệ với chúng tôi',
     'footer_terms' => 'Điều khoản sử dụng',
     'footer_privacy' => 'Chính sách bảo mật',
-    'footer_rights' => 'Đã đăng ký Bản quyền.'
+    'footer_rights' => 'Đã đăng ký Bản quyền.',
+    'footer_events' => 'Sự kiện sắp tới',
 ];
 ?>

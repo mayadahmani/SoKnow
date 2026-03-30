@@ -14,7 +14,7 @@ abstract class Vue {
         // 2. Inclut le squelette HTML global
         ?>
         <!DOCTYPE html>
-        <html lang="fr">
+        <html lang="<?php echo $_SESSION['lang'] ?? 'fr'; ?>">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">

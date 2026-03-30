@@ -3,7 +3,7 @@
 
 class VueCalendrier extends Vue {
 
-    protected $titre = "Mon Calendrier - SoKnow";
+    protected $titre = "SoKnow";
 
     protected function afficherContenu($donnees) {
         $events   = $donnees['events'] ?? [];
@@ -41,6 +41,9 @@ class VueCalendrier extends Vue {
                 'quand'       => $quand,
             ];
         }
+
+        // Calendar day/month names from lang
+        $calDays = explode(',', __('cal_days'));
         ?>
 
         <div class="calendrier-container">
@@ -48,8 +51,8 @@ class VueCalendrier extends Vue {
             <!-- ── Page header ── -->
             <div class="page-header">
                 <div class="page-title">
-                    <h1>Mon Calendrier</h1>
-                    <p>Gérez vos rendez-vous et sessions d'entraide</p>
+                    <h1><?= __('cal_title') ?></h1>
+                    <p><?= __('cal_subtitle') ?></p>
                 </div>
                 <button class="btn-primary btn-new" id="openModalBtn">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -57,7 +60,7 @@ class VueCalendrier extends Vue {
                         <line x1="12" y1="5" x2="12" y2="19"/>
                         <line x1="5"  y1="12" x2="19" y2="12"/>
                     </svg>
-                    Nouvel événement
+                    <?= __('cal_new_event') ?>
                 </button>
             </div>
 
@@ -71,14 +74,14 @@ class VueCalendrier extends Vue {
                         <div class="cal-header">
                             <span class="cal-month" id="calMonthLabel"></span>
                             <div class="cal-nav">
-                                <button class="cal-nav-btn" id="prevMonth" aria-label="Mois précédent">
+                                <button class="cal-nav-btn" id="prevMonth" aria-label="<?= __('cal_prev_month') ?>">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                                          stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                                         <polyline points="15 18 9 12 15 6"/>
                                     </svg>
                                 </button>
-                                <button class="btn-outline btn-today" id="goToday">Aujourd'hui</button>
-                                <button class="cal-nav-btn" id="nextMonth" aria-label="Mois suivant">
+                                <button class="btn-outline btn-today" id="goToday"><?= __('cal_today') ?></button>
+                                <button class="cal-nav-btn" id="nextMonth" aria-label="<?= __('cal_next_month') ?>">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                                          stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                                         <polyline points="9 18 15 12 9 6"/>
@@ -90,8 +93,7 @@ class VueCalendrier extends Vue {
                         <table class="cal-grid" id="calGrid">
                             <thead>
                                 <tr>
-                                    <th>LUN</th><th>MAR</th><th>MER</th>
-                                    <th>JEU</th><th>VEN</th><th>SAM</th><th>DIM</th>
+                                    <?php foreach ($calDays as $d): ?><th><?= htmlspecialchars($d) ?></th><?php endforeach; ?>
                                 </tr>
                             </thead>
                             <tbody id="calBody"></tbody>
@@ -111,14 +113,14 @@ class VueCalendrier extends Vue {
                                 <line x1="8"  y1="2" x2="8"  y2="6"/>
                                 <line x1="3"  y1="10" x2="21" y2="10"/>
                             </svg>
-                            Prochains rendez-vous
+                            <?= __('cal_upcoming') ?>
                         </h3>
 
                         <div class="rdv-list">
                             <?php foreach ($rendezVous as $rdv): ?>
                                 <?php
                                     $badgeClass = ($rdv['quand'] === 'today') ? 'badge-today' : 'badge-tomorrow';
-                                    $badgeLabel = ($rdv['quand'] === 'today') ? "Aujourd'hui" : 'Demain';
+                                    $badgeLabel = ($rdv['quand'] === 'today') ? __('cal_today') : __('cal_tomorrow');
                                     $isVisio    = ($rdv['type'] === 'visio');
                                 ?>
                                 <div class="rdv-item">
@@ -158,14 +160,14 @@ class VueCalendrier extends Vue {
                                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                                                 <circle cx="9" cy="7" r="4"/>
                                             </svg>
-                                            Avec <?php echo htmlspecialchars($rdv['avec']); ?>
+                                            <?= __('cal_with') ?> <?php echo htmlspecialchars($rdv['avec']); ?>
                                         </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
 
                             <?php if (empty($rendezVous)): ?>
-                                <p class="rdv-empty">Aucun rendez-vous à venir.</p>
+                                <p class="rdv-empty"><?= __('cal_no_upcoming') ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -185,8 +187,8 @@ class VueCalendrier extends Vue {
 
                     <!-- ── Header ── -->
                     <div class="modal-header">
-                        <h2 class="modal-title" id="modal-title">Nouvel événement</h2>
-                        <button class="modal-close" id="closeModalBtn" aria-label="Fermer">
+                        <h2 class="modal-title" id="modal-title"><?= __('modal_new_event') ?></h2>
+                        <button class="modal-close" id="closeModalBtn" aria-label="<?= __('modal_close') ?>">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                                 <line x1="18" y1="6"  x2="6"  y2="18"/>
@@ -200,26 +202,26 @@ class VueCalendrier extends Vue {
 
                         <!-- TITRE -->
                         <div class="mf-group">
-                            <label class="mf-label" for="ev-title">Titre</label>
+                            <label class="mf-label" for="ev-title"><?= __('modal_title') ?></label>
                             <input
                                 type="text"
                                 id="ev-title"
                                 name="title"
                                 required
                                 class="mf-input"
-                                placeholder="Titre de l'événement"
+                                placeholder="<?= __('modal_title_placeholder') ?>"
                                 autocomplete="off"
                             >
                         </div>
 
                         <!-- DESCRIPTION -->
                         <div class="mf-group">
-                            <label class="mf-label" for="ev-desc">Description</label>
+                            <label class="mf-label" for="ev-desc"><?= __('modal_desc') ?></label>
                             <textarea
                                 id="ev-desc"
                                 name="description"
                                 class="mf-input mf-textarea"
-                                placeholder="Description optionnelle"
+                                placeholder="<?= __('modal_desc_placeholder') ?>"
                                 rows="4"
                             ></textarea>
                         </div>
@@ -227,7 +229,7 @@ class VueCalendrier extends Vue {
                         <!-- DÉBUT / FIN (side by side) -->
                         <div class="mf-row">
                             <div class="mf-group">
-                                <label class="mf-label" for="ev-start">Début</label>
+                                <label class="mf-label" for="ev-start"><?= __('modal_start') ?></label>
                                 <input
                                     type="datetime-local"
                                     id="ev-start"
@@ -237,7 +239,7 @@ class VueCalendrier extends Vue {
                                 >
                             </div>
                             <div class="mf-group">
-                                <label class="mf-label" for="ev-end">Fin</label>
+                                <label class="mf-label" for="ev-end"><?= __('modal_end') ?></label>
                                 <input
                                     type="datetime-local"
                                     id="ev-end"
@@ -250,13 +252,13 @@ class VueCalendrier extends Vue {
 
                         <!-- VISIBILITÉ -->
                         <div class="mf-group">
-                            <label class="mf-label" for="ev-type">Visibilité</label>
+                            <label class="mf-label" for="ev-type"><?= __('modal_visibility') ?></label>
                             <div class="mf-select-wrap">
                                 <span class="mf-select-icon" id="selectIcon">🔒</span>
                                 <select id="ev-type" name="event_type" class="mf-input mf-select">
-                                    <option value="private" data-icon="🔒">Privé</option>
-                                    <option value="shared"  data-icon="👥">Partagé</option>
-                                    <option value="public"  data-icon="🌐">Public</option>
+                                    <option value="private" data-icon="🔒"><?= __('modal_private') ?></option>
+                                    <option value="shared"  data-icon="👥"><?= __('modal_shared') ?></option>
+                                    <option value="public"  data-icon="🌐"><?= __('modal_public') ?></option>
                                 </select>
                                 <span class="mf-chevron">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -269,8 +271,8 @@ class VueCalendrier extends Vue {
 
                         <!-- ── Action buttons ── -->
                         <div class="mf-actions">
-                            <button type="button" class="mf-btn-cancel" id="cancelModalBtn">Annuler</button>
-                            <button type="submit" class="mf-btn-create">Créer</button>
+                            <button type="button" class="mf-btn-cancel" id="cancelModalBtn"><?= __('modal_cancel') ?></button>
+                            <button type="submit" class="mf-btn-create"><?= __('modal_create') ?></button>
                         </div>
 
                     </form>
@@ -286,10 +288,7 @@ class VueCalendrier extends Vue {
         (function () {
 
             /* ── Calendar ── */
-            const MONTHS_FR = [
-                'Janvier','Février','Mars','Avril','Mai','Juin',
-                'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
-            ];
+            const MONTHS_FR = <?php echo json_encode(explode(',', __('cal_months')), JSON_UNESCAPED_UNICODE); ?>;
 
             const EVENTS = <?php echo $calEventsJson; ?>;
 
@@ -431,7 +430,7 @@ class VueCalendrier extends Vue {
                 var f = document.getElementById('ev-end').value;
                 if (s && f && f < s) {
                     e.preventDefault();
-                    alert('La date de fin doit être postérieure à la date de début.');
+                    alert(<?php echo json_encode(__('modal_end_before_start')); ?>);
                     document.getElementById('ev-end').focus();
                 }
             });

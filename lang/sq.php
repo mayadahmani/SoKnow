@@ -1,6 +1,6 @@
 <?php
 return [
-    'nav_login' => 'Kyçu',
+    'nav_login' => 'Hyr',
     'nav_register' => 'Regjistrohu',
     'nav_profile' => 'Profili im',
     'nav_logout' => 'Çkyçu',
@@ -25,11 +25,66 @@ return [
     'event_desc' => 'Zbuloni punëtoritë dhe takimet tona të ardhshme në internet ose pranë jush.',
     'event_btn' => 'Shiko më shumë →',
 
+    'nav_profile' => 'Profili Im',
+    'nav_logout' => 'Dil',
+    'nav_dashboard' => 'Paneli',
+    'nav_map' => 'Drejtoria & Harta',
+    'nav_calendar' => 'Kalendari Im',
+    'nav_messages' => 'Mesazhet',
+    'nav_close' => 'Mbyll',
+
+    // Calendar
+    'cal_title' => 'Kalendari Im',
+    'cal_subtitle' => 'Menaxhoni takimet dhe sesionet tuaja të ndihmës',
+    'cal_new_event' => 'Ngjarje e re',
+    'cal_today' => 'Sot',
+    'cal_prev_month' => 'Muaji i mëparshëm',
+    'cal_next_month' => 'Muaji i ardhshëm',
+    'cal_upcoming' => 'Takimet e ardhshme',
+    'cal_no_upcoming' => 'Nuk ka takime të ardhshme.',
+    'cal_with' => 'Me',
+    'cal_tomorrow' => 'Nesër',
+    'cal_months' => 'Janar,Shkurt,Mars,Prill,Maj,Qershor,Korrik,Gusht,Shtator,Tetor,Nëntor,Dhjetor',
+    'cal_days' => 'HËN,MAR,MËR,ENJ,PRE,SHT,DIE',
+
+    // Modal new event
+    'modal_new_event' => 'Ngjarje e re',
+    'modal_title' => 'Titulli',
+    'modal_title_placeholder' => 'Titulli i ngjarjes',
+    'modal_desc' => 'Përshkrimi',
+    'modal_desc_placeholder' => 'Përshkrim opsional',
+    'modal_start' => 'Fillimi',
+    'modal_end' => 'Fundi',
+    'modal_visibility' => 'Dukshmëria',
+    'modal_private' => 'Private',
+    'modal_shared' => 'E ndarë',
+    'modal_public' => 'Publike',
+    'modal_cancel' => 'Anulo',
+    'modal_create' => 'Krijo',
+    'modal_close' => 'Mbyll',
+    'modal_end_before_start' => 'Data e përfundimit duhet të jetë pas datës së fillimit.',
+
+    // Dashboard
+    'dash_create_request' => 'Krijo një kërkesë',
+    'dash_describe_problem' => 'Përshkruani problemin tuaj teknik këtu...',
+    'dash_publish' => 'Publiko',
+    'dash_search_placeholder' => 'Kërko një temë, dikë për të ndihmuar...',
+    'dash_filters' => 'Filtrat',
+    'dash_offer_help' => 'Ofro ndihmë',
+    'dash_upcoming_rdv' => 'Takimet e ardhshme',
+    'dash_nearby_members' => 'Anëtarët pranë',
+    'dash_explore_map' => 'Eksploro hartën',
+    'dash_upcoming_events' => 'Ngjarjet e ardhshme',
+    'dash_published_ago' => 'Publikuar',
+    'dash_today' => 'Sot',
+
+
     'footer_desc' => 'Rrjeti i parë social i ndihmës teknologjike ndërgjeneracionale.',
     'footer_links' => 'Lidhje të shpejta',
     'footer_contact' => 'Na kontaktoni',
     'footer_terms' => 'Kushtet e përdorimit',
     'footer_privacy' => 'Privatësia',
-    'footer_rights' => 'Të gjitha të drejtat e rezervuara.'
+    'footer_rights' => 'Të gjitha të drejtat e rezervuara.',
+    'footer_events' => 'Ngjarjet e ardhshme',
 ];
 ?>

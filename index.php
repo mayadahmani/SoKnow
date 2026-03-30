@@ -8,6 +8,26 @@ require_once __DIR__ . '/config/autoloader.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// ── Language handling ──
+$allowedLangs = ['fr', 'en', 'sq', 'vi'];
+if (isset($_GET['lang']) && in_array($_GET['lang'], $allowedLangs, true)) {
+    $_SESSION['lang'] = $_GET['lang'];
+    // Redirect to the same page without the lang param to keep URL clean
+    $params = $_GET;
+    unset($params['lang']);
+    $redirect = 'index.php' . ($params ? '?' . http_build_query($params) : '');
+    header("Location: $redirect");
+    exit;
+}
+$currentLang = $_SESSION['lang'] ?? 'fr';
+$lang = require __DIR__ . '/lang/' . $currentLang . '.php';
+
+// Helper function to get a translation
+function __($key) {
+    global $lang;
+    return $lang[$key] ?? $key;
+}
+
 $page = $_GET['page'] ?? 'home';
 $donnees = []; 
 
