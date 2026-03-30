@@ -9,7 +9,9 @@
     <header style="padding: 15px 0; background: white; border-bottom: 1px solid #eee;">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
             
-            <a href="index.php?page=home" style="font-size: 24px; font-weight: 900; color: #4F2EE8; text-decoration: none;">SoKnow</a>
+           <a href="index.php?page=home" style="text-decoration: none; display: flex; align-items: center;">
+    <img src="assets/img/logo.png" alt="Logo SoKnow" style="height: 40px; width: auto;">
+</a>
             
             <?php if (isset($_SESSION['user_id'])): ?>
                 <nav style="display: flex; gap: 30px;">

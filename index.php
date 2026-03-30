@@ -5,12 +5,44 @@ session_start();
 require_once __DIR__ . '/config/database.php'; 
 require_once __DIR__ . '/config/autoloader.php'; 
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// ── Language handling ──
+$allowedLangs = ['fr', 'en', 'sq', 'vi'];
+if (isset($_GET['lang']) && in_array($_GET['lang'], $allowedLangs, true)) {
+    $_SESSION['lang'] = $_GET['lang'];
+    // Redirect to the same page without the lang param to keep URL clean
+    $params = $_GET;
+    unset($params['lang']);
+    $redirect = 'index.php' . ($params ? '?' . http_build_query($params) : '');
+    header("Location: $redirect");
+    exit;
+}
+$currentLang = $_SESSION['lang'] ?? 'fr';
+$lang = require __DIR__ . '/lang/' . $currentLang . '.php';
+
+// Helper function to get a translation
+function __($key) {
+    global $lang;
+    return $lang[$key] ?? $key;
+}
+
 $page = $_GET['page'] ?? 'home';
 $donnees = []; 
 
 switch ($page) {
     case 'home':
         $vue = new VueAccueil();
+        $vue->afficher($donnees);
+        break;
+
+    case 'dashboard':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+        $vue = new VueDashboard();
         $vue->afficher($donnees);
         break;
 
@@ -110,8 +142,62 @@ switch ($page) {
         break;
 
     case 'agenda':
-        // C'est ici que Koalima et Jonida travailleront
-        include 'views/agenda.php';
+        // 0. AUTHENTICATION : Ensure the user is logged in
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $eventModel = new Event($pdo);
+        $userModel = new User($pdo);
+        $action = $_GET['action'] ?? 'view';
+        $donnees = [];
+
+        // 1. ACTION : Handle new event creation
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
+            $eventData = [
+                'title'          => $_POST['title'] ?? '',
+                'description'    => $_POST['description'] ?? '',
+                'event_type'     => $_POST['event_type'] ?? 'private',
+                'start_datetime' => $_POST['start_datetime'] ?? '',
+                'end_datetime'   => $_POST['end_datetime'] ?? ''
+            ];
+
+            $eventId = $eventModel->create($userId, $eventData);
+            
+            // Invite participants if it's a shared event
+            if ($eventId && $eventData['event_type'] === 'shared' && !empty($_POST['invited_users'])) {
+                foreach ($_POST['invited_users'] as $invitedId) {
+                    if ($invitedId != $userId) {
+                        $eventModel->addParticipant($eventId, $invitedId);
+                    }
+                }
+            }
+            header("Location: index.php?page=agenda");
+            exit;
+        }
+
+        // 2. ACTION : Handle invitation responses (Accept/Decline)
+        if ($action === 'accept' && isset($_GET['event_id'])) {
+            $eventModel->updateStatus($_GET['event_id'], $userId, 'accepted');
+            header("Location: index.php?page=agenda");
+            exit;
+        } elseif ($action === 'decline' && isset($_GET['event_id'])) {
+            $eventModel->updateStatus($_GET['event_id'], $userId, 'declined');
+            header("Location: index.php?page=agenda");
+            exit;
+        }
+
+        // 3. DISPLAY : Prepare data and render the Agenda view
+        $donnees = [
+            'events'          => $eventModel->getEventsByUser($userId),
+            'pending_invites' => $eventModel->getPendingInvites($userId),
+            'all_users'       => $userModel->getAllMembersWithSkills()
+        ];
+        
+        $vue = new VueAgenda();
+        $vue->afficher($donnees);
         break;
 
      case 'map':
@@ -146,17 +232,43 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
         header("Location: index.php?page=home");
         exit;
 
+    case 'calendar':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $eventModel = new Event($pdo);
+        $action = $_GET['action'] ?? 'view';
+
+        // Handle new event creation
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
+            $eventData = [
+                'title'          => $_POST['title'] ?? '',
+                'description'    => $_POST['description'] ?? '',
+                'event_type'     => $_POST['event_type'] ?? 'private',
+                'start_datetime' => $_POST['start_datetime'] ?? '',
+                'end_datetime'   => $_POST['end_datetime'] ?? ''
+            ];
+            $eventModel->create($userId, $eventData);
+            header("Location: index.php?page=calendar");
+            exit;
+        }
+
+        $donnees = [
+            'events'          => $eventModel->getEventsByUser($userId),
+            'upcoming'        => $eventModel->getUpcomingEvents($userId, 5),
+        ];
+
+        $vue = new VueCalendrier();
+        $vue->afficher($donnees);
+        break;
+
     default:
         http_response_code(404);
         echo "404 - Page non trouvée";
         break;
 }
-echo '</div>';
 
-
-// ==========================================
-// --- LE FOOTER (Bas de page) ---
-// S'affichera sur toutes les pages
-// ==========================================
-include 'includes/footer.php'; 
 ?>
