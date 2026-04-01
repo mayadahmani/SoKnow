@@ -1,0 +1,326 @@
+/* ============================================================
+   assets/css/dashboard.css
+   Dashboard-specific styles: post feed, widgets, offer-help modal
+   Global base styles (cards, buttons, header) live in style.css
+   ============================================================ */
+
+/* ── Search bar (override inline emoji icon) ── */
+.search-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px !important; /* tighter than post card */
+}
+
+.search-box {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon-svg {
+    position: absolute;
+    left: 12px;
+    color: #b5adcc;
+    pointer-events: none;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 8px 12px 8px 36px;
+    font-family: inherit;
+    font-size: .88rem;
+    color: var(--text-dark, #1a1530);
+    background: transparent;
+}
+
+.search-box input::placeholder { color: #b5adcc; }
+
+.btn-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: .85rem;
+    padding: 8px 16px;
+    border-radius: 9px;
+}
+
+/* ── Post card icon actions (SVG-based) ── */
+.icon-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #b5adcc;
+    padding: 4px;
+    border-radius: 7px;
+    transition: color .15s, background .15s;
+}
+
+.icon-action:hover {
+    color: var(--primary);
+    background: var(--primary-tint);
+}
+
+/* ── Mentor widget ── */
+.mentor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.mentor-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1eef9;
+}
+
+.mentor-item:last-child { border-bottom: none; }
+
+.mentor-info { flex: 1; min-width: 0; }
+
+.mentor-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: .9rem;
+    color: #1a1530;
+}
+
+.mentor-helps {
+    font-size: .78rem;
+    color: var(--primary, #5b3fd4);
+    font-weight: 500;
+    margin-top: 1px;
+}
+
+.mentor-arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c4bdd8;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: color .15s, background .15s;
+    flex-shrink: 0;
+}
+
+.mentor-arrow:hover {
+    color: var(--primary);
+    background: var(--primary-tint);
+}
+
+/* ============================================================
+   OFFER-HELP MODAL
+   Matches Figma exactly:
+   - White box, no blur tint on overlay
+   - Subject card with inline hashtags (no background)
+   - Large open textarea (no border, just outline on focus)
+   - Text "Annuler" + filled "Envoyer la proposition"
+   ============================================================ */
+
+/* Overlay */
+.oh-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 8, 48, 0.38);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    /* Hidden by default */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+
+.oh-overlay.is-open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Modal box */
+.oh-box {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 520px;
+    padding: 32px 36px 28px;
+    box-shadow: 0 20px 60px rgba(13, 8, 48, .16);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    transform: translateY(16px) scale(.98);
+    opacity: 0;
+    transition: transform .24s cubic-bezier(.34,1.26,.64,1), opacity .2s ease;
+}
+
+.oh-overlay.is-open .oh-box {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Header */
+.oh-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.oh-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #0d0830;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.oh-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+}
+
+.oh-close:hover {
+    background: #f3f0fb;
+    color: #1a1530;
+}
+
+/* Subject card — light purple bg, text + hashtag pills inline */
+.oh-subject-card {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #f5f3ff;
+    border: 1px solid rgba(91, 63, 212, .12);
+    border-radius: 12px;
+    padding: 14px 18px;
+}
+
+.oh-subject-text {
+    font-size: .88rem;
+    color: #374151;
+    flex: 1;
+    min-width: 160px;
+    line-height: 1.4;
+}
+
+.oh-subject-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Hashtag pills (reuse global .hashtag but ensure style here too) */
+.oh-subject-tags .hashtag {
+    background: var(--primary-tint, #f5f3ff);
+    color: var(--primary, #5b3fd4);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    text-decoration: none;
+}
+
+/* Textarea field */
+.oh-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.oh-label {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.oh-textarea {
+    width: 100%;
+    min-height: 130px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: #374151;
+    background: #fff;
+    resize: vertical;
+    outline: none;
+    line-height: 1.55;
+    transition: border-color .18s, box-shadow .18s;
+}
+
+.oh-textarea::placeholder { color: #b5adcc; }
+
+.oh-textarea:focus {
+    border-color: var(--primary, #5b3fd4);
+    box-shadow: 0 0 0 3px rgba(91, 63, 212, .1);
+}
+
+/* Footer */
+.oh-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    padding-top: 4px;
+}
+
+/* Plain text "Annuler" */
+.oh-btn-cancel {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 8px 4px;
+    transition: color .15s;
+}
+
+.oh-btn-cancel:hover { color: #1a1530; }
+
+/* Filled "Envoyer la proposition" */
+.oh-btn-send {
+    padding: 11px 28px;
+    border-radius: 10px;
+    font-size: .9rem;
+    font-weight: 700;
+    /* inherits .btn-primary background, color, border from global CSS */
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+    .oh-box { padding: 24px 18px 20px; border-radius: 14px; }
+    .oh-title { font-size: 1.05rem; }
+    .oh-footer { flex-direction: column-reverse; align-items: stretch; gap: 10px; }
+    .oh-btn-cancel { text-align: center; }
+    .oh-btn-send   { width: 100%; justify-content: center; }
+}

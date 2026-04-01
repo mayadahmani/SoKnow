@@ -2,9 +2,9 @@
 
 
 $host = 'localhost'; 
-$dbname = '12400095_Soknow'; 
-$username = '12400095'; 
-$password = '193063303GF'; 
+$dbname = 'soknow'; 
+$username = 'soknow'; 
+$password = '!*shownow*'; 
 
 try {
    

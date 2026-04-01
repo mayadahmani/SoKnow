@@ -4,6 +4,12 @@ return [
     'nav_register' => 'Đăng ký',
     'nav_profile' => 'Hồ sơ của tôi',
     'nav_logout' => 'Đăng xuất',
+
+    // Navigation & Header
+    'nav_login' => 'Đăng nhập',
+    'nav_register' => 'Đăng ký',
+    'nav_profile' => 'Hồ sơ của tôi',
+    'nav_logout' => 'Đăng xuất',
     
     'hero_badge' => 'Số 1 về tương trợ giữa các thế hệ',
     'hero_title' => 'Hỗ trợ công nghệ chuyên nghiệp và nhân văn',
@@ -25,11 +31,94 @@ return [
     'event_desc' => 'Khám phá các hội thảo và cuộc họp trực tuyến hoặc gần bạn sắp tới của chúng tôi.',
     'event_btn' => 'Xem thêm →',
 
+    'nav_dashboard' => 'Bảng điều khiển',
+    'nav_map' => 'Danh bạ & Bản đồ',
+    'nav_calendar' => 'Lịch của tôi',
+    'nav_messages' => 'Tin nhắn',
+    'nav_close' => 'Đóng',
+
+    // Calendar
+    'cal_title' => 'Lịch của tôi',
+    'cal_subtitle' => 'Quản lý lịch hẹn và buổi hỗ trợ của bạn',
+    'cal_new_event' => 'Sự kiện mới',
+    'cal_today' => 'Hôm nay',
+    'cal_prev_month' => 'Tháng trước',
+    'cal_next_month' => 'Tháng sau',
+    'cal_upcoming' => 'Lịch hẹn sắp tới',
+    'cal_no_upcoming' => 'Không có lịch hẹn sắp tới.',
+    'cal_with' => 'Với',
+    'cal_tomorrow' => 'Ngày mai',
+    'cal_months' => 'Tháng 1,Tháng 2,Tháng 3,Tháng 4,Tháng 5,Tháng 6,Tháng 7,Tháng 8,Tháng 9,Tháng 10,Tháng 11,Tháng 12',
+    'cal_days' => 'T2,T3,T4,T5,T6,T7,CN',
+
+    // Modal new event
+    'modal_new_event' => 'Sự kiện mới',
+    'modal_title' => 'Tiêu đề',
+    'modal_title_placeholder' => 'Tiêu đề sự kiện',
+    'modal_desc' => 'Mô tả',
+    'modal_desc_placeholder' => 'Mô tả tùy chọn',
+    'modal_start' => 'Bắt đầu',
+    'modal_end' => 'Kết thúc',
+    'modal_visibility' => 'Hiển thị',
+    'modal_private' => 'Riêng tư',
+    'modal_shared' => 'Chia sẻ',
+    'modal_public' => 'Công khai',
+    'modal_cancel' => 'Hủy',
+    'modal_create' => 'Tạo',
+    'modal_close' => 'Đóng',
+    'modal_end_before_start' => 'Ngày kết thúc phải sau ngày bắt đầu.',
+
+    // Dashboard
+    'dash_create_request' => 'Tạo yêu cầu',
+    'dash_describe_problem' => 'Mô tả vấn đề kỹ thuật của bạn ở đây...',
+    'dash_publish' => 'Đăng',
+    'dash_search_placeholder' => 'Tìm kiếm chủ đề, người cần giúp...',
+    'dash_filters' => 'Bộ lọc',
+    'dash_offer_help' => 'Đề xuất giúp đỡ',
+    'dash_upcoming_rdv' => 'Lịch hẹn sắp tới',
+    'dash_nearby_members' => 'Thành viên gần đây',
+    'dash_explore_map' => 'Khám phá bản đồ',
+    'dash_upcoming_events' => 'Sự kiện sắp tới',
+    'dash_published_ago' => 'Đã đăng',
+    'dash_today' => 'Hôm nay',
+
+    // Messages
+    'msg_page_title' => 'Tin nhắn - SoKnow',
+    'msg_search_placeholder' => 'Tìm kiếm...',
+    'msg_no_conversations' => 'Chưa có cuộc trò chuyện nào.',
+    'msg_status_online' => 'Đang trực tuyến',
+    'msg_choose_conversation' => 'Hãy chọn một cuộc trò chuyện.',
+    'msg_audio_call' => 'Cuộc gọi âm thanh',
+    'msg_video_call' => 'Cuộc gọi video',
+    'msg_info' => 'Thông tin',
+    'msg_select_conversation' => 'Chọn một cuộc trò chuyện để hiển thị tin nhắn.',
+    'msg_no_messages_yet' => 'Chưa có tin nhắn nào. Hãy gửi tin nhắn đầu tiên.',
+    'msg_attachment' => 'Tệp đính kèm',
+    'msg_write_message' => 'Viết tin nhắn của bạn...',
+    'msg_send' => 'Gửi',
+    'msg_user_prefix' => 'Người dùng',
+    'msg_no_message_preview' => 'Không có tin nhắn',
+    'msg_start_conversation' => 'Bắt đầu cuộc trò chuyện',
+    'msg_no_contacts_found' => 'Không tìm thấy tài khoản nào cho tìm kiếm này.',
+
+
     'footer_desc' => 'Mạng xã hội tương trợ công nghệ đa thế hệ đầu tiên.',
     'footer_links' => 'Liên kết nhanh',
     'footer_contact' => 'Liên hệ với chúng tôi',
     'footer_terms' => 'Điều khoản sử dụng',
     'footer_privacy' => 'Chính sách bảo mật',
-    'footer_rights' => 'Đã đăng ký Bản quyền.'
+    'footer_rights' => 'Đã đăng ký Bản quyền.',
+    'footer_events' => 'Sự kiện sắp tới',
+
+
+    'legal_title' => 'Thông báo Pháp lý',
+    'legal_editor_title' => '1. Biên tập viên trang web',
+    'legal_editor_text' => 'Trang web SoKnow là một dự án sinh viên hư cấu (phiên bản Beta) được phát triển trong khuôn khổ đào tạo đại học của chúng tôi.<br><br><strong>Người sáng tạo và sở hữu:</strong> Nhóm sinh viên: Kevin, Maya, Aymaan, Yasmine, Louis, Abdoulaye, Viacheslav, Jonida, Gerald và Koalima.<br><strong>Giám đốc xuất bản:</strong> Kevin.<br><strong>Liên hệ:</strong> contact-equipe@soknow-projet.fr.',
+    'legal_host_title' => '2. Lưu trữ trang web',
+    'legal_host_text' => 'Trang SoKnow và cơ sở dữ liệu MariaDB được lưu trữ trên các máy chủ sư phạm của tổ chức chúng tôi:<br><br><strong>Máy chủ:</strong> IUT de Bobigny (Université Sorbonne Paris Nord)<br><strong>Địa chỉ:</strong> 1 rue de Chablis, 93000 Bobigny, Pháp.',
+    'legal_prop_title' => '3. Sở hữu trí tuệ',
+    'legal_prop_text' => 'Tất cả các yếu tố trên trang SoKnow là tài sản độc quyền của nhóm. Mọi hình thức sao chép đều bị nghiêm cấm nếu không có sự đồng ý.',
+    'legal_warn_title' => '4. Cảnh báo',
+    'legal_warn_text' => 'Vì là dự án sinh viên trong giai đoạn Beta, các tính năng có thể bị hạn chế hoặc gián đoạn mà không cần thông báo trước vì lý do bảo trì kỹ thuật.',
 ];
 ?>

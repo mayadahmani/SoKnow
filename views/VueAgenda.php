@@ -10,20 +10,18 @@ class VueAgenda extends Vue {
         $pendingInvites = $donnees['pending_invites'] ?? [];
         $allUsers = $donnees['all_users'] ?? [];
 
-        // Build a lookup map: day => [events]
         $eventsByDay = [];
         foreach ($events as $event) {
             $day = date('Y-m-d', strtotime($event['start_datetime']));
             $eventsByDay[$day][] = $event;
         }
 
-        // Calendar navigation
         $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
         $year  = isset($_GET['year'])  ? (int)$_GET['year']  : (int)date('Y');
 
         $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
         $daysInMonth     = date('t', $firstDayOfMonth);
-        $startWeekday    = (int)date('N', $firstDayOfMonth); // 1=Mon, 7=Sun
+        $startWeekday    = (int)date('N', $firstDayOfMonth);
         $monthName       = date('F Y', $firstDayOfMonth);
 
         $prevMonth = $month - 1; $prevYear = $year;
@@ -32,6 +30,7 @@ class VueAgenda extends Vue {
         if ($nextMonth > 12) { $nextMonth = 1; $nextYear++; }
 
         $today = date('Y-m-d');
+        $nowForInput = date('Y-m-d\TH:i'); // Pour l'attribut min
         ?>
 
         <div class="dashboard-container">
@@ -69,10 +68,17 @@ class VueAgenda extends Vue {
                             <?php for ($day = 1; $day <= $daysInMonth; $day++):
                                 $dateStr  = sprintf('%04d-%02d-%02d', $year, $month, $day);
                                 $isToday  = ($dateStr === $today);
+                                $isPast   = ($dateStr < $today);
                                 $dayEvents = $eventsByDay[$dateStr] ?? [];
                             ?>
-                                <div class="agenda-day-cell" style="min-height: 100px; border: 1px solid <?= $isToday ? '#4A2BBD' : '#E5E7EB' ?>; border-radius: 8px; padding: 8px; <?= $isToday ? 'background: #F3F0FF;' : '' ?>">
-                                    <span style="font-size: 14px; font-weight: <?= $isToday ? '800' : '500' ?>; color: <?= $isToday ? '#4A2BBD' : '#374151' ?>;"><?= $day ?></span>
+                                <div class="agenda-day-cell" 
+                                     style="min-height: 100px; border: 1px solid <?= $isToday ? '#4A2BBD' : '#E5E7EB' ?>; border-radius: 8px; padding: 8px; 
+                                     <?= $isToday ? 'background: #F3F0FF;' : '' ?> 
+                                     <?= $isPast ? 'background: #f5f5f5; opacity:0.7; cursor:not-allowed;' : 'cursor:pointer;' ?>"
+                                     <?php if (!$isPast): ?> onclick="document.getElementById('modal-new-event').style.display='flex'" <?php endif; ?>>
+                                    
+                                    <span style="font-size: 14px; font-weight: <?= $isToday ? '800' : '500' ?>; color: <?= $isPast ? '#ccc' : ($isToday ? '#4A2BBD' : '#374151') ?>;"><?= $day ?></span>
+                                    
                                     <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
                                     <?php foreach ($dayEvents as $ev): ?>
                                         <div class="agenda-event-pill" style="font-size: 11px; padding: 4px 6px; border-radius: 4px; background: <?= $ev['event_type']=='shared' ? '#FEF3C7' : '#E0E7FF' ?>; color: <?= $ev['event_type']=='shared' ? '#92400E' : '#3730A3' ?>;" title="<?= htmlspecialchars($ev['title']) ?>">
@@ -151,11 +157,11 @@ class VueAgenda extends Vue {
                     <div class="agenda-modal-dates" style="display: flex; gap: 16px; margin-bottom: 16px;">
                         <div style="flex: 1;">
                             <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Début</label>
-                            <input type="datetime-local" name="start_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
+                            <input type="datetime-local" name="start_datetime" min="<?= $nowForInput ?>" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
                         </div>
                         <div style="flex: 1;">
                             <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Fin</label>
-                            <input type="datetime-local" name="end_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
+                            <input type="datetime-local" name="end_datetime" min="<?= $nowForInput ?>" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
                         </div>
                     </div>
                     <div style="margin-bottom: 24px;">
@@ -187,4 +193,3 @@ class VueAgenda extends Vue {
         <?php
     }
 }
-?>

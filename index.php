@@ -19,7 +19,7 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], $allowedLangs, true)) {
     header("Location: $redirect");
     exit;
 }
-$currentLang = $_SESSION['lang'] ?? 'fr';
+$currentLang = $_SESSION['lang'] ?? 'en';
 $lang = require __DIR__ . '/lang/' . $currentLang . '.php';
 
 // Helper function to get a translation
@@ -37,11 +37,58 @@ switch ($page) {
         $vue->afficher($donnees);
         break;
 
-    case 'dashboard':
+   case 'dashboard':
         if (!isset($_SESSION['user_id'])) {
             header("Location: index.php?page=login");
             exit;
         }
+
+        $userId = (int)$_SESSION['user_id'];
+        $postModel = new Post($pdo);   // Assure-toi que la classe Post existe
+        $eventModel = new Event($pdo); // Assure-toi que la classe Event existe
+
+        // 1. ACTION : Publier un nouveau post
+      // 1. ACTION : Publier un nouveau post
+        if (isset($_GET['action']) && $_GET['action'] === 'createPost') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $content = $_POST['content'] ?? '';
+                
+                $imagePath = $postModel->handleUpload($_FILES['post_image'] ?? null, 'image');
+                $docPath   = $postModel->handleUpload($_FILES['post_doc'] ?? null, 'doc');
+                
+                // 🚨 --- DÉBUT DU MODE DEBUG --- 🚨
+                if (isset($_FILES['post_image']) && $_FILES['post_image']['size'] > 0 && $imagePath === null) {
+                    echo "<h3>❌ Erreur d'upload de l'image !</h3>";
+                    echo "Code erreur PHP : " . $_FILES['post_image']['error'] . "<br>";
+                    echo "Le dossier 'assets/uploads/images/' existe-t-il sur ton FTP avec les droits 777 ou 755 ?<br>";
+                    echo "<pre>"; var_dump($_FILES['post_image']); echo "</pre>";
+                    die("Arrêt du script pour que tu puisses lire l'erreur.");
+                }
+                // 🚨 --- FIN DU MODE DEBUG --- 🚨
+
+                // On enregistre le post en BDD
+                $postModel->create($userId, $content, $imagePath, $docPath);
+                
+                header("Location: index.php?page=dashboard");
+                exit;
+            }
+        }
+
+        // 2. PRÉPARATION DES DONNÉES POUR LA VUE
+    // index.php -> case 'dashboard'
+// Dans case 'dashboard':
+$searchQuery = $_GET['q'] ?? '';
+$authorFilter = $_GET['author'] ?? 'all';
+$sortOrder = $_GET['sort'] ?? 'desc';
+
+$donnees = [
+    'posts' => $postModel->getFilteredPosts(20, $searchQuery, $authorFilter, $sortOrder, $userId),
+    'upcoming_events' => $eventModel->getUpcomingEvents($userId, 10),
+    'search_query' => $searchQuery,
+    'author' => $authorFilter,
+    'sort' => $sortOrder
+];
+
         $vue = new VueDashboard();
         $vue->afficher($donnees);
         break;
@@ -139,6 +186,46 @@ switch ($page) {
     case 'search':
         // C'est ici que Gerald travaillera
         include 'views/search.php';
+        break;
+
+
+    case 'profile':
+        // 1. Vérification : L'utilisateur est-il connecté ?
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+
+        $userModel = new User($pdo);
+        
+        // 2. Déterminer quel profil afficher
+        // Soit un ID précis passé en URL (?page=profile&id=12), soit le mien
+        $userIdToShow = isset($_GET['id']) ? (int)$_GET['id'] : (int)$_SESSION['user_id'];
+        
+        // 3. Récupération des données
+        $profileUser = $userModel->getById($userIdToShow); // Tu dois avoir cette méthode dans ton modèle User
+        
+        if (!$profileUser) {
+            http_response_code(404);
+            die("Utilisateur introuvable");
+        }
+
+        // 4. Préparation des données pour la vue
+        $donnees = [
+            'user'        => $profileUser,
+            'user_skills' => $userModel->getUserSkills($userIdToShow), // Récupère les compétences de cet utilisateur
+            'user_badges' => [], // Optionnel : à remplir si tu as une table badges
+            'all_skills'  => $userModel->getAllSkills(),   // Nécessaire pour la liste dans la modal d'édition
+            'languages'   => $userModel->getAllLanguages(), // Nécessaire pour la modal d'édition
+            'impact'      => [
+                'helped' => 14, // Tu peux dynamiser ça plus tard avec une requête COUNT
+                'rating' => 4.9
+            ]
+        ];
+
+        // 5. Affichage
+        $vue = new VueProfil();
+        $vue->afficher($donnees);
         break;
 
     case 'agenda':
@@ -264,6 +351,160 @@ $sqlMembres = "SELECT u.*, GROUP_CONCAT(s.name_fr SEPARATOR ', ') as skills_list
         $vue = new VueCalendrier();
         $vue->afficher($donnees);
         break;
+
+        case 'mentions-legales':
+        $vue = new VueMentionsLegales();
+        // Utilise la méthode que tu utilises pour tes autres vues (souvent $vue->generer(); ou $vue->afficher();)
+         $vue->afficher($donnees);
+        break;
+
+
+        case 'confidentialite':
+        $vue = new VueConfidentialite();
+        $vue->afficher($donnees);
+        break;
+case 'cgu':
+    $vue = new VueCGU();
+    $vue->afficher($donnees);
+    break;
+
+    case 'messages':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?page=login");
+            exit;
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+        $messageModel = new Message($pdo);
+        $action = $_GET['action'] ?? 'view';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'send') {
+            $receiverId = (int)($_POST['conv_id'] ?? 0);
+            $content = trim($_POST['message'] ?? '');
+
+            if ($receiverId > 0 && $content !== '') {
+                $messageModel->sendMessage($userId, $receiverId, $content, false);
+            }
+
+            header("Location: index.php?page=messages&conv=" . $receiverId);
+            exit;
+        }
+
+        $activeContactId = (int)($_GET['conv'] ?? 0);
+        $searchQuery = trim($_GET['q'] ?? '');
+
+        $formatConversationTime = function ($datetime) {
+            if (empty($datetime)) {
+                return '';
+            }
+
+            $ts = strtotime($datetime);
+            if ($ts === false) {
+                return '';
+            }
+
+            return date('d/m H:i', $ts);
+        };
+
+        $conversationsRaw = $messageModel->getConversations($userId);
+        $contactsRaw = $messageModel->searchContacts($userId, $searchQuery, 200);
+
+        if ($activeContactId <= 0 && !empty($conversationsRaw)) {
+            $activeContactId = (int)$conversationsRaw[0]['contact_id'];
+        }
+
+        $conversations = [];
+        $conversationById = [];
+        foreach ($conversationsRaw as $conv) {
+            $contactId = (int)$conv['contact_id'];
+            $displayName = trim(($conv['first_name'] ?? '') . ' ' . ($conv['last_name'] ?? ''));
+            if ($displayName === '') {
+                $displayName = __('msg_user_prefix') . ' #' . $contactId;
+            }
+
+            $item = [
+                'id' => $contactId,
+                'name' => $displayName,
+                'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
+                'online' => false,
+                'preview' => preg_replace('/^\[post_preview:\{.*?\}\]\s*/s', '', $conv['last_content']) ?: __('msg_no_message_preview'),
+                'time' => $formatConversationTime($conv['last_created_at']),
+                'active' => $contactId === $activeContactId,
+                'unread_count' => (int)($conv['unread_count'] ?? 0),
+            ];
+
+            $conversations[] = $item;
+            $conversationById[$contactId] = true;
+        }
+
+        foreach ($contactsRaw as $contact) {
+            $contactId = (int)$contact['id'];
+            if (isset($conversationById[$contactId])) {
+                continue;
+            }
+
+            $displayName = trim(($contact['first_name'] ?? '') . ' ' . ($contact['last_name'] ?? ''));
+            if ($displayName === '') {
+                $displayName = __('msg_user_prefix') . ' #' . $contactId;
+            }
+
+            $conversations[] = [
+                'id' => $contactId,
+                'name' => $displayName,
+                'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
+                'online' => false,
+                'preview' => __('msg_start_conversation'),
+                'time' => '',
+                'active' => $contactId === $activeContactId,
+                'unread_count' => 0,
+            ];
+        }
+
+        $activeContact = null;
+        $messages = [];
+
+        if ($activeContactId > 0) {
+            $activeContactRaw = $messageModel->getContact($userId, $activeContactId);
+
+            if ($activeContactRaw) {
+                $activeContactName = trim(($activeContactRaw['first_name'] ?? '') . ' ' . ($activeContactRaw['last_name'] ?? ''));
+                if ($activeContactName === '') {
+                    $activeContactName = __('msg_user_prefix') . ' #' . $activeContactId;
+                }
+
+                $activeContact = [
+                    'id' => $activeContactId,
+                    'name' => $activeContactName,
+                    'avatar' => 'https://i.pravatar.cc/150?u=' . $activeContactId,
+                    'online' => false,
+                ];
+
+                $messageModel->markConversationAsRead($userId, $activeContactId);
+
+                $messagesRaw = $messageModel->getConversationMessages($userId, $activeContactId);
+                foreach ($messagesRaw as $msg) {
+                    $messages[] = [
+                        'type' => ((int)$msg['sender_id'] === $userId) ? 'sent' : 'received',
+                        'text' => $msg['content'],
+                        'time' => date('H:i', strtotime($msg['created_at'])),
+                        'read' => (bool)$msg['is_read'],
+                        'is_initial' => (bool)$msg['is_initial'],
+                    ];
+                }
+            }
+        }
+
+        $donnees = [
+            'conversations' => $conversations,
+            'messages' => $messages,
+            'active_contact' => $activeContact,
+            'search_query' => $searchQuery,
+        ];
+
+        $vue = new VueMessages();
+        $vue->afficher($donnees);
+        break;
+
 
     default:
         http_response_code(404);

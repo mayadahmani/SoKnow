@@ -1,6 +1,6 @@
 <?php
 return [
-    'nav_login' => 'Kyçu',
+    'nav_login' => 'Hyr',
     'nav_register' => 'Regjistrohu',
     'nav_profile' => 'Profili im',
     'nav_logout' => 'Çkyçu',
@@ -25,11 +25,97 @@ return [
     'event_desc' => 'Zbuloni punëtoritë dhe takimet tona të ardhshme në internet ose pranë jush.',
     'event_btn' => 'Shiko më shumë →',
 
+    'nav_profile' => 'Profili Im',
+    'nav_logout' => 'Dil',
+    'nav_dashboard' => 'Paneli',
+    'nav_map' => 'Drejtoria & Harta',
+    'nav_calendar' => 'Kalendari Im',
+    'nav_messages' => 'Mesazhet',
+    'nav_close' => 'Mbyll',
+
+    // Calendar
+    'cal_title' => 'Kalendari Im',
+    'cal_subtitle' => 'Menaxhoni takimet dhe sesionet tuaja të ndihmës',
+    'cal_new_event' => 'Ngjarje e re',
+    'cal_today' => 'Sot',
+    'cal_prev_month' => 'Muaji i mëparshëm',
+    'cal_next_month' => 'Muaji i ardhshëm',
+    'cal_upcoming' => 'Takimet e ardhshme',
+    'cal_no_upcoming' => 'Nuk ka takime të ardhshme.',
+    'cal_with' => 'Me',
+    'cal_tomorrow' => 'Nesër',
+    'cal_months' => 'Janar,Shkurt,Mars,Prill,Maj,Qershor,Korrik,Gusht,Shtator,Tetor,Nëntor,Dhjetor',
+    'cal_days' => 'HËN,MAR,MËR,ENJ,PRE,SHT,DIE',
+
+    // Modal new event
+    'modal_new_event' => 'Ngjarje e re',
+    'modal_title' => 'Titulli',
+    'modal_title_placeholder' => 'Titulli i ngjarjes',
+    'modal_desc' => 'Përshkrimi',
+    'modal_desc_placeholder' => 'Përshkrim opsional',
+    'modal_start' => 'Fillimi',
+    'modal_end' => 'Fundi',
+    'modal_visibility' => 'Dukshmëria',
+    'modal_private' => 'Private',
+    'modal_shared' => 'E ndarë',
+    'modal_public' => 'Publike',
+    'modal_cancel' => 'Anulo',
+    'modal_create' => 'Krijo',
+    'modal_close' => 'Mbyll',
+    'modal_end_before_start' => 'Data e përfundimit duhet të jetë pas datës së fillimit.',
+
+    // Dashboard
+    'dash_create_request' => 'Krijo një kërkesë',
+    'dash_describe_problem' => 'Përshkruani problemin tuaj teknik këtu...',
+    'dash_publish' => 'Publiko',
+    'dash_search_placeholder' => 'Kërko një temë, dikë për të ndihmuar...',
+    'dash_filters' => 'Filtrat',
+    'dash_offer_help' => 'Ofro ndihmë',
+    'dash_upcoming_rdv' => 'Takimet e ardhshme',
+    'dash_nearby_members' => 'Anëtarët pranë',
+    'dash_explore_map' => 'Eksploro hartën',
+    'dash_upcoming_events' => 'Ngjarjet e ardhshme',
+    'dash_published_ago' => 'Publikuar',
+    'dash_today' => 'Sot',
+
+    // Messages
+    'msg_page_title' => 'Mesazhet - SoKnow',
+    'msg_search_placeholder' => 'Kërko...',
+    'msg_no_conversations' => 'Nuk ka ende biseda.',
+    'msg_status_online' => 'Online',
+    'msg_choose_conversation' => 'Zgjidhni një bisedë.',
+    'msg_audio_call' => 'Thirrje audio',
+    'msg_video_call' => 'Thirrje video',
+    'msg_info' => 'Informacione',
+    'msg_select_conversation' => 'Zgjidhni një bisedë për të shfaqur mesazhet.',
+    'msg_no_messages_yet' => 'Nuk ka ende mesazhe. Dërgoni mesazhin e parë.',
+    'msg_attachment' => 'Bashkëngjitje',
+    'msg_write_message' => 'Shkruani mesazhin tuaj...',
+    'msg_send' => 'Dërgo',
+    'msg_user_prefix' => 'Përdoruesi',
+    'msg_no_message_preview' => 'Nuk ka mesazh',
+    'msg_start_conversation' => 'Nis një bisedë',
+    'msg_no_contacts_found' => 'Nuk u gjet asnjë llogari për këtë kërkim.',
+
+
     'footer_desc' => 'Rrjeti i parë social i ndihmës teknologjike ndërgjeneracionale.',
     'footer_links' => 'Lidhje të shpejta',
     'footer_contact' => 'Na kontaktoni',
     'footer_terms' => 'Kushtet e përdorimit',
     'footer_privacy' => 'Privatësia',
-    'footer_rights' => 'Të gjitha të drejtat e rezervuara.'
+    'footer_rights' => 'Të gjitha të drejtat e rezervuara.',
+    'footer_events' => 'Ngjarjet e ardhshme',
+
+
+
+    'legal_title' => 'Njoftimi Ligjor',
+    'legal_editor_title' => '1. Botuesi i faqes',
+    'legal_editor_text' => 'Faqja SoKnow është një projekt studentor fiktiv (version Beta) i zhvilluar në kuadër të trajnimit tonë universitar.<br><br><strong>Krijuesit dhe pronarët:</strong> Ekipi studentor: Kevin, Maya, Aymaan, Yasmine, Louis, Abdoulaye, Viacheslav, Jonida, Gerald dhe Koalima.<br><strong>Drejtori i botimit:</strong> Kevin.<br><strong>Kontakti:</strong> contact-equipe@soknow-projet.fr.',
+    'legal_host_title' => '2. Hosting i faqes',
+    'legal_host_text' => 'Faqja SoKnow dhe baza e të dhënave MariaDB priten në serverat pedagogjikë të institucionit tonë:<br><br><strong>Host:</strong> IUT de Bobigny (Université Sorbonne Paris Nord)<br><strong>Adresa:</strong> 1 rue de Chablis, 93000 Bobigny, Francë.',
+    'legal_prop_title' => '3. Pronësia intelektuale',
+    'legal_prop_text' => 'Të gjitha elementet në faqen SoKnow janë pronë ekskluzive e ekipit. Çdo riprodhim është i ndaluar pa pëlqim.',
+    'legal_warn_title' => '4. Paralajmërim',
+    'legal_warn_text' => 'Si një projekt studentor në fazën Beta, karakteristikat mund të jenë të kufizuara ose të ndërprera pa paralajmërim për arsye të mirëmbajtjes teknike.',
 ];
 ?>

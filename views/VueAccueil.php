@@ -11,45 +11,45 @@ class VueAccueil extends Vue {
                 <div class="container hero-container">
                     <div class="hero-text">
                         <div class="hero-badge">
-                            <span>✓</span> N°1 de l'entraide intergénérationnelle
+                            <span>✓</span> <?= __('hero_badge') ?>
                         </div>
-                        <h1>L'entraide technologique professionnelle et humaine</h1>
-                        <p>Rejoignez la première communauté intergénérationnelle qui connecte les natifs du numérique aux seniors pour un accompagnement technologique bienveillant et structuré.</p>
+                        <h1><?= __('hero_title') ?></h1>
+                        <p><?= __('hero_desc') ?></p>
                     </div>
                     <div class="hero-video">
                         <div class="play-btn">▶</div>
-                        <p>Vidéo de présentation (À venir)</p>
+                        <p><?= __('hero_video') ?></p>
                     </div>
                 </div>
             </section>
 
             <section class="features-section">
                 <div class="container text-center">
-                    <h2>L'alliance parfaite entre réseau pro et<br>forum d'entraide</h2>
-                    <p class="features-subtitle">SoKnow réinvente le support technique en valorisant les compétences des jeunes<br>tout en offrant un accompagnement de qualité aux seniors.</p>
+                    <h2><?= __('feat_title') ?></h2>
+                    <p class="features-subtitle"><?= __('feat_desc') ?></p>
 
                     <div class="features-grid">
                         <div class="feature-card">
                             <img src="assets/img/question.png" alt="Questions">
-                            <h3>Questions & Réponses expertes</h3>
-                            <p>Un système de forum structuré pour poser vos questions et obtenir des réponses claires, validées par la communauté.</p>
+                            <h3><?= __('feat_1_title') ?></h3>
+                            <p><?= __('feat_1_desc') ?></p>
                         </div>
                         <div class="feature-card">
                             <img src="assets/img/pro.png" alt="Profil">
-                            <h3>Profil Professionnel</h3>
-                            <p>Valorisez votre aide. Chaque intervention réussie enrichit votre profil avec des badges de compétences reconnus.</p>
+                            <h3><?= __('feat_2_title') ?></h3>
+                            <p><?= __('feat_2_desc') ?></p>
                         </div>
                         <div class="feature-card">
                             <img src="assets/img/local.png" alt="Mentorat">
-                            <h3>Mentorat Local</h3>
-                            <p>Trouvez de l'aide près de chez vous ou organisez des sessions vidéo sécurisées avec nos mentors certifiés.</p>
+                            <h3><?= __('feat_3_title') ?></h3>
+                            <p><?= __('feat_3_desc') ?></p>
                         </div>
                     </div>
 
                     <?php if(!isset($_SESSION['user_id'])): ?>
-                        <a href="index.php?page=register" class="btn-primary btn-large">Rejoindre la communauté maintenant →</a>
+                        <a href="index.php?page=register" class="btn-primary btn-large"><?= __('hero_btn_join') ?></a>
                     <?php else: ?>
-                        <a href="index.php?page=dashboard" class="btn-primary btn-large">Accéder à mon tableau de bord →</a>
+                        <a href="index.php?page=dashboard" class="btn-primary btn-large"><?= __('nav_dashboard') ?> →</a>
                     <?php endif; ?>
                 </div>
             </section>
@@ -58,10 +58,10 @@ class VueAccueil extends Vue {
                 <div class="container">
                     <div class="events-header">
                         <div class="events-title-area">
-                            <h2>Événements à venir</h2>
-                            <p>Découvrez nos prochains ateliers et rencontres en ligne ou près de chez vous.</p>
+                            <h2><?= __('event_title') ?></h2>
+                            <p><?= __('event_desc') ?></p>
                         </div>
-                        <a href="index.php?page=agenda" class="btn-outline">Voir plus →</a>
+                        <a href="index.php?page=agenda" class="btn-outline"><?= __('event_btn') ?></a>
                     </div>
 
                     <div class="events-grid">

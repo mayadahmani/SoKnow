@@ -2,147 +2,271 @@
 // views/VueProfil.php
 
 class VueProfil extends Vue {
-    
+
     protected $titre = "Mon Profil - SoKnow";
 
     protected function afficherContenu($donnees) {
-        // On récupère les infos de l'utilisateur (soit de la session, soit de la DB via le contrôleur)
-        $user = $donnees['user'] ?? $_SESSION;
-        $nom_complet = ($user['first_name'] ?? 'Alexandre') . ' ' . ($user['last_name'] ?? '');
+        // Extraction des données ou valeurs par défaut
+        $user = $donnees['user'] ?? [];
+        $user_skills = $donnees['user_skills'] ?? [];
+        $user_badges = $donnees['user_badges'] ?? [];
+        $all_skills = $donnees['all_skills'] ?? [];
+        $languages = $donnees['languages'] ?? [];
+        $impact = $donnees['impact'] ?? ['helped' => 0, 'rating' => 0];
+        
+        $avatarUrl = !empty($user['avatar_url']) ? $user['avatar_url'] : 'assets/img/default-avatar.png';
+        $bannerUrl = !empty($user['banner_url']) ? $user['banner_url'] : '';
+        $csrfToken = $_SESSION['csrf_token'] ?? '';
         ?>
 
-        <style>
-            /* Variables exactes de la maquette */
-            :root {
-                --bg-color: #F8F8FF;
-                --card-bg: #FFFFFF;
-                --primary: #4F2EE8;
-                --primary-light: #F0EDFF;
-                --text-dark: #131313;
-                --text-muted: #888888;
-                --border-color: #EAEAEA;
-                --card-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
-            }
+        <link rel="stylesheet" href="assets/css/viewProfile.css" />
 
-            .profile-container { background-color: var(--bg-color); padding: 40px 0; min-height: 100vh; }
-            .profile-grid { display: flex; gap: 30px; max-width: 1000px; margin: 0 auto; padding: 0 20px; }
-            .col-main { flex: 2; display: flex; flex-direction: column; gap: 24px; }
-            .col-side { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+        <div class="page-wrapper">
 
-            .card { background: var(--card-bg); border-radius: 16px; padding: 24px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); }
-            .card-title { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 20px 0; display: flex; align-items: center; gap: 8px; }
+            <div class="profile-card">
+                <div class="profile-banner" id="bannerEl" style="<?= $bannerUrl ? "background-image:url('$bannerUrl'); background-size:cover;" : "" ?>">
+                    <button type="button" class="btn-modifier" data-modal="modal-modifier">
+                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.333 2a1.885 1.885 0 0 1 2.667 2.667L5.417 13.25 2 14l.75-3.417L11.333 2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Modifier
+                    </button>
+                </div>
 
-            /* En-tête */
-            .profile-header { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); margin-bottom: 24px; max-width: 1000px; margin-left: auto; margin-right: auto; }
-            .cover-photo { height: 160px; background: linear-gradient(135deg, #4F2EE8 0%, #8E78FF 100%); position: relative; }
-            .profile-info-bar { padding: 20px 30px 30px 30px; display: flex; justify-content: space-between; align-items: flex-end; margin-top: -60px; }
-            .profile-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; object-fit: cover; background: white; z-index: 2; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-            
-            .hashtag { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-right: 8px; margin-bottom: 8px; }
-            .stat-box { text-align: center; padding: 15px; background: #F9F9FB; border-radius: 12px; border: 1px solid var(--border-color); }
-            .stat-number { font-size: 24px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
-            .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-            
-            .btn-edit { background: white; border: 1px solid var(--border-color); color: var(--text-dark); padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
-            .btn-edit:hover { border-color: var(--primary); color: var(--primary); }
-        </style>
-
-        <div class="profile-container">
-            
-            <div style="padding: 0 20px;">
-                <div class="profile-header">
-                    <div class="cover-photo">
-                        <button style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; backdrop-filter: blur(5px);">📷 Modifier</button>
-                    </div>
-                    <div class="profile-info-bar">
-                        <div style="display: flex; gap: 20px; align-items: flex-end;">
-                            <img src="<?php echo $user['avatar'] ?? 'https://i.pravatar.cc/150?img=11'; ?>" alt="Avatar" class="profile-avatar">
-                            <div style="padding-bottom: 5px;">
-                                <h1 style="margin: 0; font-size: 28px; font-weight: 900; color: var(--text-dark);">
-                                    <?php echo htmlspecialchars($nom_complet); ?>
-                                    <span style="font-size: 20px;">👋</span>
-                                </h1>
-                                <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 15px;">
-                                    <?php echo $user['user_type'] == 'senior' ? '👴 Sénior en quête de savoir' : '🎓 Étudiant en Informatique'; ?> • 📍 <?php echo htmlspecialchars($user['location_name'] ?? 'Bobigny, France'); ?>
-                                </p>
+                <div class="profile-info-row">
+                    <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+                        <div class="avatar-wrapper">
+                            <img id="mainAvatarImg" src="<?= htmlspecialchars($avatarUrl) ?>" alt="Avatar de <?= htmlspecialchars($user['first_name'] ?? 'moi') ?>" />
+                        </div>
+                        <div class="profile-meta">
+                            <div class="profile-name"><?= htmlspecialchars($user['first_name'] ?? '') ?> <?= htmlspecialchars($user['last_name'] ?? '') ?> 👋</div>
+                            <div class="profile-tagline">
+                                <span>
+                                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2 13.5V12a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v1.5M8 9A3.5 3.5 0 1 0 8 2a3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <?= ($user['user_type'] ?? '') === 'student' ? 'Étudiant(e) / Bénévole' : 'Senior' ?>
+                                </span>
+                                <span>
+                                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8 1.5A4.5 4.5 0 0 1 12.5 6c0 3-4.5 8.5-4.5 8.5S3.5 9 3.5 6A4.5 4.5 0 0 1 8 1.5Z" stroke="#f97316" stroke-width="1.3"/>
+                                        <circle cx="8" cy="6" r="1.5" stroke="#f97316" stroke-width="1.3"/>
+                                    </svg>
+                                    <?= htmlspecialchars($user['location_name'] ?? 'Non localisé') ?>
+                                </span>
                             </div>
                         </div>
-                        <a href="index.php?page=edit_profile" class="btn-edit">✏️ Éditer le profil</a>
                     </div>
+
+                    <button type="button" class="btn-edit-profile" data-modal="modal-edit">
+                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.333 2a1.885 1.885 0 0 1 2.667 2.667L5.417 13.25 2 14l.75-3.417L11.333 2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Éditer le profil
+                    </button>
                 </div>
             </div>
 
-            <div class="profile-grid">
-                
-                <div class="col-main">
+            <div class="two-col">
+                <div style="display:flex;flex-direction:column;gap:20px;">
                     <div class="card">
-                        <h3 class="card-title">À propos de moi</h3>
-                        <p style="color: #555; line-height: 1.6; font-size: 15px; margin: 0;">
-                            <?php echo htmlspecialchars($user['bio'] ?? "Passionné par les nouvelles technologies, j'aime rendre l'informatique accessible à tous. J'ai rejoint SoKnow pour partager mes connaissances et aider les seniors à ne plus avoir peur du numérique !"); ?>
+                        <div class="card-title">À propos de moi</div>
+                        <p class="about-text" id="profileBio">
+                            <?= nl2br(htmlspecialchars($user['bio'] ?? 'Aucune présentation rédigée pour le moment.')) ?>
                         </p>
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">Mes Compétences</h3>
-                        <div>
-                            <?php if (!empty($donnees['skills'])): ?>
-                                <?php foreach ($donnees['skills'] as $skill): ?>
-                                    <span class="hashtag">#<?php echo strtoupper(htmlspecialchars($skill)); ?></span>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="hashtag">#ANDROID</span>
-                                <span class="hashtag">#TABLETTE</span>
-                                <span class="hashtag">#WIFISETUP</span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">Dernières interventions</h3>
-                        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <div style="font-weight: 700; font-size: 14px;">Aidé Eleanor & John (Imprimante Wi-Fi)</div>
-                                <div style="color: #F59E0B; font-size: 14px;">⭐⭐⭐⭐⭐</div>
-                            </div>
-                            <p style="color: #666; font-size: 14px; margin: 0; font-style: italic;">"Super patient et très clair dans ses explications."</p>
+                        <div class="card-title">Mes Compétences</div>
+                        <div class="skills-tags" id="profileSkillsDisplay">
+                            <?php foreach ($user_skills as $skill): ?>
+                                <span class="skill-tag">#<?= htmlspecialchars(strtoupper($skill['name_fr'])) ?></span>
+                            <?php endforeach; ?>
+                            <?php if(empty($user_skills)): ?> <span style="color:#94a3b8; font-size:13px;">Aucune compétence sélectionnée.</span> <?php endif; ?>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-side">
+                <div style="display:flex;flex-direction:column;gap:20px;">
                     <div class="card">
-                        <h3 class="card-title">Impact</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <div class="stat-box">
-                                <div class="stat-number">14</div>
-                                <div class="stat-label">Aidés</div>
+                        <div class="card-title">Impact</div>
+                        <div class="impact-grid">
+                            <div class="impact-stat">
+                                <span class="impact-number"><?= (int)$impact['helped'] ?></span>
+                                <span class="impact-label">Personnes Aidées</span>
                             </div>
-                            <div class="stat-box">
-                                <div class="stat-number">4.9</div>
-                                <div class="stat-label">Note</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="card-title">Mes Badges</h3>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <div style="display: flex; align-items: center; gap: 12px; background: #FFF9E6; padding: 12px; border-radius: 12px; border: 1px solid #FFE58F;">
-                                <div style="font-size: 24px;">🏆</div>
-                                <div style="font-weight: 800; font-size: 13px; color: #D97706;">Mentor de l'année</div>
+                            <div class="impact-stat">
+                                <span class="impact-number"><?= number_format($impact['rating'], 1) ?></span>
+                                <span class="impact-label">Note Moyenne</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">Langues</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <span style="border: 1px solid var(--border-color); padding: 5px 12px; border-radius: 8px; font-size: 13px;">🇫🇷 Français</span>
-                        </div>
+                        <div class="card-title">Mes Badges</div>
+                        <?php foreach ($user_badges as $badge): ?>
+                            <div class="badge-item gold">
+                                <div class="badge-icon"><?= $badge['icon'] ?? '🏅' ?></div>
+                                <div>
+                                    <span class="badge-text-name"><?= htmlspecialchars($badge['name']) ?></span>
+                                    <span class="badge-text-desc"><?= htmlspecialchars($badge['description']) ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if(empty($user_badges)): ?> <p style="color:#94a3b8; font-size:13px;">Gagnez vos premiers badges en aidant la communauté !</p> <?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div id="modal-modifier" class="modal-overlay" role="dialog" aria-modal="true">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">Modifier les photos</span>
+                    <button type="button" class="modal-close" data-close>&#x2715;</button>
+                </div>
+                <form action="index.php?page=update_media" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+                    <div class="modal-body">
+                        <div class="avatar-preview-row">
+                            <img class="avatar-preview-img" id="avatarPreviewThumb" src="<?= htmlspecialchars($avatarUrl) ?>" />
+                            <div class="avatar-preview-info">
+                                <strong><?= htmlspecialchars($user['first_name'] ?? '') ?></strong>
+                                <p>Votre photo est visible par tous les membres.</p>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="form-label">Photo de profil</label>
+                            <div class="upload-zone" id="avatarZone">
+                                <input type="file" name="avatar" accept="image/*" data-zone="avatarZone" data-mirror="mainAvatarImg" data-mirror-type="img" />
+                                <div class="upload-zone-text">Cliquez pour changer l'avatar</div>
+                            </div>
+                        </div>
+                        <div class="field" style="margin-top:20px;">
+                            <label class="form-label">Bannière</label>
+                            <div class="upload-zone" id="bannerZone">
+                                <input type="file" name="banner" accept="image/*" data-zone="bannerZone" data-mirror="bannerEl" data-mirror-type="bg" />
+                                <div class="upload-zone-text">Cliquez pour changer la bannière</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" data-close>Annuler</button>
+                        <button type="submit" class="btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-edit" class="modal-overlay" role="dialog" aria-modal="true">
+            <div class="modal modal-wide">
+                <div class="modal-header">
+                    <span class="modal-title">Éditer le profil</span>
+                    <button type="button" class="modal-close" data-close>&#x2715;</button>
+                </div>
+                <form action="index.php?page=update_profile" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+                    <div class="modal-body">
+                        <div class="form-section-title">Identité</div>
+                        <div class="form-grid">
+                            <div class="field">
+                                <label class="form-label">Prénom</label>
+                                <input class="form-input" type="text" name="first_name" value="<?= htmlspecialchars($user['first_name'] ?? '') ?>" required>
+                            </div>
+                            <div class="field">
+                                <label class="form-label">Nom</label>
+                                <input class="form-input" type="text" name="last_name" value="<?= htmlspecialchars($user['last_name'] ?? '') ?>" required>
+                            </div>
+                            <div class="field span-2">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-textarea" name="bio" maxlength="1000"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">Localisation & Langues</div>
+                        <div class="form-grid">
+                            <div class="field span-2">
+                                <label class="form-label">Ville / Pays</label>
+                                <input class="form-input" type="text" name="location_name" value="<?= htmlspecialchars($user['location_name'] ?? '') ?>" required>
+                            </div>
+                            <div class="field">
+                                <label class="form-label">Langue d'interface</label>
+                                <select class="form-select" name="preferred_lang">
+                                    <?php foreach ($languages as $l): ?>
+                                        <option value="<?= $l['id'] ?>" <?= ($user['preferred_lang'] ?? 0) == $l['id'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($l['label']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label class="form-label">Langues parlées</label>
+                                <input class="form-input" type="text" name="spoken_languages" value="<?= htmlspecialchars($user['spoken_languages'] ?? '') ?>">
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">Compétences</div>
+                        <div class="skills-check-grid" id="skillsCheckGrid">
+                            <?php 
+                            $user_skill_ids = array_column($user_skills, 'id');
+                            foreach ($all_skills as $skill): 
+                                $checked = in_array($skill['id'], $user_skill_ids) ? 'checked' : '';
+                            ?>
+                                <div class="skill-check-item">
+                                    <input type="checkbox" id="sk_<?= $skill['id'] ?>" name="skills[]" value="<?= $skill['id'] ?>" <?= $checked ?>>
+                                    <label class="skill-check-label" for="sk_<?= $skill['id'] ?>">#<?= htmlspecialchars(strtoupper($skill['name_fr'])) ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" data-close>Annuler</button>
+                        <button type="submit" class="btn-primary">Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+        <script>
+            // Logique JS simplifiée pour les modals et previews
+            (function() {
+                const openModal = (id) => {
+                    document.getElementById(id).classList.add('is-open');
+                    document.body.style.overflow = 'hidden';
+                };
+                const closeModal = (overlay) => {
+                    overlay.classList.remove('is-open');
+                    document.body.style.overflow = '';
+                };
+
+                document.querySelectorAll('[data-modal]').forEach(btn => {
+                    btn.onclick = () => openModal(btn.dataset.modal);
+                });
+
+                document.querySelectorAll('[data-close], .modal-overlay').forEach(el => {
+                    el.onclick = (e) => { if(e.target === el || el.hasAttribute('data-close')) closeModal(el.closest('.modal-overlay')); };
+                });
+
+                // Preview images
+                document.querySelectorAll('input[type="file"]').forEach(input => {
+                    input.onchange = () => {
+                        const file = input.files[0];
+                        if(file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const mirror = document.getElementById(input.dataset.mirror);
+                                if(input.dataset.mirrorType === 'img') mirror.src = e.target.result;
+                                else mirror.style.backgroundImage = `url(${e.target.result})`;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                });
+            })();
+        </script>
+
         <?php
     }
 }
