@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil – SoKnow</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/viewProfile.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PROFILE VIEW
+══════════════════════════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+  <!-- ── Profile Card ──────────────────────────────────────────── -->
+  <div class="profile-card">
+
+    <div class="profile-banner" id="bannerEl">
+      <!-- "Modifier" opens modal-modifier (avatar + banner photos) -->
+      <button type="button" class="btn-modifier" data-modal="modal-modifier">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.333 2a1.885 1.885 0 0 1 2.667 2.667L5.417 13.25 2 14l.75-3.417L11.333 2Z"
+                stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Modifier
+      </button>
+    </div>
+
+    <div class="profile-info-row">
+      <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+        <div class="avatar-wrapper">
+          <!-- PHP: src="<?= htmlspecialchars($user['avatar_url'] ?? 'assets/img/default-avatar.png') ?>"
+                    alt="<?= htmlspecialchars($user['first_name']) ?>" -->
+          <img id="mainAvatarImg" src="https://i.pravatar.cc/150?img=12" alt="Avatar de maya" />
+        </div>
+        <div class="profile-meta">
+          <!-- PHP: <?= htmlspecialchars($user['first_name']) ?> -->
+          <div class="profile-name">maya 👋</div>
+          <div class="profile-tagline">
+            <!-- PHP: $user['user_type'] === 'student' ? 'Étudiant(e)' : 'Senior' -->
+            <span>
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 13.5V12a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v1.5M8 9A3.5 3.5 0 1 0 8 2a3.5 3.5 0 0 0 0 7Z"
+                      stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Étudiant en Informatique
+            </span>
+            <!-- PHP: htmlspecialchars($user['location_name']) -->
+            <span>
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 1.5A4.5 4.5 0 0 1 12.5 6c0 3-4.5 8.5-4.5 8.5S3.5 9 3.5 6A4.5 4.5 0 0 1 8 1.5Z"
+                      stroke="#f97316" stroke-width="1.3"/>
+                <circle cx="8" cy="6" r="1.5" stroke="#f97316" stroke-width="1.3"/>
+              </svg>
+              Bobigny, France
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- "Éditer le profil" opens modal-edit (full profile form) -->
+      <button type="button" class="btn-edit-profile" data-modal="modal-edit">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.333 2a1.885 1.885 0 0 1 2.667 2.667L5.417 13.25 2 14l.75-3.417L11.333 2Z"
+                stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Éditer le profil
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Two-column section ────────────────────────────────────── -->
+  <div class="two-col">
+
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+      <div class="card">
+        <div class="card-title">À propos de moi</div>
+        <!-- PHP: <?= nl2br(htmlspecialchars($user['bio'])) ?> -->
+        <p class="about-text" id="profileBio">
+          Passionné par les nouvelles technologies, j'aime rendre l'informatique accessible à tous.
+          Je suis particulièrement à l'aise avec l'écosystème Android et la configuration de matériel.
+          J'ai rejoint SoKnow pour partager mes connaissances et aider les seniors à ne plus avoir peur du numérique !
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Mes Compétences</div>
+        <!-- PHP: foreach ($user_skills as $s): echo '<span class="skill-tag">#'.htmlspecialchars($s['name_fr']).'</span>'; endforeach; -->
+        <div class="skills-tags" id="profileSkillsDisplay">
+          <span class="skill-tag">#ANDROID</span>
+          <span class="skill-tag">#TABLETTE</span>
+          <span class="skill-tag">#WIFISETUP</span>
+          <span class="skill-tag">#BUREAUTIQUE</span>
+          <span class="skill-tag">#SÉCURITÉ</span>
+        </div>
+        <div class="skills-hint">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Les personnes peuvent vous trouver en cherchant ces mots-clés.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+      <div class="card">
+        <div class="card-title">Impact</div>
+        <div class="impact-grid">
+          <!-- PHP: count of people helped (sessions/events) -->
+          <div class="impact-stat">
+            <span class="impact-number">14</span>
+            <span class="impact-label">Personnes Aidées</span>
+          </div>
+          <!-- PHP: average rating from reviews -->
+          <div class="impact-stat">
+            <span class="impact-number">4.9</span>
+            <span class="impact-label">Note Moyenne</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Mes Badges</div>
+        <!-- PHP: foreach ($user_badges as $badge): -->
+        <div class="badge-item gold">
+          <div class="badge-icon">🏆</div>
+          <div>
+            <!-- PHP: htmlspecialchars($badge['name']) -->
+            <span class="badge-text-name">Mentor de l'année</span>
+            <!-- PHP: htmlspecialchars($badge['description']) -->
+            <span class="badge-text-desc">A aidé plus de 10 personnes</span>
+          </div>
+        </div>
+        <div class="badge-item owl">
+          <div class="badge-icon">🦉</div>
+          <div>
+            <span class="badge-text-name">Le Pédagogue</span>
+            <span class="badge-text-desc">5 avis mentionnant "Patient"</span>
+          </div>
+        </div>
+        <!-- PHP: endforeach; -->
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     MODAL 1 — "Modifier" : Avatar & Banner
+     ────────────────────────────────────────────────────────────────
+     PHP team → update_media.php
+       1. Verify: $_SESSION['csrf_token'] === $_POST['csrf_token']  (die on mismatch)
+       2. For each file (avatar / banner):
+          - Validate MIME: in_array(mime_content_type($tmp), ['image/jpeg','image/png','image/webp'])
+          - Validate size: $_FILES['avatar']['size'] <= 5 * 1024 * 1024
+          - Generate unique filename: $userId . '_' . time() . '.' . $ext
+          - move_uploaded_file($tmp, 'public/uploads/avatars/' . $filename)
+          - UPDATE users SET avatar_url = ?, banner_url = ? WHERE id = ?
+       3. Return: header('Location: viewProfile.php')
+          OR JSON { "success": true } for fetch()-based submit.
+════════════════════════════════════════════════════════════════════ -->
+<div id="modal-modifier" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="title-modifier">
+  <div class="modal">
+
+    <div class="modal-header">
+      <span class="modal-title" id="title-modifier">Modifier les photos</span>
+      <button type="button" class="modal-close" data-close aria-label="Fermer">&#x2715;</button>
+    </div>
+
+    <!--
+      PHP team: wrap modal-body in
+        <form action="update_media.php" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+          <input type="hidden" name="user_id"    value="<?= (int)$user['id'] ?>">
+    -->
+    <div class="modal-body">
+
+      <!-- Current avatar preview -->
+      <div class="avatar-preview-row">
+        <!-- PHP: src="<?= htmlspecialchars($user['avatar_url'] ?? 'assets/img/default-avatar.png') ?>" -->
+        <img class="avatar-preview-img" id="avatarPreviewThumb"
+             src="https://i.pravatar.cc/150?img=12" alt="Aperçu avatar actuel" />
+        <div class="avatar-preview-info">
+          <!-- PHP: <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?> -->
+          <strong>maya</strong>
+          <p>Votre photo de profil est visible par tous les membres de SoKnow.</p>
+        </div>
+      </div>
+
+      <!-- Avatar upload
+           PHP: name="avatar" → move_uploaded_file → UPDATE users SET avatar_url WHERE id -->
+      <div class="field">
+        <label class="form-label" for="avatarInput">Photo de profil</label>
+        <div class="upload-zone" id="avatarZone">
+          <input type="file" id="avatarInput" name="avatar"
+                 accept="image/png,image/jpeg,image/webp"
+                 data-zone="avatarZone"
+                 data-zone-preview="avatarZonePreview"
+                 data-zone-text="avatarZoneText"
+                 data-mirror="mainAvatarImg"
+                 data-mirror-type="img"
+                 data-max-mb="5" />
+          <img class="upload-zone-preview" id="avatarZonePreview" src="" alt="" />
+          <div class="upload-zone-icon">🖼️</div>
+          <div class="upload-zone-text" id="avatarZoneText">Cliquez ou déposez votre photo ici</div>
+          <div class="upload-zone-sub">PNG · JPG · WEBP — 5 Mo max</div>
+        </div>
+        <span class="field-hint">Dimensions recommandées : 400 × 400 px</span>
+      </div>
+
+      <!-- Banner upload
+           PHP: name="banner" → move_uploaded_file → UPDATE users SET banner_url WHERE id
+           (add banner_url VARCHAR(255) NULL to users table if absent) -->
+      <div class="field" style="margin-top:22px;">
+        <label class="form-label" for="bannerInput">Image de bannière</label>
+        <div class="upload-zone" id="bannerZone">
+          <input type="file" id="bannerInput" name="banner"
+                 accept="image/png,image/jpeg,image/webp"
+                 data-zone="bannerZone"
+                 data-zone-preview="bannerZonePreview"
+                 data-zone-text="bannerZoneText"
+                 data-mirror="bannerEl"
+                 data-mirror-type="bg"
+                 data-max-mb="8" />
+          <img class="upload-zone-preview" id="bannerZonePreview" src="" alt="" />
+          <div class="upload-zone-icon">🌅</div>
+          <div class="upload-zone-text" id="bannerZoneText">Cliquez ou déposez votre bannière ici</div>
+          <div class="upload-zone-sub">PNG · JPG · WEBP — 8 Mo max</div>
+        </div>
+        <span class="field-hint">Dimensions recommandées : 1200 × 300 px</span>
+      </div>
+
+    </div><!-- /modal-body -->
+    <!-- PHP: </form> -->
+
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" data-close>Annuler</button>
+      <!--
+        PHP: change to type="submit" once wrapped in <form action="update_media.php">
+      -->
+      <button type="button" class="btn-primary" id="btnSaveMedia">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 8.5l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Enregistrer
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     MODAL 2 — "Éditer le profil" : Full profile form
+     ────────────────────────────────────────────────────────────────
+     PHP team → update_profile.php
+       1. Verify: $_SESSION['csrf_token'] === $_POST['csrf_token']  (die on mismatch)
+       2. Sanitize & validate each field:
+          - first_name / last_name: trim + htmlspecialchars, maxlength 100, not empty
+          - user_type: in_array($val, ['student','senior'])
+          - bio: trim, maxlength 1000
+          - location_name: trim, maxlength 255, not empty
+          - lat: floatval, range -90…90
+          - lng: floatval, range -180…180
+          - preferred_lang: intval, must exist in languages.id
+          - spoken_languages: trim, maxlength 255
+       3. UPDATE users SET ... WHERE id = ?  (PDO prepared statement)
+       4. Skills:
+          DELETE FROM user_skills WHERE user_id = ?
+          foreach ($_POST['skills'] as $skillId):
+            INSERT INTO user_skills (user_id, skill_id, skill_type) VALUES (?,?,?)
+       5. Return: header('Location: viewProfile.php')
+          OR JSON { "success": true } for fetch()-based submit.
+════════════════════════════════════════════════════════════════════ -->
+<div id="modal-edit" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="title-edit">
+  <div class="modal modal-wide">
+
+    <div class="modal-header">
+      <span class="modal-title" id="title-edit">Éditer le profil</span>
+      <button type="button" class="modal-close" data-close aria-label="Fermer">&#x2715;</button>
+    </div>
+
+    <!--
+      PHP team: wrap modal-body in
+        <form action="update_profile.php" method="POST" id="editProfileForm">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+          <input type="hidden" name="user_id"    value="<?= (int)$user['id'] ?>">
+    -->
+    <div class="modal-body">
+
+      <!-- ── Identité ──────────────────────────────────────────── -->
+      <div class="form-section-title">Identité</div>
+      <div class="form-grid">
+
+        <!-- users.first_name  VARCHAR(100) NOT NULL -->
+        <div class="field">
+          <label class="form-label" for="first_name">Prénom <span class="req">*</span></label>
+          <!-- PHP: value="<?= htmlspecialchars($user['first_name']) ?>" -->
+          <input class="form-input" type="text" id="first_name" name="first_name"
+                 placeholder="Votre prénom" value="maya"
+                 maxlength="100" required autocomplete="given-name" />
+        </div>
+
+        <!-- users.last_name  VARCHAR(100) NOT NULL -->
+        <div class="field">
+          <label class="form-label" for="last_name">Nom <span class="req">*</span></label>
+          <!-- PHP: value="<?= htmlspecialchars($user['last_name']) ?>" -->
+          <input class="form-input" type="text" id="last_name" name="last_name"
+                 placeholder="Votre nom" value=""
+                 maxlength="100" required autocomplete="family-name" />
+        </div>
+
+        <!-- users.user_type  ENUM('senior','student') -->
+        <div class="field span-2">
+          <label class="form-label">Type de compte <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <!-- PHP: <?= $user['user_type'] === 'student' ? 'checked' : '' ?> -->
+              <input type="radio" id="type_student" name="user_type" value="student" checked />
+              <label class="radio-label" for="type_student">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 2L14 5l-6 3-6-3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+                  <path d="M4.5 6.5V10a5 5 0 0 0 7 0V6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+                Étudiant(e) / Bénévole
+              </label>
+            </div>
+            <div class="radio-option">
+              <!-- PHP: <?= $user['user_type'] === 'senior' ? 'checked' : '' ?> -->
+              <input type="radio" id="type_senior" name="user_type" value="senior" />
+              <label class="radio-label" for="type_senior">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/>
+                  <path d="M2 14c0-3 2.5-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+                Senior
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- users.bio  TEXT -->
+        <div class="field span-2">
+          <label class="form-label" for="bio">Présentation / Bio</label>
+          <!-- PHP: value inside textarea: <?= htmlspecialchars($user['bio']) ?> -->
+          <textarea class="form-textarea" id="bio" name="bio"
+                    placeholder="Parlez de vous, de vos compétences ou de vos besoins…"
+                    maxlength="1000"
+                    data-char-counter="bioCounter">Passionné par les nouvelles technologies, j'aime rendre l'informatique accessible à tous. Je suis particulièrement à l'aise avec l'écosystème Android et la configuration de matériel. J'ai rejoint SoKnow pour partager mes connaissances et aider les seniors à ne plus avoir peur du numérique !</textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:-2px;">
+            <span class="field-hint">Maximum 1 000 caractères.</span>
+            <span class="char-counter" id="bioCounter"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Localisation ──────────────────────────────────────── -->
+      <div class="form-section-title">Localisation</div>
+      <div class="form-grid">
+
+        <!-- users.location_name  VARCHAR(255) — displayed on profile card -->
+        <div class="field span-2">
+          <label class="form-label" for="location_name">Ville / Pays <span class="req">*</span></label>
+          <!-- PHP: value="<?= htmlspecialchars($user['location_name']) ?>" -->
+          <input class="form-input" type="text" id="location_name" name="location_name"
+                 placeholder="ex : Bobigny, France" value="Bobigny, France"
+                 maxlength="255" required />
+          <span class="field-hint">Ce nom s'affiche publiquement sur votre profil.</span>
+        </div>
+
+        <!-- users.lat  DECIMAL — GPS latitude for Leaflet/OpenStreetMap -->
+        <div class="field">
+          <label class="form-label" for="lat">Latitude</label>
+          <!-- PHP: value="<?= htmlspecialchars($user['lat']) ?>" -->
+          <input class="form-input" type="number" id="lat" name="lat"
+                 placeholder="48.9100" value="48.9100"
+                 step="0.0001" min="-90" max="90" />
+        </div>
+
+        <!-- users.lng  DECIMAL — GPS longitude for map -->
+        <div class="field">
+          <label class="form-label" for="lng">Longitude</label>
+          <!-- PHP: value="<?= htmlspecialchars($user['lng']) ?>" -->
+          <input class="form-input" type="number" id="lng" name="lng"
+                 placeholder="2.4400" value="2.4400"
+                 step="0.0001" min="-180" max="180" />
+        </div>
+
+      </div>
+
+      <!-- ── Langues ───────────────────────────────────────────── -->
+      <div class="form-section-title">Langues</div>
+      <div class="form-grid">
+
+        <!-- users.preferred_lang  INT FK → languages.id  (FR / AL / VI) -->
+        <div class="field">
+          <label class="form-label" for="preferred_lang">Langue d'interface <span class="req">*</span></label>
+          <div class="select-wrap">
+            <!--
+              PHP: foreach ($languages as $lang):
+                     echo '<option value="' . (int)$lang['id'] . '"'
+                        . ($lang['id'] == $user['preferred_lang'] ? ' selected' : '') . '>'
+                        . htmlspecialchars($lang['label']) . '</option>';
+                   endforeach;
+            -->
+            <select class="form-select" id="preferred_lang" name="preferred_lang" required>
+              <option value="1" selected>🇫🇷 Français</option>
+              <option value="2">🇦🇱 Albanais</option>
+              <option value="3">🇻🇳 Vietnamien</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- users.spoken_languages  VARCHAR(255) — comma-separated free text -->
+        <div class="field">
+          <label class="form-label" for="spoken_languages">Langues parlées</label>
+          <!-- PHP: value="<?= htmlspecialchars($user['spoken_languages']) ?>" -->
+          <input class="form-input" type="text" id="spoken_languages" name="spoken_languages"
+                 placeholder="ex : Français, Anglais" value="Français, Anglais"
+                 maxlength="255" />
+          <span class="field-hint">Séparées par des virgules.</span>
+        </div>
+
+      </div>
+
+      <!-- ── Compétences ───────────────────────────────────────── -->
+      <div class="form-section-title">Compétences</div>
+
+      <!--
+        PHP team: generate these checkboxes dynamically:
+          foreach ($all_skills as $skill):
+            $checked = in_array($skill['id'], $user_skill_ids) ? 'checked' : '';
+            echo '<div class="skill-check-item">
+                    <input type="checkbox" id="sk_' . $skill['id'] . '"
+                           name="skills[]" value="' . (int)$skill['id'] . '" ' . $checked . '>
+                    <label class="skill-check-label" for="sk_' . $skill['id'] . '">#'
+                    . htmlspecialchars(strtoupper($skill['name_fr'])) . '</label>
+                  </div>';
+          endforeach;
+        On save:
+          DELETE FROM user_skills WHERE user_id = ?
+          foreach ($_POST['skills'] as $skillId):
+            INSERT INTO user_skills (user_id, skill_id, skill_type)
+            VALUES (?, ?, ?)  -- skill_type comes from skill_type_default below
+      -->
+      <div class="field">
+        <label class="form-label">Sélectionnez vos compétences</label>
+        <div class="skills-check-grid" id="skillsCheckGrid" style="margin-top:6px;">
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_1" name="skills[]" value="1" checked />
+            <label class="skill-check-label" for="sk_1">#ANDROID</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_2" name="skills[]" value="2" checked />
+            <label class="skill-check-label" for="sk_2">#TABLETTE</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_3" name="skills[]" value="3" checked />
+            <label class="skill-check-label" for="sk_3">#WIFISETUP</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_4" name="skills[]" value="4" checked />
+            <label class="skill-check-label" for="sk_4">#BUREAUTIQUE</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_5" name="skills[]" value="5" checked />
+            <label class="skill-check-label" for="sk_5">#SÉCURITÉ</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_6" name="skills[]" value="6" />
+            <label class="skill-check-label" for="sk_6">#EMAIL</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_7" name="skills[]" value="7" />
+            <label class="skill-check-label" for="sk_7">#IMPRIMANTE</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_8" name="skills[]" value="8" />
+            <label class="skill-check-label" for="sk_8">#VISIOCONFÉRENCE</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_9" name="skills[]" value="9" />
+            <label class="skill-check-label" for="sk_9">#SMARTPHONE</label>
+          </div>
+          <div class="skill-check-item">
+            <input type="checkbox" id="sk_10" name="skills[]" value="10" />
+            <label class="skill-check-label" for="sk_10">#PHOTO</label>
+          </div>
+        </div>
+        <span class="field-hint" style="margin-top:8px;">
+          Les compétences cochées apparaissent sur votre profil et permettent aux membres de vous trouver.
+        </span>
+      </div>
+
+      <!-- user_skills.skill_type  ENUM('offering','seeking') -->
+      <div class="field" style="margin-top:18px;">
+        <label class="form-label" for="skill_type_default">Je propose / cherche ces compétences en tant que… <span class="req">*</span></label>
+        <div class="select-wrap" style="max-width:320px;">
+          <!--
+            PHP: <option value="offering" <?= $dominant_skill_type === 'offering' ? 'selected' : '' ?>>
+                 <option value="seeking"  <?= $dominant_skill_type === 'seeking'  ? 'selected' : '' ?>>
+          -->
+          <select class="form-select" id="skill_type_default" name="skill_type_default">
+            <option value="offering" selected>✋ Je les enseigne (offering)</option>
+            <option value="seeking">🎓 Je souhaite apprendre (seeking)</option>
+          </select>
+        </div>
+      </div>
+
+    </div><!-- /modal-body -->
+    <!-- PHP: </form> -->
+
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" data-close>Annuler</button>
+      <!--
+        PHP: change to type="submit" once wrapped in <form action="update_profile.php">
+      -->
+      <button type="button" class="btn-primary" id="btnSaveProfile">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 8.5l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Sauvegarder les modifications
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!--
+  PHP FLASH MESSAGE HOOK — paste this snippet into the .php view, just before </body>:
+
+  <?php if (!empty($_SESSION['flash'])): ?>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        soknowToast(
+          '[addslashes(htmlspecialchars($_SESSION["flash"]["msg"]))]',
+          '[htmlspecialchars($_SESSION["flash"]["type"])]'
+        );
+      });
+    </script>
+    <?php unset($_SESSION['flash']); ?>
+  <?php endif; ?>
+-->
+
+<!-- ── Toast ──────────────────────────────────────────────────────── -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg id="toastIcon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 8.5l4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <span id="toastMsg"></span>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ══════════════════════════════════════════════════════
+     1. MODAL MANAGER
+  ══════════════════════════════════════════════════════ */
+  var activeOverlay = null;
+
+  function openModal(id) {
+    var overlay = document.getElementById(id);
+    if (!overlay) return;
+    if (activeOverlay) closeModal(activeOverlay, false);
+    activeOverlay = overlay;
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    // Move focus to first interactive element
+    var first = overlay.querySelector('input:not([type="file"]), select, textarea, button:not([data-close])');
+    if (first) { setTimeout(function () { first.focus(); }, 80); }
+  }
+
+  function closeModal(overlay, restoreScroll) {
+    if (!overlay) return;
+    if (typeof restoreScroll === 'undefined') restoreScroll = true;
+    overlay.classList.remove('is-open');
+    if (restoreScroll) document.body.style.overflow = '';
+    activeOverlay = null;
+  }
+
+  // Open triggers  [data-modal="modal-id"]
+  document.querySelectorAll('[data-modal]').forEach(function (btn) {
+    btn.addEventListener('click', function () { openModal(btn.dataset.modal); });
+  });
+
+  // Close triggers  [data-close]
+  document.querySelectorAll('[data-close]').forEach(function (btn) {
+    btn.addEventListener('click', function () { closeModal(btn.closest('.modal-overlay')); });
+  });
+
+  // Click on backdrop (not on modal box)
+  document.querySelectorAll('.modal-overlay').forEach(function (overlay) {
+    overlay.addEventListener('mousedown', function (e) {
+      if (e.target === overlay) closeModal(overlay);
+    });
+  });
+
+  // Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && activeOverlay) closeModal(activeOverlay);
+  });
+
+
+  /* ══════════════════════════════════════════════════════
+     2. CHAR COUNTER  (data-char-counter="counter-id")
+  ══════════════════════════════════════════════════════ */
+  document.querySelectorAll('[data-char-counter]').forEach(function (el) {
+    var counter = document.getElementById(el.dataset.charCounter);
+    var max = parseInt(el.getAttribute('maxlength'), 10) || 1000;
+    if (!counter) return;
+
+    function updateCounter() {
+      var len = el.value.length;
+      counter.textContent = len + ' / ' + max;
+      counter.className = 'char-counter' +
+        (len >= max        ? ' over' :
+         len >= max * 0.85 ? ' warn' : '');
+    }
+    el.addEventListener('input', updateCounter);
+    updateCounter();
+  });
+
+
+  /* ══════════════════════════════════════════════════════
+     3. FILE UPLOAD ZONE with live preview
+        data-zone           → id of the .upload-zone wrapper
+        data-zone-preview   → id of the <img> inside the zone
+        data-zone-text      → id of the text label element
+        data-mirror         → id of the element to mirror the image to
+        data-mirror-type    → "img"  → set src
+                              "bg"   → set background-image
+        data-max-mb         → client-side size limit
+  ══════════════════════════════════════════════════════ */
+  document.querySelectorAll('.upload-zone input[type="file"]').forEach(function (input) {
+    var zone        = document.getElementById(input.dataset.zone);
+    var preview     = document.getElementById(input.dataset.zonePreview);
+    var zoneText    = document.getElementById(input.dataset.zoneText);
+    var mirror      = document.getElementById(input.dataset.mirror);
+    var mirrorType  = input.dataset.mirrorType || 'img';
+    var maxMb       = parseFloat(input.dataset.maxMb) || 5;
+    var maxBytes    = maxMb * 1024 * 1024;
+
+    input.addEventListener('change', function () {
+      var file = this.files && this.files[0];
+      if (!file) return;
+
+      if (file.size > maxBytes) {
+        showToast('Fichier trop lourd — max ' + maxMb + ' Mo', 'error');
+        this.value = '';
+        return;
+      }
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var src = e.target.result;
+
+        // Zone in-place preview
+        if (preview) { preview.src = src; }
+        if (zone)     { zone.classList.add('has-file'); }
+        if (zoneText) { zoneText.textContent = file.name; }
+
+        // Mirror to the live profile card
+        if (mirror) {
+          if (mirrorType === 'img') {
+            mirror.src = src;
+          } else {
+            mirror.style.backgroundImage    = 'url(' + src + ')';
+            mirror.style.backgroundSize     = 'cover';
+            mirror.style.backgroundPosition = 'center';
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+
+  /* ══════════════════════════════════════════════════════
+     4. PROFILE FORM — client-side validation + optimistic UI
+     PHP team: replace btnSaveProfile click handler by making
+     the button type="submit" inside <form action="update_profile.php">.
+     The JS below gives immediate feedback while the backend is wired up.
+  ══════════════════════════════════════════════════════ */
+  var btnSaveProfile = document.getElementById('btnSaveProfile');
+  if (btnSaveProfile) {
+    btnSaveProfile.addEventListener('click', function () {
+
+      // — Validate required fields —
+      var requiredIds = ['first_name', 'location_name'];
+      var valid = true;
+
+      requiredIds.forEach(function (id) {
+        var field = document.getElementById(id);
+        if (!field) return;
+        if (!field.value.trim()) {
+          field.classList.add('invalid');
+          valid = false;
+          field.addEventListener('input', function () {
+            field.classList.remove('invalid');
+          }, { once: true });
+        }
+      });
+
+      if (!valid) {
+        showToast('Veuillez remplir les champs obligatoires.', 'error');
+        // Scroll to first invalid input inside modal
+        var firstInvalid = document.querySelector('.modal-overlay.is-open .invalid');
+        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // — Optimistic UI: update profile card immediately —
+      var bioVal      = document.getElementById('bio').value.trim();
+      var bioDisplay  = document.getElementById('profileBio');
+      if (bioDisplay && bioVal) bioDisplay.textContent = bioVal;
+
+      // Rebuild skills display
+      var checkedBoxes  = document.querySelectorAll('#skillsCheckGrid input[type="checkbox"]:checked');
+      var skillsDisplay = document.getElementById('profileSkillsDisplay');
+      if (skillsDisplay) {
+        skillsDisplay.innerHTML = '';
+        checkedBoxes.forEach(function (cb) {
+          var lbl = cb.nextElementSibling;
+          if (lbl) {
+            var tag = document.createElement('span');
+            tag.className   = 'skill-tag';
+            tag.textContent = lbl.textContent.trim();
+            skillsDisplay.appendChild(tag);
+          }
+        });
+      }
+
+      closeModal(document.getElementById('modal-edit'));
+      showToast('Modifications enregistrées !', 'success');
+    });
+  }
+
+
+  /* ══════════════════════════════════════════════════════
+     5. MEDIA FORM — optimistic close
+     PHP team: replace with type="submit" inside
+     <form action="update_media.php" enctype="multipart/form-data">
+  ══════════════════════════════════════════════════════ */
+  var btnSaveMedia = document.getElementById('btnSaveMedia');
+  if (btnSaveMedia) {
+    btnSaveMedia.addEventListener('click', function () {
+      closeModal(document.getElementById('modal-modifier'));
+      showToast('Photos mises à jour !', 'success');
+    });
+  }
+
+
+  /* ══════════════════════════════════════════════════════
+       6. TOAST HELPER
+       Exposed globally as window.soknowToast(msg, type).
+       PHP team: trigger a flash message in the .php view with:
+         echo '<script>soknowToast("' . addslashes($flash['msg']) . '","' . $flash['type'] . '")<\/script>';
+    ══════════════════════════════════════════════════════ */
+  
+  var toastTimer = null;
+
+  function showToast(message, type) {
+    var toast   = document.getElementById('toast');
+    var toastMsg = document.getElementById('toastMsg');
+    if (!toast || !toastMsg) return;
+
+    if (toastTimer) clearTimeout(toastTimer);
+
+    toastMsg.textContent = message;
+    toast.className = 'toast ' + (type || '');
+
+    // Force reflow so transition fires even on rapid successive calls
+    void toast.offsetWidth;
+    toast.classList.add('show');
+
+    toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 3400);
+  }
+
+  window.soknowToast = showToast;
+
+})();
+</script>
+
+</body>
+</html>

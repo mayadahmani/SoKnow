@@ -1,0 +1,562 @@
+/* ═══════════════════════════════════════════════════════════════
+   viewProfile.css — Profile page styles
+   Depends on: style.css  (design tokens, base reset, shared components)
+   Variables used from style.css:
+     --primary, --primary-dark, --primary-hover, --primary-tint,
+     --text-heading, --text-body, --text-muted, --text-label,
+     --border, --radius-card, --radius-btn, --radius-input
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Body override ─────────────────────────────────────────────── */
+body {
+  background: #F3F0FF4D;
+  padding: 32px 16px 64px;
+}
+
+/* ── Page wrapper ──────────────────────────────────────────────── */
+.page-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PROFILE CARD
+══════════════════════════════════════════════════════════════════ */
+.profile-card {
+  background: #fff;
+  border: 1px solid #F3E8FF;
+  border-radius: var(--radius-card);
+  box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+  overflow: hidden;
+}
+
+.profile-banner {
+  height: 140px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 50%, #7c3aed 100%);
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  /* PHP: if banner_url is set → add inline style: background-image:url([users.banner_url]) */
+}
+
+/* "Modifier" button — sits on the banner */
+.btn-modifier {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.18s, border-color 0.18s;
+}
+.btn-modifier:hover  { background: rgba(255,255,255,0.28); border-color: rgba(255,255,255,0.6); }
+.btn-modifier svg { width: 13px; height: 13px; }
+
+.profile-info-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 28px 22px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  z-index: 40;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  overflow: hidden;
+  margin-top: -44px;
+  flex-shrink: 0;
+  background: #ddd;
+  box-shadow: 0 4px 16px rgba(67,31,196,0.18);
+}
+.avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.profile-meta { flex: 1; min-width: 0; }
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-heading);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  letter-spacing: -0.3px;
+}
+
+.profile-tagline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+.profile-tagline span {
+  font-size: 13px;
+  color: var(--text-body);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.profile-tagline svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* "Éditer le profil" button */
+.btn-edit-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.18s;
+  align-self: center;
+}
+.btn-edit-profile:hover { background: var(--primary-tint); }
+.btn-edit-profile svg { width: 14px; height: 14px; }
+
+/* ══════════════════════════════════════════════════════════════════
+   TWO-COLUMN GRID + CONTENT CARDS
+══════════════════════════════════════════════════════════════════ */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #F3E8FF;
+  border-radius: var(--radius-card);
+  box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+  padding: 26px 28px;
+}
+.card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 16px;
+  letter-spacing: -0.2px;
+}
+
+.about-text { font-size: 14px; line-height: 1.72; color: var(--text-body); }
+
+/* ── Impact stats ── */
+.impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.impact-stat {
+  border: 1px solid #F3E8FF;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+}
+.impact-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  display: block;
+  letter-spacing: -0.4px;
+}
+.impact-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── Skills display tags ── */
+.skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.skill-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-tint);
+  border: 1px solid rgba(67, 31, 196, 0.2);
+  border-radius: 100px;
+  padding: 5px 12px;
+  letter-spacing: 0.04em;
+}
+
+.skills-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.skills-hint svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── Badges ── */
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: transform 0.18s;
+}
+.badge-item:last-child { margin-bottom: 0; }
+.badge-item:hover      { transform: translateX(3px); }
+.badge-item.gold       { background: #fffbeb; }
+.badge-item.owl        { background: #f3f4f6; }
+.badge-icon            { font-size: 1.6rem; flex-shrink: 0; }
+.badge-text-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f97316;
+  display: block;
+}
+.badge-item.owl .badge-text-name { color: var(--primary); }
+.badge-text-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: block; }
+
+/* ══════════════════════════════════════════════════════════════════
+   MODAL SYSTEM  (JS toggles .is-open on .modal-overlay)
+   Mirrors the .cal-modal-overlay / .cal-modal pattern in style.css
+══════════════════════════════════════════════════════════════════ */
+.modal-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 8, 48, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px 40px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: #fff;
+  border: 1px solid #F3E8FF;
+  border-radius: var(--radius-card);
+  box-shadow: 0 20px 60px rgba(67, 31, 196, 0.18);
+  width: 100%;
+  max-width: 540px;
+  overflow: hidden;
+  position: relative;
+  margin: auto;
+  transform: translateY(12px);
+  transition: transform 0.22s, opacity 0.2s;
+  opacity: 0;
+}
+.modal-overlay.is-open .modal {
+  transform: translateY(0);
+  opacity: 1;
+}
+.modal.modal-wide { max-width: 680px; }
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px 18px;
+  border-bottom: 1px solid #F1F5F9;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+}
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-heading);
+  letter-spacing: -0.4px;
+}
+
+/* Close ✕ button — mirrors .cal-modal-close from style.css */
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.modal-close:hover { background: var(--primary-tint); color: var(--primary); }
+
+.modal-body { padding: 26px 28px; }
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 28px 22px;
+  border-top: 1px solid #F1F5F9;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  z-index: 2;
+}
+/* Undo full-width set by global .btn-primary */
+.modal-footer .btn-primary {
+  width: auto;
+  flex: none;
+}
+
+.btn-primary svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FORM EXTENSIONS  (modal-specific, complements style.css forms)
+══════════════════════════════════════════════════════════════════ */
+
+/* Two-column form grid (extends .form-row from style.css) */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+.form-grid .span-2 { grid-column: 1 / -1; }
+
+/* Field wrapper */
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+/* Required star (used inside .form-label) */
+.field .form-label .req { color: #f97316; margin-left: 2px; }
+
+/* Helper text below inputs */
+.field-hint { font-size: 12px; color: var(--text-muted); }
+
+/* Invalid state — applied by JS validation */
+.form-input.invalid,
+.form-textarea.invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Char counter */
+.char-counter {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  transition: color 0.18s;
+}
+.char-counter.warn { color: #f59e0b; }
+.char-counter.over { color: #dc2626; }
+
+/* ── Radio group (account type) ── */
+.radio-group { display: flex; gap: 10px; }
+.radio-option { flex: 1; position: relative; }
+.radio-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.radio-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  cursor: pointer;
+  background: #fff;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  user-select: none;
+}
+.radio-option input[type="radio"]:checked + .radio-label {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-tint);
+}
+.radio-label svg { width: 15px; height: 15px; }
+
+/* ── Skill checkboxes ── */
+.skills-check-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-check-item  { position: relative; }
+.skill-check-item input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.skill-check-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-body);
+  background: #f3f4f6;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 5px 12px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  user-select: none;
+}
+.skill-check-item input[type="checkbox"]:checked + .skill-check-label {
+  background: var(--primary-tint);
+  border-color: rgba(67, 31, 196, 0.4);
+  color: var(--primary);
+}
+
+/* ── File upload zone ── */
+.upload-zone {
+  border: 2px dashed rgba(67, 31, 196, 0.3);
+  border-radius: var(--radius-input);
+  background: var(--primary-tint);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.18s, background 0.18s;
+}
+.upload-zone:hover          { border-color: var(--primary); background: #ede9fe; }
+.upload-zone.has-file       { border-style: solid; border-color: var(--primary); }
+.upload-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.upload-zone-preview {
+  display: none;
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.upload-zone.has-file .upload-zone-preview { display: block; }
+.upload-zone-icon           { font-size: 2rem; margin-bottom: 8px; }
+.upload-zone.has-file .upload-zone-icon { display: none; }
+.upload-zone-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.upload-zone-sub            { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.upload-zone.has-file .upload-zone-sub { color: #16a34a; font-weight: 600; }
+
+/* ── Avatar preview row (top of Modifier modal) ── */
+.avatar-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.avatar-preview-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #F3E8FF;
+  flex-shrink: 0;
+}
+.avatar-preview-info p      { font-size: 13px; color: var(--text-body); line-height: 1.5; }
+.avatar-preview-info strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-heading);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ── Section separator inside modals ── */
+.form-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 26px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.form-section-title::after   { content: ''; flex: 1; height: 1px; background: var(--border); }
+.form-section-title:first-child { margin-top: 0; }
+
+/* ══════════════════════════════════════════════════════════════════
+   TOAST NOTIFICATION
+══════════════════════════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text-heading);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--radius-btn);
+  box-shadow: 0 8px 24px rgba(13, 8, 48, 0.28);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  white-space: nowrap;
+}
+.toast.show    { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.success { background: #15803d; }
+.toast.error   { background: #dc2626; }
+.toast svg     { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .two-col       { grid-template-columns: 1fr; }
+  .profile-info-row { padding: 0 18px 18px; }
+  .card          { padding: 20px 18px; }
+  .form-grid     { grid-template-columns: 1fr; }
+  .form-grid .span-2 { grid-column: 1; }
+  .modal-body, .modal-header, .modal-footer { padding-left: 18px; padding-right: 18px; }
+}
+@media (max-width: 480px) {
+  body           { padding: 16px 10px 48px; }
+  .profile-name  { font-size: 18px; }
+  .radio-group   { flex-direction: column; }
+  .modal-overlay { padding: 16px 12px; }
+}
