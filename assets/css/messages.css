@@ -3,6 +3,16 @@
    Styles for VueMessages — three-panel messaging UI
    ============================================================ */
 
+/* ── CSS Variables used by this stylesheet ── */
+:root {
+    --brand:       #431FC4;
+    --brand-light: #f3f0ff;
+    --text:        #1a1530;
+    --muted:       #9CA3AF;
+    --border:      #E5E7EB;
+    --bg:          #F8F8FF;
+}
+
 /* ── Three-panel layout ── */
 .messages-page {
     display: grid;

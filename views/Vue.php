@@ -26,6 +26,7 @@ abstract class Vue {
             <link rel="stylesheet" href="assets/css/header.css?v=<?= time() ?>">
             <link rel="stylesheet" href="assets/css/dashboard.css?v=<?= time() ?>">
             <link rel="stylesheet" href="assets/css/calendar.css?v=<?= time() ?>">
+            <link rel="stylesheet" href="assets/css/messages.css?v=<?= time() ?>">
             
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         </head>
