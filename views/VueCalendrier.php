@@ -1,7 +1,11 @@
 <?php
 // views/VueCalendrier.php
 class VueCalendrier extends Vue {
-    protected $titre = "SoKnow - Mes Rendez-vous";
+    protected $titre = "SoKnow";
+
+    public function __construct() {
+        $this->titre = __('agenda_title');
+    }
 
     protected function afficherContenu($donnees) {
         $events   = $donnees['events'] ?? [];

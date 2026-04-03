@@ -15,7 +15,7 @@ class VueMap extends Vue {
             <div id="map" class="map-container"></div>
 
             <div class="map-sidebar">
-                <h2 style="font-size: 24px; font-weight: 800; color: #4F2EE8; margin-bottom: 24px;">Annuaire & Carte</h2>
+                <h2 style="font-size: 24px; font-weight: 800; color: #4F2EE8; margin-bottom: 24px;"><?= __('map_title') ?></h2>
 
                 <div id="map-list-panel">
                     
@@ -23,25 +23,25 @@ class VueMap extends Vue {
                         
                         <div style="display: flex; align-items: center; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 15px; margin-bottom: 15px;">
                             <img src="assets/img/search.png" alt="Recherche" style="width: 18px; height: 18px; opacity: 0.5; margin-right: 10px;">
-                            <input type="text" id="search-input" placeholder="Rechercher une personne, ville..." style="border: none; background: transparent; outline: none; width: 100%; font-size: 14px; color: #333;">
+                            <input type="text" id="search-input" placeholder="<?= __('map_search_ph') ?>" style="border: none; background: transparent; outline: none; width: 100%; font-size: 14px; color: #333;">
                         </div>
 
                         <div style="display: flex; gap: 12px;">
                             <div style="flex: 1;">
-                                <label style="display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Langue</label>
+                                <label style="display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;"><?= __('map_lang_filter') ?></label>
                                 <select id="filter-lang" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 13px; color: #333; outline: none;">
-                                    <option value="">Toutes</option>
-                                    <option value="français">Français</option>
-                                    <option value="anglais">Anglais</option>
-                                    <option value="vietnamien">Vietnamien</option>
-                                    <option value="albanais">Albanais</option>
+                                    <option value=""><?= __('map_all') ?></option>
+                                    <option value="français"><?= __('map_lang_fr') ?></option>
+                                    <option value="anglais"><?= __('map_lang_en') ?></option>
+                                    <option value="vietnamien"><?= __('map_lang_vi') ?></option>
+                                    <option value="albanais"><?= __('map_lang_sq') ?></option>
                                 </select>
                             </div>
                             
                             <div style="flex: 1;">
-                                <label style="display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Compétence</label>
+                                <label style="display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;"><?= __('map_skill_filter') ?></label>
                                 <select id="filter-skill" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 13px; color: #333; outline: none;">
-                                    <option value="">Toutes</option>
+                                    <option value=""><?= __('map_all') ?></option>
                                     <?php foreach ($allSkills as $skill): ?>
                                         <option value="<?= htmlspecialchars($skill['name_fr']); ?>">
                                             <?= htmlspecialchars($skill['name_fr']); ?>
@@ -53,12 +53,12 @@ class VueMap extends Vue {
                     </div>
 
                     <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 15px;">
-                        <span id="count-text"><?= count($membres); ?></span> résultat(s)
+                        <span id="count-text"><?= count($membres); ?></span> <?= __('map_results') ?>
                     </div>
 
                     <div class="member-list" style="display: flex; flex-direction: column; gap: 15px;">
                         <?php if (empty($membres)): ?>
-                            <p style="color: #64748b; font-size: 14px; text-align: center; padding: 20px;">Aucun membre trouvé.</p>
+                            <p style="color: #64748b; font-size: 14px; text-align: center; padding: 20px;"><?= __('map_no_members') ?></p>
                         <?php else: ?>
                             <?php foreach ($membres as $index => $membre): 
                                 $avatarUrl = !empty($membre['avatar']) ? htmlspecialchars($membre['avatar']) : 'assets/img/default-avatar.svg';
@@ -83,11 +83,11 @@ class VueMap extends Vue {
                                                 <div>
                                                     <?php if (($membre['user_type'] ?? '') === 'student'): ?>
                                                         <span style="display: inline-flex; align-items: center; gap: 4px; color: #059669; background: #e7f5ed; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">
-                                                         Partage
+                                                         <?= __('map_sharing') ?>
                                                         </span>
                                                     <?php elseif (($membre['user_type'] ?? '') === 'senior'): ?>
                                                         <span style="display: inline-flex; align-items: center; gap: 4px; color: #d97706; background: #fff7ed; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">
-                                                         Recherche
+                                                         <?= __('map_seeking') ?>
                                                         </span>
                                                     <?php endif; ?>
                                                 </div>
@@ -113,7 +113,7 @@ class VueMap extends Vue {
 
                 <div id="map-detail-panel" style="display: none;">
                     <button onclick="closeUserDetail()" style="display: flex; align-items: center; gap: 6px; background: none; border: none; color: #4F2EE8; cursor: pointer; font-weight: 600; font-size: 14px; margin-bottom: 20px; padding: 0;">
-                        <span style="font-size: 18px; line-height: 1;">←</span> Retour aux résultats
+                        <span style="font-size: 18px; line-height: 1;">←</span> <?= __('map_back') ?>
                     </button>
                     
                     <div style="text-align: center; margin-bottom: 20px;">
@@ -128,22 +128,22 @@ class VueMap extends Vue {
                     </div>
 
                     <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                        <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">À propos</h4>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px;"><?= __('map_about') ?></h4>
                         <p id="detail-bio" style="font-size: 13px; color: #475569; line-height: 1.6; margin: 0;"></p>
                     </div>
 
                     <div style="margin-bottom: 20px;">
-                        <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Langues</h4>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px;"><?= __('map_languages') ?></h4>
                         <p id="detail-langs" style="font-size: 13px; color: #475569; margin: 0;"></p>
                     </div>
 
                     <div style="margin-bottom: 20px;">
-                        <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Compétences</h4>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 8px;"><?= __('map_skills') ?></h4>
                         <div id="detail-skills" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
                     </div>
 
                     <button class="contact-btn" style="width: 100%; padding: 12px; background: #4F2EE8; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;">
-                        Envoyer un message
+                        <?= __('map_send_msg') ?>
                     </button>
                 </div>
 
@@ -152,6 +152,13 @@ class VueMap extends Vue {
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
+        var MAP_LANG = {
+            sharing: <?= json_encode(__('map_sharing')) ?>,
+            seeking: <?= json_encode(__('map_seeking')) ?>,
+            noBio: <?= json_encode(__('map_no_bio')) ?>,
+            notSpecified: <?= json_encode(__('map_not_specified')) ?>,
+            viewProfile: <?= json_encode(__('map_view_profile')) ?>
+        };
         var map = L.map('map', { zoomControl: true, minZoom: 2, maxZoom: 18 }).setView([46.603354, 1.888334], 5);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap', subdomains: 'abcd'
@@ -162,9 +169,9 @@ class VueMap extends Vue {
 
         function getRoleBadge(roleType) {
             if (roleType === 'student') {
-                return '<span style="display: inline-flex; align-items: center; gap: 4px; color: #059669; background: #e7f5ed; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">🤝 Partage</span>';
+                return '<span style="display: inline-flex; align-items: center; gap: 4px; color: #059669; background: #e7f5ed; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">🤝 ' + MAP_LANG.sharing + '</span>';
             } else if (roleType === 'senior') {
-                return '<span style="display: inline-flex; align-items: center; gap: 4px; color: #d97706; background: #fff7ed; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">❓ Recherche</span>';
+                return '<span style="display: inline-flex; align-items: center; gap: 4px; color: #d97706; background: #fff7ed; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">❓ ' + MAP_LANG.seeking + '</span>';
             }
             return '';
         }
@@ -188,7 +195,7 @@ class VueMap extends Vue {
                     <div style="text-align: center; font-family: 'Inter', sans-serif;">
                         <strong style="color:#0f172a; font-size:15px; display:block; margin-bottom:6px;">${membre.first_name} ${membre.last_name || ''}</strong>
                         <div style="margin-bottom: 12px;">${getRoleBadge(membre.user_type)}</div>
-                        <button onclick="showUserDetail(${membre.id})" style="background:#4F2EE8; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:600; font-size: 12px;">Voir le profil</button>
+                        <button onclick="showUserDetail(${membre.id})" style="background:#4F2EE8; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:600; font-size: 12px;">${MAP_LANG.viewProfile}</button>
                     </div>
                 `);
                 
@@ -206,8 +213,8 @@ class VueMap extends Vue {
                 document.getElementById('detail-name').innerText = user.first_name + " " + (user.last_name || "");
                 document.getElementById('detail-location').innerHTML = '<img src="assets/img/location.png" style="width: 12px; height: 12px;"> <span>' + user.location_name + '</span>';
                 
-                document.getElementById('detail-bio').innerText = user.bio || "Aucune description renseignée.";
-                document.getElementById('detail-langs').innerText = user.spoken_languages || "Non précisé";
+                document.getElementById('detail-bio').innerText = user.bio || MAP_LANG.noBio;
+                document.getElementById('detail-langs').innerText = user.spoken_languages || MAP_LANG.notSpecified;
                 document.getElementById('detail-avatar').src = user.avatar ? user.avatar : 'assets/img/default-avatar.svg';
                 
                 document.getElementById('detail-role').innerHTML = getRoleBadge(user.user_type);

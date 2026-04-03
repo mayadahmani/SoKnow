@@ -1071,6 +1071,12 @@ body { font-family: 'Inter', sans-serif; color: #131313; display: flex; flex-dir
         flex: unset;
         width: 100%;
     }
+    .col-feed {
+        order: 1;
+    }
+    .col-widgets {
+        order: 2;
+    }
 }
 
 /* Mobile */

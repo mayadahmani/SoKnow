@@ -3,7 +3,11 @@
 
 class VueAgenda extends Vue {
 
-    protected $titre = "Mes Rendez-vous - SoKnow";
+    protected $titre = "SoKnow";
+
+    public function __construct() {
+        $this->titre = __('agenda_title');
+    }
 
     protected function afficherContenu($donnees) {
         $events = $donnees['events'] ?? [];
@@ -41,11 +45,11 @@ class VueAgenda extends Vue {
                     <div class="card">
                         <div class="agenda-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <div>
-                                <h1 class="card-title" style="font-size: 24px;">Mon Calendrier</h1>
-                                <p class="post-time">Gérez vos rendez-vous et sessions d'entraide.</p>
+                                <h1 class="card-title" style="font-size: 24px;"><?= __('agenda_heading') ?></h1>
+                                <p class="post-time"><?= __('agenda_subtitle') ?></p>
                             </div>
                             <button class="btn-primary agenda-new-btn" onclick="document.getElementById('modal-new-event').style.display='flex'">
-                                + Nouvel événement
+                                <?= __('agenda_new_event') ?>
                             </button>
                         </div>
                         
@@ -53,14 +57,14 @@ class VueAgenda extends Vue {
                             <a href="?page=agenda&month=<?= $prevMonth ?>&year=<?= $prevYear ?>" class="btn-outline">&#8249;</a>
                             <span class="agenda-month-label" style="font-weight: 700; font-size: 16px;"><?= $monthName ?></span>
                             <div style="display: flex; gap: 10px;">
-                                <a href="?page=agenda" class="btn-outline">Aujourd'hui</a>
+                                <a href="?page=agenda" class="btn-outline"><?= __('agenda_today') ?></a>
                                 <a href="?page=agenda&month=<?= $nextMonth ?>&year=<?= $nextYear ?>" class="btn-outline">&#8250;</a>
                             </div>
                         </div>
 
                         <div class="agenda-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
                             <!-- Day headers -->
-                            <?php foreach (['LUN','MAR','MER','JEU','VEN','SAM','DIM'] as $d): ?>
+                            <?php $calDays = explode(',', __('cal_days')); foreach ($calDays as $d): ?>
                                 <div class="agenda-day-header" style="text-align: center; font-size: 12px; font-weight: 700; color: #6B7280; padding-bottom: 10px;"><?= $d ?></div>
                             <?php endforeach; ?>
 
@@ -100,19 +104,19 @@ class VueAgenda extends Vue {
                     <!-- NEW Pending Invites Widget -->
                     <?php if (!empty($pendingInvites)): ?>
                     <div class="card" style="margin-bottom: 24px; border-left: 4px solid #F59E0B;">
-                        <h3 class="card-title" style="color: #D97706;">⏳ Invitations en attente</h3>
+                        <h3 class="card-title" style="color: #D97706;">⏳ <?= __('agenda_pending') ?></h3>
                         <?php foreach ($pendingInvites as $inv): ?>
                             <div class="widget-rdv" style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: 1px solid #F3F4F6; padding-bottom: 12px; margin-bottom: 12px;">
                                 <div class="rdv-info" style="width: 100%;">
                                     <div style="flex: 1;">
                                         <h4 class="post-name"><?= htmlspecialchars($inv['title']) ?></h4>
                                         <div class="rdv-time"><?= date('d M Y, H:i', strtotime($inv['start_datetime'])) ?></div>
-                                        <div style="font-size: 11px; margin-top: 4px; color: #6B7280;">De: <?= htmlspecialchars($inv['first_name'] . ' ' . $inv['last_name']) ?></div>
+                                        <div style="font-size: 11px; margin-top: 4px; color: #6B7280;"><?= __('agenda_from') ?> <?= htmlspecialchars($inv['first_name'] . ' ' . $inv['last_name']) ?></div>
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 8px; width: 100%;">
-                                    <a href="index.php?page=agenda&action=accept&event_id=<?= $inv['id'] ?>" class="btn-primary" style="flex:1; padding: 6px; font-size:12px; text-align:center;">Accepter</a>
-                                    <a href="index.php?page=agenda&action=decline&event_id=<?= $inv['id'] ?>" class="btn-outline" style="flex:1; padding: 6px; font-size:12px; text-align:center;">Refuser</a>
+                                    <a href="index.php?page=agenda&action=accept&event_id=<?= $inv['id'] ?>" class="btn-primary" style="flex:1; padding: 6px; font-size:12px; text-align:center;"><?= __('agenda_accept') ?></a>
+                                    <a href="index.php?page=agenda&action=decline&event_id=<?= $inv['id'] ?>" class="btn-outline" style="flex:1; padding: 6px; font-size:12px; text-align:center;"><?= __('agenda_decline') ?></a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -120,9 +124,9 @@ class VueAgenda extends Vue {
                     <?php endif; ?>
 
                     <div class="card">
-                        <h3 class="card-title">📅 Prochains rendez-vous</h3>
+                        <h3 class="card-title">📅 <?= __('agenda_upcoming') ?></h3>
                         <?php if (empty($events)): ?>
-                            <p class="post-time">Aucun rendez-vous à venir.</p>
+                            <p class="post-time"><?= __('agenda_no_upcoming') ?></p>
                         <?php else: ?>
                             <?php foreach (array_slice($events, 0, 5) as $ev): ?>
                                 <div class="widget-rdv">
@@ -148,38 +152,38 @@ class VueAgenda extends Vue {
         <div id="modal-new-event" class="agenda-modal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
             <div class="card agenda-modal-box" style="width: 100%; max-width: 600px; padding: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 class="card-title">Nouvel événement</h2>
+                    <h2 class="card-title"><?= __('agenda_subject') ?></h2>
                     <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="document.getElementById('modal-new-event').style.display='none'">&times;</button>
                 </div>
                 <form method="POST" action="index.php?page=agenda&action=create">
                     <div style="margin-bottom: 16px;">
-                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Objet du RDV</label>
-                        <input type="text" name="title" required class="input-textarea" style="min-height: 40px; margin-top: 6px;" placeholder="Ex: Révision PHP">
+                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;"><?= __('agenda_subject') ?></label>
+                        <input type="text" name="title" required class="input-textarea" style="min-height: 40px; margin-top: 6px;" placeholder="<?= __('agenda_subject_ph') ?>">
                     </div>
                     <div style="margin-bottom: 16px;">
-                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Description</label>
-                        <textarea name="description" class="input-textarea" style="margin-top: 6px;" rows="3" placeholder="Description optionnelle"></textarea>
+                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;"><?= __('agenda_desc') ?></label>
+                        <textarea name="description" class="input-textarea" style="margin-top: 6px;" rows="3" placeholder="<?= __('agenda_desc_ph') ?>"></textarea>
                     </div>
                     <div class="agenda-modal-dates" style="display: flex; gap: 16px; margin-bottom: 16px;">
                         <div style="flex: 1;">
-                            <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Début</label>
+                            <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;"><?= __('agenda_start') ?></label>
                             <input type="datetime-local" name="start_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
                         </div>
                         <div style="flex: 1;">
-                            <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Fin</label>
+                            <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;"><?= __('agenda_end') ?></label>
                             <input type="datetime-local" name="end_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
                         </div>
                     </div>
                     <div style="margin-bottom: 24px;">
-                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Visibilité</label>
+                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;"><?= __('agenda_visibility') ?></label>
                         <select name="event_type" id="event_type" class="input-textarea" style="min-height: 40px; margin-top: 6px;" onchange="document.getElementById('user_select_div').style.display = this.value === 'shared' ? 'block' : 'none';">
-                            <option value="private">🔒 Privé</option>
-                            <option value="shared">👥 Partagé</option>
-                            <option value="public">🌍 Public</option>
+                            <option value="private">🔒 <?= __('agenda_private') ?></option>
+                            <option value="shared">👥 <?= __('agenda_shared') ?></option>
+                            <option value="public">🌍 <?= __('agenda_public') ?></option>
                         </select>
                     </div>
                     <div id="user_select_div" style="display:none; margin-bottom: 24px;">
-                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Membres à inviter</label>
+                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;"><?= __('agenda_invite') ?></label>
                         <select name="invited_users[]" multiple class="input-textarea" style="margin-top: 6px; height: 100px;">
                             <?php foreach ($allUsers as $u): ?>
                                 <?php if ($u['id'] != $_SESSION['user_id']): ?>
@@ -187,11 +191,11 @@ class VueAgenda extends Vue {
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </select>
-                        <div style="font-size: 11px; color:#6B7280; margin-top:4px;">Maintenez Ctrl (Windows) ou Cmd (Mac) pour en sélectionner plusieurs.</div>
+                        <div style="font-size: 11px; color:#6B7280; margin-top:4px;"><?= __('agenda_select_hint') ?></div>
                     </div>
                     <div style="display: flex; justify-content: flex-end; gap: 12px;">
-                        <button type="button" class="btn-outline" onclick="document.getElementById('modal-new-event').style.display='none'">Annuler</button>
-                        <button type="submit" class="btn-primary">Planifier</button>
+                        <button type="button" class="btn-outline" onclick="document.getElementById('modal-new-event').style.display='none'"><?= __('agenda_cancel') ?></button>
+                        <button type="submit" class="btn-primary"><?= __('agenda_schedule') ?></button>
                     </div>
                 </form>
             </div>

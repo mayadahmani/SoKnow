@@ -74,7 +74,29 @@ switch ($page) {
             }
         }
 
-        // 2. PRÉPARATION DES DONNÉES POUR LA VUE
+        // 2. ACTION : Supprimer un post
+        if (isset($_GET['action']) && $_GET['action'] === 'deletePost' && isset($_GET['id'])) {
+            $postModel->delete((int)$_GET['id'], $userId);
+            header("Location: index.php?page=dashboard");
+            exit;
+        }
+
+        // 3. ACTION : Modifier un post
+        if (isset($_GET['action']) && $_GET['action'] === 'editPost' && isset($_GET['id'])) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $content = $_POST['content'] ?? '';
+                $postModel->update((int)$_GET['id'], $userId, $content);
+                header("Location: index.php?page=dashboard");
+                exit;
+            }
+            // GET: show dashboard with edit mode
+            $editPost = $postModel->getById((int)$_GET['id']);
+            if ($editPost && (int)$editPost['user_id'] === $userId) {
+                $donnees['edit_post'] = $editPost;
+            }
+        }
+
+        // 4. PRÉPARATION DES DONNÉES POUR LA VUE
     // index.php -> case 'dashboard'
 // Dans case 'dashboard':
 $searchQuery = $_GET['q'] ?? '';

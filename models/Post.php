@@ -199,8 +199,26 @@ public function getFilteredPosts($limit, $search, $authorFilter, $sortOrder, $cu
     }
 
     public function delete($postId, $userId) {
-    $stmt = $this->pdo->prepare("DELETE FROM posts WHERE id = :pid AND user_id = :uid");
-    return $stmt->execute(['pid' => $postId, 'uid' => $userId]);
+        $stmt = $this->pdo->prepare("DELETE FROM posts WHERE id = :pid AND user_id = :uid");
+        return $stmt->execute(['pid' => (int)$postId, 'uid' => (int)$userId]);
+    }
+
+    public function getById($postId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE id = :pid");
+        $stmt->execute(['pid' => (int)$postId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function update($postId, $userId, $content) {
+        $content = trim((string)$content);
+        if ($content === '') {
+            return false;
+        }
+        $stmt = $this->pdo->prepare("UPDATE posts SET content = :content WHERE id = :pid AND user_id = :uid");
+        return $stmt->execute([
+            'content' => $content,
+            'pid'     => (int)$postId,
+            'uid'     => (int)$userId,
+        ]);
+    }
 }
-}
-?>

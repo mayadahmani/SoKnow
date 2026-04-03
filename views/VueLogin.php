@@ -3,7 +3,11 @@
 
 class VueLogin extends Vue {
     
-    protected $titre = "Se connecter - SoKnow";
+    protected $titre = "SoKnow";
+
+    public function __construct() {
+        $this->titre = __('login_title');
+    }
 
     protected function afficherContenu($donnees) {
         $erreur = $donnees['erreur'] ?? null;
@@ -15,19 +19,17 @@ class VueLogin extends Vue {
                 <div class="left-content">
                     <div class="left-brand">SoKnow</div>
                     <p class="left-quote">
-                        "Grâce à un étudiant de SoKnow, j'ai enfin pu configurer ma
-                        tablette pour voir mes petits-enfants en vidéo. Un réseau
-                        vraiment bienveillant."
+                        "<?= __('login_quote') ?>"
                     </p>
-                    <span class="left-cite">- Marie, 72 ans</span>
+                    <span class="left-cite"><?= __('login_cite') ?></span>
                 </div>
             </div>
 
             <div class="right-panel">
                 <div class="form-card">
                     <div class="group">
-                        <h1 class="form-card-title">Se connecter</h1>
-                        <p class="form-card-subtitle">Heureux de vous revoir parmi nous.</p>
+                        <h1 class="form-card-title"><?= __('login_heading') ?></h1>
+                        <p class="form-card-subtitle"><?= __('login_subtitle') ?></p>
                     </div>
                     
                     <?php if ($erreur): ?>
@@ -38,27 +40,27 @@ class VueLogin extends Vue {
 
                         <div class="form-group">
                             <label class="form-label" for="login-email">
-                                Adresse e-mail professionnelle ou personnelle
+                                <?= __('login_email_label') ?>
                             </label>
                             <input class="form-input" type="email" id="login-email" name="email" placeholder="votre@email.com" required>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label" for="login-password">
-                                Mot de passe (8 caractères min.)
+                                <?= __('login_password_label') ?>
                             </label>
                             <input class="form-input" type="password" id="login-password" name="password" placeholder="••••••••" minlength="8" required>
                         </div>
 
                         <button type="submit" class="btn-primary">
-                            Se connecter
+                            <?= __('login_submit') ?>
                         </button>
 
                     </form>
 
                     <p class="form-footer">
-                        Nouveau sur SoKnow ?
-                        <a href="index.php?page=register">S'inscrire</a>
+                        <?= __('login_new_user') ?>
+                        <a href="index.php?page=register"><?= __('login_signup_link') ?></a>
                     </p>
                 </div>
             </div>

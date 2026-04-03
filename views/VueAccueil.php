@@ -2,7 +2,11 @@
 // views/VueAccueil.php
 
 class VueAccueil extends Vue {
-    protected $titre = "SoKnow - L'entraide technologique intergénérationnelle";
+    protected $titre = "SoKnow";
+
+    public function __construct() {
+        $this->titre = __('home_title');
+    }
 
     protected function afficherContenu($donnees) {
         ?>

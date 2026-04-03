@@ -30,15 +30,15 @@ class VueDashboard extends Vue {
                                     <input type="file" id="post-doc-input" name="post_doc"
                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.ppt,.pptx"
                                            style="display:none">
-                                   <span class="icon-action" id="trigger-image" title="Joindre une image" style="cursor: pointer;">
+                                   <span class="icon-action" id="trigger-image" title="<?= __('dash_attach_image') ?>" style="cursor: pointer;">
     <img src="assets/img//image.png" alt="Image" style="width: 24px; height: 24px;">
 </span>
 
-<span class="icon-action" id="trigger-doc" title="Joindre un document" style="cursor: pointer;">
+<span class="icon-action" id="trigger-doc" title="<?= __('dash_attach_doc') ?>" style="cursor: pointer;">
     <img src="assets/img/document.png" alt="Document" style="width: 24px; height: 24px;">
 </span>
 
-<span class="icon-action" id="trigger-hashtag" title="Ajouter un hashtag" style="cursor: pointer;">
+<span class="icon-action" id="trigger-hashtag" title="<?= __('dash_add_hashtag') ?>" style="cursor: pointer;">
     <img src="assets/img/hashtag.png" alt="Hashtag" style="width: 24px; height: 24px;">
 </span>
                                 </div>
@@ -52,8 +52,8 @@ class VueDashboard extends Vue {
     
     <div class="search-box" style="display: flex; align-items: center; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 5px 15px; flex-grow: 1; min-width: 200px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
         
-        <button type="submit" style="background: none; border: none; padding: 0; margin-right: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Lancer la recherche">
-            <img src="assets/img/search.png" alt="Recherche" style="width: 20px; height: 20px;">
+        <button type="submit" style="background: none; border: none; padding: 0; margin-right: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="<?= __('dash_search_btn') ?>">
+            <img src="assets/img/search.png" alt="<?= __('dash_search_btn') ?>" style="width: 20px; height: 20px;">
         </button>
         
         <input type="text" id="live-search-input" name="q" value="<?= htmlspecialchars($searchQuery); ?>" placeholder="<?= __('dash_search_placeholder') ?>" style="border: none; outline: none; background: transparent; width: 100%; height: 35px; font-size: 15px; font-family: inherit; color: #333;">
@@ -63,16 +63,16 @@ class VueDashboard extends Vue {
         
         <div style="position: relative; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
             <select name="author" onchange="this.form.submit()" style="appearance: none; -webkit-appearance: none; background: transparent; border: none; outline: none; height: 47px; padding: 0 35px 0 15px; font-family: inherit; font-size: 14px; color: #4F2EE8; font-weight: 500; cursor: pointer; min-width: 160px;">
-                <option value="all" <?= ($donnees['author'] ?? '') === 'all' ? 'selected' : '' ?>>Tous les membres</option>
-                <option value="mine" <?= ($donnees['author'] ?? '') === 'mine' ? 'selected' : '' ?>>Mes publications</option>
+                <option value="all" <?= ($donnees['author'] ?? '') === 'all' ? 'selected' : '' ?>><?= __('dash_filter_all_members') ?></option>
+                <option value="mine" <?= ($donnees['author'] ?? '') === 'mine' ? 'selected' : '' ?>><?= __('dash_filter_my_posts') ?></option>
             </select>
             <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 10px; color: #4F2EE8;">▼</span>
         </div>
 
         <div style="position: relative; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
             <select name="sort" onchange="this.form.submit()" style="appearance: none; -webkit-appearance: none; background: transparent; border: none; outline: none; height: 47px; padding: 0 35px 0 15px; font-family: inherit; font-size: 14px; color: #4F2EE8; font-weight: 500; cursor: pointer; min-width: 150px;">
-                <option value="desc" <?= ($donnees['sort'] ?? '') === 'desc' ? 'selected' : '' ?>>Plus récents</option>
-                <option value="asc" <?= ($donnees['sort'] ?? '') === 'asc' ? 'selected' : '' ?>>Plus anciens</option>
+                <option value="desc" <?= ($donnees['sort'] ?? '') === 'desc' ? 'selected' : '' ?>><?= __('dash_sort_newest') ?></option>
+                <option value="asc" <?= ($donnees['sort'] ?? '') === 'asc' ? 'selected' : '' ?>><?= __('dash_sort_oldest') ?></option>
             </select>
             <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 10px; color: #4F2EE8;">▼</span>
         </div>
@@ -121,14 +121,14 @@ class VueDashboard extends Vue {
             <h4 style="margin: 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
                 <?= htmlspecialchars($author); ?>
                 <?php if ($isOwn): ?> 
-                    <span style="background: #e7f3ff; color: #1877f2; padding: 2px 8px; border-radius: 6px; font-size: 11px;">Vous</span> 
+                    <span style="background: #e7f3ff; color: #1877f2; padding: 2px 8px; border-radius: 6px; font-size: 11px;"><?= __('dash_you') ?></span> 
                 <?php endif; ?>
             </h4>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                 <?php if (($post['user_type'] ?? '') === 'student'): ?>
-                    <span style="color: #059669; background: #e7f5ed; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">🤝 Partage</span>
+                    <span style="color: #059669; background: #e7f5ed; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">🤝 <?= __('dash_badge_sharing') ?></span>
                 <?php elseif (($post['user_type'] ?? '') === 'senior'): ?>
-                    <span style="color: #d97706; background: #fff7ed; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">❓ Recherche</span>
+                    <span style="color: #d97706; background: #fff7ed; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 10px; text-transform: uppercase;">❓ <?= __('dash_badge_seeking') ?></span>
                 <?php endif; ?>
                 <span style="color: #65676b; font-size: 11px; white-space: nowrap;"><?= $timeAgo($post['created_at']) ?></span>
             </div>
@@ -140,20 +140,24 @@ class VueDashboard extends Vue {
         <button class="btn-options-trigger" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #65676b; line-height: 1; padding: 0 5px;">⋮</button>
         
         <div class="post-options-menu" style="display: none; position: absolute; right: 0; top: 30px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 9999; min-width: 150px; overflow: hidden;">
-            <a href="index.php?page=dashboard&action=editPost&id=<?= $post['id'] ?>" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; text-decoration: none; color: #1c1e21; font-size: 14px; border-bottom: 1px solid #f0f2f5;">
-                <span>✏️</span> Modifier
-            </a>
-            <a href="index.php?page=dashboard&action=deletePost&id=<?= $post['id'] ?>" 
+            <button class="btn-edit-post" data-post-id="<?= (int)$post['id'] ?>"
+               style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; text-decoration: none; color: #1c1e21; font-size: 14px; border-bottom: 1px solid #f0f2f5; background: none; border-left: none; border-right: none; border-top: none; width: 100%; cursor: pointer;"
+               onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
+                <span>✏️</span> <?= __('dash_edit') ?? 'Modifier' ?>
+            </button>
+            <a href="index.php?page=dashboard&action=deletePost&id=<?= (int)$post['id'] ?>" 
                style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; text-decoration: none; color: #dc3545; font-size: 14px; font-weight: 600;"
-               onclick="return confirm('Voulez-vous vraiment supprimer ce post ?');">
-                <span>🗑️</span> Supprimer
+               onclick="return confirm('<?= __('dash_confirm_delete') ?? 'Voulez-vous vraiment supprimer ce post ?' ?>');">
+                <span>🗑️</span> <?= __('dash_delete') ?? 'Supprimer' ?>
             </a>
         </div>
     </div>
     <?php endif; ?>
 </div>
 
+                                <div class="post-body-wrap" data-post-id="<?= (int)$post['id'] ?>" data-raw-content="<?= htmlspecialchars($post['content'], ENT_QUOTES) ?>">
                                 <p class="post-text"><?= nl2br(htmlspecialchars($body)); ?></p>
+                                </div>
 
                                 <?php if (!empty($post['image_path']) && strlen(trim($post['image_path'])) > 5): ?>
                                     <div class="post-attachment-img-wrap" style="margin-top: 15px; border-radius: 8px; overflow: hidden; border: 1px solid #eee;">
@@ -170,7 +174,7 @@ class VueDashboard extends Vue {
            style="text-decoration: none; color: #4F2EE8; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
            <span style="font-size: 20px;">📄</span> 
            
-           Document attaché
+           <?= __('dash_doc_attached') ?>
            
            <span style="font-size: 11px; color: #64748b; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">
                <?= strtoupper(pathinfo($post['doc_path'], PATHINFO_EXTENSION)) ?>
@@ -196,13 +200,13 @@ class VueDashboard extends Vue {
     <?php
     if (($post['user_type'] ?? '') === 'student') {
         // Le post propose une connaissance
-        $btnMessageText = "Lui poser une question";
-        $btnRdvText = "Apprendre avec cette personne";
+        $btnMessageText = __('dash_ask_question');
+        $btnRdvText = __('dash_learn_with');
     } 
     elseif (($post['user_type'] ?? '') === 'senior') {
         // Le post est une demande d'aide
-        $btnMessageText = "Lui apporter une solution";
-        $btnRdvText = "L'aider via un RDV";
+        $btnMessageText = __('dash_offer_solution');
+        $btnRdvText = __('dash_help_via_rdv');
     }
     ?>
     
@@ -288,7 +292,7 @@ class VueDashboard extends Vue {
     ?>
 
     <?php if (empty($publicEvents)): ?>
-        <p style="color:var(--text-muted);padding:10px 0;text-align:center;">Aucun événement public à venir.</p>
+        <p style="color:var(--text-muted);padding:10px 0;text-align:center;"><?= __('dash_no_events') ?></p>
     <?php else: ?>
         <?php
         $monthNames = explode(',', __('cal_months'));
@@ -319,6 +323,11 @@ class VueDashboard extends Vue {
         </div>
 
      <script>
+var DASH_LANG = {
+    save: <?= json_encode(__('dash_save')) ?>,
+    cancel: <?= json_encode(__('dash_cancel')) ?>,
+    confirmDelete: <?= json_encode(__('dash_confirm_delete')) ?>
+};
 document.addEventListener("DOMContentLoaded", function() {
     
     // 1. GESTION DU MENU DES 3 POINTS (Modifier / Supprimer)
@@ -344,6 +353,39 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!e.target.closest('.post-options-menu') && !e.target.closest('.btn-options-trigger')) {
             document.querySelectorAll('.post-options-menu').forEach(m => m.style.display = 'none');
         }
+    });
+
+    // 1b. INLINE EDIT POST
+    document.querySelectorAll('.btn-edit-post').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Close the menu
+            document.querySelectorAll('.post-options-menu').forEach(function(m) { m.style.display = 'none'; });
+            
+            var postId = this.getAttribute('data-post-id');
+            var wrap = document.querySelector('.post-body-wrap[data-post-id="' + postId + '"]');
+            if (!wrap || wrap.querySelector('.edit-form-inline')) return;
+            
+            var rawContent = wrap.getAttribute('data-raw-content');
+            var originalHTML = wrap.innerHTML;
+            
+            wrap.innerHTML = '<form class="edit-form-inline" method="POST" action="index.php?page=dashboard&action=editPost&id=' + postId + '">' +
+                '<textarea name="content" style="width:100%;min-height:80px;border:1.5px solid #4F2EE8;border-radius:10px;padding:12px;font-family:inherit;font-size:14px;resize:vertical;outline:none;">' + rawContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</textarea>' +
+                '<div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;">' +
+                '<button type="button" class="btn-cancel-edit" style="padding:8px 18px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-weight:600;font-size:13px;">' + DASH_LANG.cancel + '</button>' +
+                '<button type="submit" style="padding:8px 18px;border:none;border-radius:8px;background:#4F2EE8;color:#fff;cursor:pointer;font-weight:600;font-size:13px;">' + DASH_LANG.save + '</button>' +
+                '</div></form>';
+            
+            var ta = wrap.querySelector('textarea');
+            ta.focus();
+            ta.setSelectionRange(ta.value.length, ta.value.length);
+            
+            wrap.querySelector('.btn-cancel-edit').addEventListener('click', function() {
+                wrap.innerHTML = originalHTML;
+            });
+        });
     });
 
     // 2. RECHERCHE EN DIRECT (Live Search)
