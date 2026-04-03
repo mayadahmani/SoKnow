@@ -112,6 +112,7 @@ return [
     'msg_choose_conversation' => 'Choose a conversation.',
     'msg_audio_call' => 'Audio call',
     'msg_video_call' => 'Video call',
+    'msg_call_coming_soon' => 'Calls are coming soon! This feature is not yet available.',
     'msg_info' => 'Information',
     'msg_select_conversation' => 'Select a conversation to display messages.',
     'msg_no_messages_yet' => 'No messages yet. Send the first message.',

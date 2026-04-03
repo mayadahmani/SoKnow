@@ -118,6 +118,7 @@ return [
     'msg_choose_conversation' => 'Hãy chọn một cuộc trò chuyện.',
     'msg_audio_call' => 'Cuộc gọi âm thanh',
     'msg_video_call' => 'Cuộc gọi video',
+    'msg_call_coming_soon' => 'Cuộc gọi sắp ra mắt! Tính năng này chưa khả dụng.',
     'msg_info' => 'Thông tin',
     'msg_select_conversation' => 'Chọn một cuộc trò chuyện để hiển thị tin nhắn.',
     'msg_no_messages_yet' => 'Chưa có tin nhắn nào. Hãy gửi tin nhắn đầu tiên.',

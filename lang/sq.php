@@ -114,6 +114,7 @@ return [
     'msg_choose_conversation' => 'Zgjidhni një bisedë.',
     'msg_audio_call' => 'Thirrje audio',
     'msg_video_call' => 'Thirrje video',
+    'msg_call_coming_soon' => 'Thirrjet do të vijnë së shpejti! Kjo veçori nuk është ende e disponueshme.',
     'msg_info' => 'Informacione',
     'msg_select_conversation' => 'Zgjidhni një bisedë për të shfaqur mesazhet.',
     'msg_no_messages_yet' => 'Nuk ka ende mesazhe. Dërgoni mesazhin e parë.',

@@ -90,14 +90,14 @@ class VueMessages extends Vue {
                     </div>
                     <div class="chat-header-actions">
                         <!-- Phone -->
-                        <button class="chat-action-btn" title="<?php echo htmlspecialchars(__('msg_audio_call')); ?>">
+                        <button class="chat-action-btn" id="btnAudioCall" title="<?php echo htmlspecialchars(__('msg_audio_call')); ?>">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                             </svg>
                         </button>
                         <!-- Video -->
-                        <button class="chat-action-btn" title="<?php echo htmlspecialchars(__('msg_video_call')); ?>">
+                        <button class="chat-action-btn" id="btnVideoCall" title="<?php echo htmlspecialchars(__('msg_video_call')); ?>">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="23 7 16 12 23 17 23 7"/>
@@ -241,6 +241,13 @@ class VueMessages extends Vue {
                     window.location.href = 'index.php?page=messages&conv=' + id;
                 });
             });
+
+            // Audio & Video call buttons
+            var btnAudio = document.getElementById('btnAudioCall');
+            var btnVideo = document.getElementById('btnVideoCall');
+            var callMsg  = <?php echo json_encode(__('msg_call_coming_soon')); ?>;
+            if (btnAudio) btnAudio.addEventListener('click', function () { alert(callMsg); });
+            if (btnVideo) btnVideo.addEventListener('click', function () { alert(callMsg); });
 
             // Send on Enter (not Shift+Enter)
             var input = document.querySelector('.chat-input');

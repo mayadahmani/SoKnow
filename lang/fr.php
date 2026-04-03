@@ -134,6 +134,7 @@ return [
     'msg_choose_conversation' => 'Choisissez une conversation.',
     'msg_audio_call' => 'Appel audio',
     'msg_video_call' => 'Appel vidéo',
+    'msg_call_coming_soon' => 'Les appels arrivent bientôt ! Cette fonctionnalité n\'est pas encore disponible.',
     'msg_info' => 'Informations',
     'msg_select_conversation' => 'Sélectionnez une conversation pour afficher les messages.',
     'msg_no_messages_yet' => 'Aucun message pour le moment. Envoyez le premier message.',
