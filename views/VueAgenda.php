@@ -10,18 +10,20 @@ class VueAgenda extends Vue {
         $pendingInvites = $donnees['pending_invites'] ?? [];
         $allUsers = $donnees['all_users'] ?? [];
 
+        // Build a lookup map: day => [events]
         $eventsByDay = [];
         foreach ($events as $event) {
             $day = date('Y-m-d', strtotime($event['start_datetime']));
             $eventsByDay[$day][] = $event;
         }
 
+        // Calendar navigation
         $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
         $year  = isset($_GET['year'])  ? (int)$_GET['year']  : (int)date('Y');
 
         $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
         $daysInMonth     = date('t', $firstDayOfMonth);
-        $startWeekday    = (int)date('N', $firstDayOfMonth);
+        $startWeekday    = (int)date('N', $firstDayOfMonth); // 1=Mon, 7=Sun
         $monthName       = date('F Y', $firstDayOfMonth);
 
         $prevMonth = $month - 1; $prevYear = $year;
@@ -39,11 +41,11 @@ class VueAgenda extends Vue {
                     <div class="card">
                         <div class="agenda-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <div>
-                                <h1 class="card-title" style="font-size: 24px;">Mes Rendez-vous</h1>
-                                <p class="post-time">Gérez vos sessions d'entraide et RDV personnels.</p>
+                                <h1 class="card-title" style="font-size: 24px;">Mon Calendrier</h1>
+                                <p class="post-time">Gérez vos rendez-vous et sessions d'entraide.</p>
                             </div>
                             <button class="btn-primary agenda-new-btn" onclick="document.getElementById('modal-new-event').style.display='flex'">
-                                + Nouveau RDV
+                                + Nouvel événement
                             </button>
                         </div>
                         
@@ -57,10 +59,12 @@ class VueAgenda extends Vue {
                         </div>
 
                         <div class="agenda-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                            <!-- Day headers -->
                             <?php foreach (['LUN','MAR','MER','JEU','VEN','SAM','DIM'] as $d): ?>
                                 <div class="agenda-day-header" style="text-align: center; font-size: 12px; font-weight: 700; color: #6B7280; padding-bottom: 10px;"><?= $d ?></div>
                             <?php endforeach; ?>
 
+                            <!-- Empty cells before day 1 -->
                             <?php for ($i = 1; $i < $startWeekday; $i++): ?>
                                 <div class="agenda-day-cell agenda-day-empty" style="min-height: 100px; border: 1px solid #E5E7EB; border-radius: 8px; background: #F9FAFB;"></div>
                             <?php endfor; ?>
@@ -93,6 +97,7 @@ class VueAgenda extends Vue {
                 </div>
 
                 <div class="col-widgets">
+                    <!-- NEW Pending Invites Widget -->
                     <?php if (!empty($pendingInvites)): ?>
                     <div class="card" style="margin-bottom: 24px; border-left: 4px solid #F59E0B;">
                         <h3 class="card-title" style="color: #D97706;">⏳ Invitations en attente</h3>
@@ -139,10 +144,11 @@ class VueAgenda extends Vue {
             </div>
         </div>
 
+        <!-- New Event Modal -->
         <div id="modal-new-event" class="agenda-modal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
             <div class="card agenda-modal-box" style="width: 100%; max-width: 600px; padding: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 class="card-title">Planifier un Rendez-vous</h2>
+                    <h2 class="card-title">Nouvel événement</h2>
                     <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="document.getElementById('modal-new-event').style.display='none'">&times;</button>
                 </div>
                 <form method="POST" action="index.php?page=agenda&action=create">
@@ -157,18 +163,19 @@ class VueAgenda extends Vue {
                     <div class="agenda-modal-dates" style="display: flex; gap: 16px; margin-bottom: 16px;">
                         <div style="flex: 1;">
                             <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Début</label>
-                            <input type="datetime-local" name="start_datetime" min="<?= $nowForInput ?>" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
+                            <input type="datetime-local" name="start_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
                         </div>
                         <div style="flex: 1;">
                             <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Fin</label>
-                            <input type="datetime-local" name="end_datetime" min="<?= $nowForInput ?>" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
+                            <input type="datetime-local" name="end_datetime" required class="input-textarea" style="min-height: 40px; margin-top: 6px;">
                         </div>
                     </div>
                     <div style="margin-bottom: 24px;">
-                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Type de RDV</label>
+                        <label style="font-size: 12px; font-weight: 700; color: #4B5563; text-transform: uppercase;">Visibilité</label>
                         <select name="event_type" id="event_type" class="input-textarea" style="min-height: 40px; margin-top: 6px;" onchange="document.getElementById('user_select_div').style.display = this.value === 'shared' ? 'block' : 'none';">
-                            <option value="private">🔒 Personnel (Pense-bête)</option>
-                            <option value="shared">👥 Partagé (RDV avec un membre)</option>
+                            <option value="private">🔒 Privé</option>
+                            <option value="shared">👥 Partagé</option>
+                            <option value="public">🌍 Public</option>
                         </select>
                     </div>
                     <div id="user_select_div" style="display:none; margin-bottom: 24px;">

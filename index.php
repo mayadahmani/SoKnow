@@ -511,5 +511,4 @@ case 'cgu':
         echo "404 - Page non trouvée";
         break;
 }
-
 ?>

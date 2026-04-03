@@ -14,19 +14,22 @@ abstract class Vue {
         // 2. Inclut le squelette HTML global
         ?>
         <!DOCTYPE html>
-        <html lang="fr">
+        <html lang="<?php echo $_SESSION['lang'] ?? 'fr'; ?>">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title><?php echo $this->titre; ?></title>
             
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
             
-            <link rel="stylesheet" href="css/style.css">
+            <link rel="stylesheet" href="assets/css/style.css?v=<?= time() ?>">
+            <link rel="stylesheet" href="assets/css/header.css?v=<?= time() ?>">
+            <link rel="stylesheet" href="assets/css/dashboard.css?v=<?= time() ?>">
+            <link rel="stylesheet" href="assets/css/calendar.css?v=<?= time() ?>">
             
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         </head>
-        <body>
+        <body class="sk-body">
 
             <?php include 'includes/header.php'; ?>
 

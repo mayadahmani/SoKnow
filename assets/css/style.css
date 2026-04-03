@@ -1,3 +1,494 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary:       #431FC4;
+  --primary-dark:  #3520A8;
+  --primary-hover: #5535E8;
+  --primary-tint:  #FAF5FF;
+  --text-heading:  #0D0830;
+  --text-body:     #374151;
+  --text-muted:    #9CA3AF;
+  --text-label:    #111827;
+  --border:        #CAD5E2;
+  --radius-input:  10px;
+  --radius-card:   16px;
+  --radius-btn:    10px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  color: var(--text-body);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #fff;
+}
+
+/* ──────────────────────────────────────
+   HEADER
+────────────────────────────────────── */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: #fff;
+  border-bottom: 2px solid #F3E8FF;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.site-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.4px;
+  text-decoration: none;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.lang-btn:hover { background: transparent; }
+
+.lang-btn svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+}
+
+/* ──────────────────────────────────────
+   TWO-COLUMN LAYOUT
+────────────────────────────────────── */
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: calc(100vh - 58px);
+}
+
+/* ──────────────────────────────────────
+   LEFT PANEL
+   Gradient removed — photo added here
+────────────────────────────────────── */
+.left-panel {
+  background-image: linear-gradient(0deg, var(--primary) 0%, rgba(0, 0, 0, 0.6) 60%), url(../img/marie.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 44px 48px;
+}
+
+.left-panel img {
+  height: 100%;
+  width: 100%;
+}
+
+.left-content {
+  position: relative;
+  color: #fff;
+  max-width: 480px;
+}
+
+.left-brand {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 14px;
+}
+
+.left-quote {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.left-cite {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ──────────────────────────────────────
+   RIGHT PANEL
+────────────────────────────────────── */
+.right-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  background: #F3F0FF4D;
+}
+
+/* ──────────────────────────────────────
+   FORM CARD  (wider to match mockup)
+────────────────────────────────────── */
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  border: 1px solid #F3E8FF;
+  border-radius: var(--radius-card);
+  padding: 33px;
+  box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+}
+
+.group {
+  gap: 0;
+}
+
+.form-card-title {
+  line-height: 36px;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-heading);
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.form-card-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ──────────────────────────────────────
+   FORM ELEMENTS
+────────────────────────────────────── */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-body);
+  background: #fff;
+  outline: none;
+  box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 47, 212, 0.12),
+              0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Two-column input row */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ──────────────────────────────────────
+   CHECKBOX
+────────────────────────────────────── */
+.checkbox-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-top: -2px;
+  cursor: pointer;
+}
+
+.checkbox-wrap input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin-top: 2px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.checkbox-wrap span {
+  font-size: 13px;
+  color: var(--text-body);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────
+   BUTTONS  (weight 500 — not bold)
+────────────────────────────────────── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--primary);
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  text-decoration: none;
+  box-shadow: 0px 2px 4px -2px #0000001A, 0px 4px 6px -1px #0000001A;
+}
+
+.btn-primary:hover  { background: var(--primary-hover); }
+.btn-primary:active { transform: scale(0.99); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #fff;
+  color: var(--text-body);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover { background: transparent; }
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-row .btn-primary { flex: 1; }
+
+/* ──────────────────────────────────────
+   FORM FOOTER LINK
+────────────────────────────────────── */
+.form-footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding-top: 27px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.form-footer a {
+  color: var(--text-body);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.form-footer a:hover { color: var(--primary); }
+
+/* ──────────────────────────────────────
+   STEP INDICATOR
+   Taller bar (4 px), border-radius,
+   fully filled on step 2
+────────────────────────────────────── */
+.step-indicator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.step-item {
+  position: relative;
+  padding-bottom: 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.step-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.step-item.active {
+  color: var(--primary);
+}
+
+.step-item.active::after {
+  background: var(--primary);
+}
+
+.step-item:last-child {
+  text-align: right;
+}
+
+/* ──────────────────────────────────────
+   ROLE SELECTION CARDS
+────────────────────────────────────── */
+.role-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 10px;
+}
+
+.role-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.role-card {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 14px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.role-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.role-card:hover {
+  border-color: #c4b5f5;
+}
+
+.role-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-tint);
+}
+
+/* SVG icon linked from file */
+.role-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+
+  border-radius: 10px;
+}
+
+.role-icon img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+
+  border-radius: 500px;
+}
+
+.role-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 4px;
+}
+
+.role-card-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ──────────────────────────────────────
+   SKILL TAGS
+   White bg, grey border only
+────────────────────────────────────── */
+.skills-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 10px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.skill-tag {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.skill-tag:hover {
+  border-color: #c4b5f5;
+}
+
+.skill-tag.selected {
+  background: rgba(74, 47, 212, 0.07);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* =========================================
@@ -566,3 +1057,684 @@ body { font-family: 'Inter', sans-serif; color: #131313; display: flex; flex-dir
     object-fit: cover;
 }
 
+/* =========================================
+   RESPONSIVE — AGENDA / DASHBOARD
+========================================= */
+
+/* Tablet — stack sidebar below feed */
+@media (max-width: 900px) {
+    .grid-layout {
+        flex-direction: column;
+    }
+    .col-feed,
+    .col-widgets {
+        flex: unset;
+        width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 16px 0;
+    }
+    .grid-layout {
+        padding: 0 10px;
+        gap: 16px;
+    }
+
+    /* Agenda header: stack title + button */
+    .agenda-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px;
+    }
+    .agenda-new-btn {
+        width: 100%;
+    }
+
+    /* Month navigation */
+    .agenda-nav {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .agenda-month-label {
+        font-size: 14px !important;
+    }
+
+    /* Calendar grid — compact cells */
+    .agenda-grid {
+        gap: 4px !important;
+    }
+    .agenda-day-header {
+        font-size: 10px !important;
+        padding-bottom: 6px !important;
+    }
+    .agenda-day-cell {
+        min-height: 60px !important;
+        padding: 4px !important;
+        border-radius: 6px !important;
+    }
+    .agenda-day-cell span {
+        font-size: 12px !important;
+    }
+    .agenda-event-pill {
+        font-size: 9px !important;
+        padding: 2px 4px !important;
+    }
+
+    /* Card padding */
+    .card {
+        padding: 16px;
+    }
+    .card-title {
+        font-size: 14px;
+    }
+
+    /* Modal */
+    .agenda-modal-box {
+        max-width: 95vw !important;
+        padding: 20px !important;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .agenda-modal-dates {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* Invites widget buttons */
+    .widget-rdv {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+    .agenda-grid {
+        gap: 2px !important;
+    }
+    .agenda-day-cell {
+        min-height: 48px !important;
+        padding: 3px !important;
+    }
+    .agenda-day-cell span {
+        font-size: 10px !important;
+    }
+    .agenda-event-pill {
+        font-size: 8px !important;
+        padding: 1px 3px !important;
+    }
+    .agenda-day-header {
+        font-size: 9px !important;
+    }
+}
+
+/* ──────────────────────────────────────
+   FOOTER
+────────────────────────────────────── */
+.sk-footer {
+    background: #fff;
+    padding: 60px 0 20px 0;
+    margin-top: 100px;
+    border-top: 1px solid #eee;
+}
+
+.sk-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .sk-footer {
+        padding: 40px 0 16px 0;
+        margin-top: 60px;
+    }
+    .sk-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 30px;
+        font-size: 0.85rem;
+    }
+    .sk-footer-brand {
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    /* Links + Contact side by side below brand */
+    .sk-footer-links,
+    .sk-footer-contact {
+        display: inline;
+    }
+    .sk-footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
+    .sk-footer-brand {
+        grid-column: 1;
+    }
+    /* Wrap the two bottom columns in a sub-grid */
+    .sk-footer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+    }
+    .sk-footer-brand {
+        grid-column: 1 / -1;
+    }
+    .sk-footer-grid h3 {
+        font-size: 1.1rem;
+    }
+    .sk-footer-grid h4 {
+        font-size: 0.85rem;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   CALENDAR PAGE  (calendarView.html)
+   All new selectors are prefixed "cal-" to avoid conflicts.
+   Existing .btn-primary, .btn-secondary, .form-group,
+   .form-label, .form-input, .form-row are reused as-is.
+══════════════════════════════════════════════════════════════ */
+
+/* ── Page shell ── */
+.cal-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 48px 60px;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.cal-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.cal-page-title h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.cal-page-title p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+/* Inline button — overrides width:100% inherited from .btn-primary */
+.btn-inline {
+    width: auto;
+    display: inline-flex;
+}
+
+/* ── Two-column layout ── */
+.cal-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ── Calendar card ── */
+.cal-card {
+    background: #fff;
+    border: 1px solid #F1F5F9;
+    border-radius: var(--radius-card);
+    box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+    padding: 28px 32px 32px;
+}
+
+/* ── Month navigation ── */
+.cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.cal-nav-month {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-heading);
+    letter-spacing: -0.3px;
+}
+
+.cal-nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-nav {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: background 0.15s, color 0.15s;
+}
+
+.btn-nav:hover { background: var(--primary-tint); color: var(--primary); }
+
+.btn-today {
+    border: none;
+    border-radius: 14px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-body);
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-today:hover {
+    background: var(--primary-tint);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ── Calendar grid ── */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: auto;
+  grid-auto-rows: 100px;
+  gap: 2px;
+  background-color: #F1F5F9;
+  border-radius: 14px;
+  border: 2px solid #F1F5F9;
+}
+
+.cal-day-header {
+    min-width: 100px;
+    text-align: center;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #62748E;
+    padding: 14px 0 14px;
+    background-color: #F8FAFC;
+}
+
+.cal-day-header:first-child {
+  border-top-left-radius: 14px;
+}
+
+.cal-day-header:nth-child(7) {
+  border-top-right-radius: 14px;
+}
+
+.cal-cell {
+    overflow: hidden;
+    padding: 8px 6px 6px;
+    position: relative;
+    background-color: white;
+}
+
+.cal-cell:last-child {
+  border-bottom-right-radius: 14px;
+}
+
+.cal-cell:nth-child(7n+1):nth-last-child(-n+7) {
+  border-bottom-left-radius: 14px;
+}
+
+.cal-cell.other-month .cal-date-num { color: var(--text-muted); }
+
+.cal-date-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-body);
+    border-radius: 50%;
+    transition: background 0.15s, color 0.15s;
+}
+
+.cal-cell:hover .cal-date-num { background: var(--primary-tint); color: var(--primary); }
+
+.cal-cell.today .cal-date-num {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+.cal-cell.today:hover .cal-date-num { background: var(--primary-dark); }
+
+/* ── Event chips — all violet to match mockup ── */
+.cal-event-chip {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    cursor: pointer;
+    transition: filter 0.15s;
+    background: rgba(67,31,196,0.1);
+    border: 1px solid rgba(67,31,196,0.25);
+    color: var(--primary);
+}
+
+.cal-event-chip:hover { filter: brightness(0.93); }
+
+/* ── Sidebar card ── */
+.cal-sidebar {
+    background: #fff;
+    border: 1px solid #F3E8FF;
+    border-radius: var(--radius-card);
+    padding: 24px;
+    box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+}
+
+.cal-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+}
+
+/* ── Upcoming events ── */
+.cal-sidebar-divider {
+    visibility: none;
+    border: none;
+    margin: 10px 0;
+}
+
+/* One block per event */
+.cal-rdv-block {
+    border: 1px solid #F1F5F9;
+    padding: 17px;
+    border-radius: 14px;
+}
+
+/* Day label + type icon on the same row */
+.cal-rdv-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.cal-day-label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-tint);
+    border-radius: 100px;
+    padding: 3px 12px;
+}
+
+.cal-rdv-type-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border-radius: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.cal-rdv-type-icon:hover { background: var(--primary-tint); color: var(--primary); }
+
+/* Event title */
+.cal-rdv-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+/* Meta rows (time, participants) */
+.cal-event-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.cal-event-meta:last-child { margin-bottom: 0; }
+.cal-event-meta svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.cal-event-icon-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.cal-event-icon-btn:hover { background: var(--primary-tint); color: var(--primary); }
+
+.cal-event-group + .cal-event-group {
+    border-top: 1px solid #F1F5F9;
+    padding-top: 20px;
+}
+
+/* ── Textarea + Select (form extensions) ── */
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-body);
+    background: #fff;
+    outline: none;
+    box-shadow: 0px 1px 2px -1px #0000001A, 0px 1px 3px 0px #0000001A;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.form-select:focus,
+.form-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74,47,212,0.12), 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.form-textarea::placeholder { color: var(--text-muted); }
+
+.select-wrap            { position: relative; }
+.select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--text-muted);
+    pointer-events: none;
+}
+
+.select-wrap .form-select { padding-right: 36px; cursor: pointer; }
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL — Nouvel événement
+══════════════════════════════════════════════════════════════ */
+
+.cal-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,8,48,0.45);
+    backdrop-filter: blur(3px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.cal-modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.cal-modal {
+    background: #fff;
+    border: 1px solid #F3E8FF;
+    border-radius: var(--radius-card);
+    padding: 32px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(67,31,196,0.18);
+    transform: translateY(12px);
+    transition: transform 0.22s;
+}
+
+.cal-modal-overlay.open .cal-modal { transform: translateY(0); }
+
+.cal-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.cal-modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-heading);
+    letter-spacing: -0.4px;
+}
+
+.cal-modal-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+.cal-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+
+.cal-modal-close:hover { background: var(--primary-tint); color: var(--primary); }
+
+/* ── Event type radio cards ── */
+.cal-type-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.cal-type-card {
+    position: relative;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s;
+    text-align: center;
+}
+
+.cal-type-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.cal-type-card:hover { border-color: #c4b5f5; }
+
+.cal-type-card.sel-private { border-color: var(--primary);  background: var(--primary-tint); }
+.cal-type-card.sel-shared  { border-color: #10B981; background: rgba(16,185,129,0.06); }
+.cal-type-card.sel-public  { border-color: #F59E0B; background: rgba(245,158,11,0.06); }
+
+.cal-type-card-icon  { font-size: 20px; margin-bottom: 6px; display: block; }
+.cal-type-card-label { font-size: 12px; font-weight: 700; color: var(--text-heading); display: block; }
+.cal-type-card-desc  { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.3; }
+
+/* ── Modal footer ── */
+.cal-modal-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #F1F5F9;
+}
+
+/* Override width:100% from .btn-primary inside the modal footer */
+.cal-modal-footer .btn-primary {
+    flex: 1;
+    width: auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+    .cal-layout { grid-template-columns: 1fr; }
+    .cal-page   { padding: 24px 20px 48px; }
+}
+
+@media (max-width: 520px) {
+    .cal-type-cards { grid-template-columns: 1fr; }
+    .cal-modal      { padding: 24px 20px; }
+    .cal-modal .form-row { grid-template-columns: 1fr; }
+}

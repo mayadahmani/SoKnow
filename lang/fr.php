@@ -67,7 +67,6 @@ return [
     'modal_end_before_start' => 'La date de fin doit être postérieure à la date de début.',
 
     // Dashboard
-    // Dashboard - Flux et Posts
     'dash_create_request' => 'Créer une demande',
     'dash_describe_problem' => 'Décrivez votre problème technique ici...',
     'dash_publish' => 'Publier',
