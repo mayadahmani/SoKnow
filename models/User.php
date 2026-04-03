@@ -159,4 +159,50 @@ public function getAllAvailableSkills() {
     $stmt = $this->pdo->query("SELECT id, name_fr FROM skills ORDER BY name_fr ASC");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// --- UPDATE PROFILE INFO ---
+public function updateProfile($userId, $data) {
+    $coords = $this->getCoordinates($data['location_name'] ?? '');
+
+    $sql = "UPDATE users SET first_name = :fn, last_name = :ln, bio = :bio,
+            location_name = :loc, preferred_lang = :pl, spoken_languages = :sl,
+            lat = :lat, lng = :lng
+            WHERE id = :id";
+
+    $stmt = $this->pdo->prepare($sql);
+    return $stmt->execute([
+        'fn'  => $data['first_name'],
+        'ln'  => $data['last_name'],
+        'bio' => $data['bio'] ?? '',
+        'loc' => $data['location_name'] ?? '',
+        'pl'  => $data['preferred_lang'] ?? null,
+        'sl'  => $data['spoken_languages'] ?? '',
+        'lat' => $coords['lat'],
+        'lng' => $coords['lng'],
+        'id'  => $userId
+    ]);
+}
+
+// --- UPDATE USER SKILLS (replace all) ---
+public function replaceUserSkills($userId, $skillIds) {
+    $this->pdo->prepare("DELETE FROM user_skills WHERE user_id = ?")->execute([$userId]);
+
+    if (!empty($skillIds)) {
+        $stmt = $this->pdo->prepare("INSERT IGNORE INTO user_skills (user_id, skill_id) VALUES (?, ?)");
+        foreach ($skillIds as $skillId) {
+            $stmt->execute([$userId, (int)$skillId]);
+        }
+    }
+}
+
+// --- UPDATE AVATAR / BANNER ---
+public function updateAvatar($userId, $path) {
+    $stmt = $this->pdo->prepare("UPDATE users SET avatar_url = :path WHERE id = :id");
+    return $stmt->execute(['path' => $path, 'id' => $userId]);
+}
+
+public function updateBanner($userId, $path) {
+    $stmt = $this->pdo->prepare("UPDATE users SET banner_url = :path WHERE id = :id");
+    return $stmt->execute(['path' => $path, 'id' => $userId]);
+}
 } // <--- Fermeture de la classe User

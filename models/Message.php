@@ -39,6 +39,7 @@ class Message {
                     u.id AS contact_id,
                     u.first_name,
                     u.last_name,
+                    u.avatar_url,
                     (
                         SELECT m2.content
                         FROM messages m2
@@ -91,7 +92,7 @@ class Message {
         $query = trim((string)$query);
         $limit = max(1, (int)$limit);
 
-        $sql = "SELECT u.id, u.first_name, u.last_name
+        $sql = "SELECT u.id, u.first_name, u.last_name, u.avatar_url
                 FROM users u
                 WHERE u.id <> :user_id";
 
@@ -121,7 +122,7 @@ class Message {
     }
 
     public function getContact($userId, $contactId) {
-        $sql = "SELECT id, first_name, last_name
+        $sql = "SELECT id, first_name, last_name, avatar_url
                 FROM users
                 WHERE id = :contact_id AND id <> :user_id
                 LIMIT 1";

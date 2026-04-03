@@ -35,11 +35,10 @@ body {
 
 .profile-banner {
   height: 140px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 50%, #7c3aed 100%);
-  position: relative;
+  background-image: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 50%, #7c3aed 100%);
   background-size: cover;
   background-position: center;
-  /* PHP: if banner_url is set → add inline style: background-image:url([users.banner_url]) */
+  position: relative;
 }
 
 /* "Modifier" button — sits on the banner */
@@ -88,6 +87,19 @@ body {
   box-shadow: 0 4px 16px rgba(67,31,196,0.18);
 }
 .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.avatar-wrapper:hover .avatar-overlay { opacity: 1; }
 
 .profile-meta { flex: 1; min-width: 0; }
 
@@ -318,6 +330,68 @@ body {
 
 .modal-body { padding: 26px 28px; }
 
+/* ── Edit modal: photo preview ─────────────────────────────────── */
+.edit-photos-preview {
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.edit-banner-preview {
+  height: 90px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 50%, #7c3aed 100%);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.edit-banner-preview .btn-change-photo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.45);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.edit-banner-preview .btn-change-photo:hover { background: rgba(0,0,0,0.65); }
+.edit-avatar-preview {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  overflow: hidden;
+  margin-top: -32px;
+  margin-left: 20px;
+  background: #ddd;
+}
+.edit-avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.edit-avatar-preview .btn-change-avatar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--primary);
+  border: 2px solid #fff;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s;
+}
+.edit-avatar-preview .btn-change-avatar:hover { background: var(--primary-dark); }
+
 .modal-footer {
   display: flex;
   align-items: center;
@@ -456,14 +530,16 @@ body {
 .upload-zone-preview {
   display: none;
   width: 100%;
-  height: 100px;
-  object-fit: cover;
+  height: 120px;
+  object-fit: contain;
   border-radius: 8px;
   margin-bottom: 10px;
 }
-.upload-zone.has-file .upload-zone-preview { display: block; }
+.upload-zone.has-file .upload-zone-preview,
+.upload-zone.has-preview .upload-zone-preview { display: block; }
 .upload-zone-icon           { font-size: 2rem; margin-bottom: 8px; }
-.upload-zone.has-file .upload-zone-icon { display: none; }
+.upload-zone.has-file .upload-zone-icon,
+.upload-zone.has-preview .upload-zone-icon { display: none; }
 .upload-zone-text {
   font-size: 13px;
   font-weight: 600;

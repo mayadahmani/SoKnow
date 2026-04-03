@@ -114,7 +114,7 @@ class VueDashboard extends Vue {
           <div class="post-header" style="display: flex; align-items: flex-start; justify-content: space-between; width: 100%; margin-bottom: 15px;">
     
     <div style="display: flex; gap: 12px; align-items: center;">
-        <?php $avatarUrl = !empty($post['avatar']) ? htmlspecialchars($post['avatar']) : 'assets/img/default-avatar.svg'; ?>
+        <?php $avatarUrl = !empty($post['avatar_url']) ? htmlspecialchars($post['avatar_url']) : 'assets/img/default-avatar.svg'; ?>
         <img src="<?= $avatarUrl ?>" alt="Avatar" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #f0f2f5; flex-shrink: 0;">
         
         <div style="display: flex; flex-direction: column; gap: 2px;">
@@ -249,7 +249,8 @@ class VueDashboard extends Vue {
                                 ?>
                                 <div class="widget-rdv">
                                     <div class="rdv-info">
-                                        <img src="https://i.pravatar.cc/150?u=<?= (int)$rdv['organizer_id']; ?>" alt="Avatar" class="avatar avatar-small">
+                                        <?php $rdvAvatarUrl = !empty($rdv['avatar_url']) ? htmlspecialchars($rdv['avatar_url']) : 'assets/img/default-avatar.svg'; ?>
+                                        <img src="<?= $rdvAvatarUrl ?>" alt="Avatar" class="avatar avatar-small">
                                         <div>
                                             <h4 class="post-name"><?= htmlspecialchars($rdv['title']); ?></h4>
                                             <div class="rdv-time"><?= $rdvDate->format('H:i'); ?> - <?= htmlspecialchars($rdv['first_name'] . ' ' . $rdv['last_name']); ?></div>

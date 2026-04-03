@@ -61,7 +61,7 @@ class VueMap extends Vue {
                             <p style="color: #64748b; font-size: 14px; text-align: center; padding: 20px;"><?= __('map_no_members') ?></p>
                         <?php else: ?>
                             <?php foreach ($membres as $index => $membre): 
-                                $avatarUrl = !empty($membre['avatar']) ? htmlspecialchars($membre['avatar']) : 'assets/img/default-avatar.svg';
+                                $avatarUrl = !empty($membre['avatar_url']) ? htmlspecialchars($membre['avatar_url']) : 'assets/img/default-avatar.svg';
                                 $skills = !empty($membre['skills_list']) ? explode(',', $membre['skills_list']) : [];
                             ?>
                                 <div class="member-card" 
@@ -178,7 +178,7 @@ class VueMap extends Vue {
 
         membres.forEach((membre, index) => {
             if (membre.lat && membre.lng) {
-                let avatar = membre.avatar ? membre.avatar : 'assets/img/default-avatar.svg';
+                let avatar = membre.avatar_url ? membre.avatar_url : 'assets/img/default-avatar.svg';
                 
                 let customIcon = L.divIcon({
                     className: 'custom-map-marker',
@@ -207,15 +207,24 @@ class VueMap extends Vue {
             }
         });
 
+        var currentDetailUserId = null;
+
+        document.querySelector('.contact-btn').addEventListener('click', function() {
+            if (currentDetailUserId) {
+                window.location.href = 'index.php?page=messages&conv=' + currentDetailUserId;
+            }
+        });
+
         function showUserDetail(userId) {
             const user = membres.find(m => parseInt(m.id) === parseInt(userId));
             if (user) {
+                currentDetailUserId = user.id;
                 document.getElementById('detail-name').innerText = user.first_name + " " + (user.last_name || "");
                 document.getElementById('detail-location').innerHTML = '<img src="assets/img/location.png" style="width: 12px; height: 12px;"> <span>' + user.location_name + '</span>';
                 
                 document.getElementById('detail-bio').innerText = user.bio || MAP_LANG.noBio;
                 document.getElementById('detail-langs').innerText = user.spoken_languages || MAP_LANG.notSpecified;
-                document.getElementById('detail-avatar').src = user.avatar ? user.avatar : 'assets/img/default-avatar.svg';
+                document.getElementById('detail-avatar').src = user.avatar_url ? user.avatar_url : 'assets/img/default-avatar.svg';
                 
                 document.getElementById('detail-role').innerHTML = getRoleBadge(user.user_type);
 

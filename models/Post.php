@@ -171,7 +171,7 @@ class Post {
 
 public function getFilteredPosts($limit, $search, $authorFilter, $sortOrder, $currentUserId) {
         // Ajout de u.status ici 👇
-     $sql = "SELECT p.*, u.first_name, u.last_name, u.user_type 
+     $sql = "SELECT p.*, u.first_name, u.last_name, u.user_type, u.avatar_url 
             FROM posts p 
             JOIN users u ON p.user_id = u.id 
             WHERE 1=1";

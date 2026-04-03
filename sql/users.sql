@@ -40,6 +40,8 @@ CREATE TABLE `users` (
   `bio` text DEFAULT NULL,
   `spoken_languages` varchar(255) DEFAULT NULL,
   `preferred_lang` int(11) DEFAULT NULL,
+  `avatar_url` varchar(500) DEFAULT NULL,
+  `banner_url` varchar(500) DEFAULT NULL,
   `tos_accepted_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -18,7 +18,7 @@ class VueProfil extends Vue {
         $languages = $donnees['languages'] ?? [];
         $impact = $donnees['impact'] ?? ['helped' => 0, 'rating' => 0];
         
-        $avatarUrl = !empty($user['avatar_url']) ? $user['avatar_url'] : 'assets/img/default-avatar.png';
+        $avatarUrl = !empty($user['avatar_url']) ? $user['avatar_url'] : 'assets/img/default-avatar.svg';
         $bannerUrl = !empty($user['banner_url']) ? $user['banner_url'] : '';
         $csrfToken = $_SESSION['csrf_token'] ?? '';
         ?>
@@ -28,7 +28,7 @@ class VueProfil extends Vue {
         <div class="page-wrapper">
 
             <div class="profile-card">
-                <div class="profile-banner" id="bannerEl" style="<?= $bannerUrl ? "background-image:url('$bannerUrl'); background-size:cover;" : "" ?>">
+                <div class="profile-banner" id="bannerEl" style="<?= $bannerUrl ? "background-image:url('" . htmlspecialchars($bannerUrl) . "');" : "" ?>">
                     <button type="button" class="btn-modifier" data-modal="modal-modifier">
                         <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M11.333 2a1.885 1.885 0 0 1 2.667 2.667L5.417 13.25 2 14l.75-3.417L11.333 2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -39,8 +39,14 @@ class VueProfil extends Vue {
 
                 <div class="profile-info-row">
                     <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
-                        <div class="avatar-wrapper">
+                        <div class="avatar-wrapper" data-modal="modal-modifier" style="cursor:pointer;" title="<?= __('profile_avatar_change') ?>">
                             <img id="mainAvatarImg" src="<?= htmlspecialchars($avatarUrl) ?>" alt="Avatar de <?= htmlspecialchars($user['first_name'] ?? 'moi') ?>" />
+                            <div class="avatar-overlay">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="12" cy="13" r="4" stroke="#fff" stroke-width="1.8"/>
+                                </svg>
+                            </div>
                         </div>
                         <div class="profile-meta">
                             <div class="profile-name"><?= htmlspecialchars($user['first_name'] ?? '') ?> <?= htmlspecialchars($user['last_name'] ?? '') ?> 👋</div>
@@ -142,15 +148,17 @@ class VueProfil extends Vue {
                         <div class="field">
                             <label class="form-label"><?= __('profile_avatar_label') ?></label>
                             <div class="upload-zone" id="avatarZone">
-                                <input type="file" name="avatar" accept="image/*" data-zone="avatarZone" data-mirror="mainAvatarImg" data-mirror-type="img" />
-                                <div class="upload-zone-text"><?= __('profile_avatar_change') ?></div>
+                                <input type="file" name="avatar" accept="image/*" data-zone="avatarZone" data-mirror="mainAvatarImg" data-mirror-type="img" data-preview="avatarZonePreview" data-thumb="avatarPreviewThumb" />
+                                <img class="upload-zone-preview" id="avatarZonePreview" style="display:none;" alt="Preview" />
+                                <div class="upload-zone-text" id="avatarZoneText"><?= __('profile_avatar_change') ?></div>
                             </div>
                         </div>
                         <div class="field" style="margin-top:20px;">
                             <label class="form-label"><?= __('profile_banner_label') ?></label>
                             <div class="upload-zone" id="bannerZone">
-                                <input type="file" name="banner" accept="image/*" data-zone="bannerZone" data-mirror="bannerEl" data-mirror-type="bg" />
-                                <div class="upload-zone-text"><?= __('profile_banner_change') ?></div>
+                                <input type="file" name="banner" accept="image/*" data-zone="bannerZone" data-mirror="bannerEl" data-mirror-type="bg" data-preview="bannerZonePreview" />
+                                <img class="upload-zone-preview" id="bannerZonePreview" style="display:none;" alt="Preview" />
+                                <div class="upload-zone-text" id="bannerZoneText"><?= __('profile_banner_change') ?></div>
                             </div>
                         </div>
                     </div>
@@ -171,6 +179,21 @@ class VueProfil extends Vue {
                 <form action="index.php?page=update_profile" method="POST">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     <div class="modal-body">
+                        <!-- Photo preview section -->
+                        <div class="edit-photos-preview">
+                            <div class="edit-banner-preview" id="editBannerPreview" style="<?= $bannerUrl ? "background-image:url('" . htmlspecialchars($bannerUrl) . "'); background-size:cover; background-position:center;" : "" ?>">
+                                <button type="button" class="btn-change-photo" data-open-photo-modal>
+                                    <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
+                                </button>
+                            </div>
+                            <div class="edit-avatar-preview">
+                                <img id="editAvatarPreview" src="<?= htmlspecialchars($avatarUrl) ?>" alt="Avatar" />
+                                <button type="button" class="btn-change-avatar" data-open-photo-modal>
+                                    <svg viewBox="0 0 24 24" fill="none" width="12" height="12"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="#fff" stroke-width="2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="form-section-title"><?= __('profile_identity') ?></div>
                         <div class="form-grid">
                             <div class="field">
@@ -246,11 +269,21 @@ class VueProfil extends Vue {
                 };
 
                 document.querySelectorAll('[data-modal]').forEach(btn => {
-                    btn.onclick = () => openModal(btn.dataset.modal);
+                    btn.onclick = (e) => { e.stopPropagation(); openModal(btn.dataset.modal); };
                 });
 
                 document.querySelectorAll('[data-close], .modal-overlay').forEach(el => {
                     el.onclick = (e) => { if(e.target === el || el.hasAttribute('data-close')) closeModal(el.closest('.modal-overlay')); };
+                });
+
+                // "Change photo" buttons inside edit modal → close edit, open photo modal
+                document.querySelectorAll('[data-open-photo-modal]').forEach(btn => {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeModal(document.getElementById('modal-edit'));
+                        setTimeout(() => openModal('modal-modifier'), 200);
+                    };
                 });
 
                 // Preview images
@@ -260,9 +293,27 @@ class VueProfil extends Vue {
                         if(file) {
                             const reader = new FileReader();
                             reader.onload = (e) => {
+                                // Update main page element
                                 const mirror = document.getElementById(input.dataset.mirror);
-                                if(input.dataset.mirrorType === 'img') mirror.src = e.target.result;
-                                else mirror.style.backgroundImage = `url(${e.target.result})`;
+                                if(mirror) {
+                                    if(input.dataset.mirrorType === 'img') mirror.src = e.target.result;
+                                    else mirror.style.backgroundImage = `url(${e.target.result})`;
+                                }
+                                // Show inline preview in upload zone
+                                const preview = document.getElementById(input.dataset.preview);
+                                if(preview) {
+                                    preview.src = e.target.result;
+                                    preview.style.display = 'block';
+                                    const textEl = input.parentElement.querySelector('.upload-zone-text');
+                                    if(textEl) textEl.style.display = 'none';
+                                    input.parentElement.classList.add('has-preview');
+                                }
+                                // Update modal avatar thumbnail
+                                const thumb = document.getElementById(input.dataset.thumb);
+                                if(thumb) thumb.src = e.target.result;
+                                // Update edit modal avatar preview
+                                const editAvatar = document.getElementById('editAvatarPreview');
+                                if(editAvatar && input.name === 'avatar') editAvatar.src = e.target.result;
                             };
                             reader.readAsDataURL(file);
                         }

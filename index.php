@@ -31,6 +31,11 @@ function __($key) {
 $page = $_GET['page'] ?? 'home';
 $donnees = []; 
 
+// Generate CSRF token if not already set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 switch ($page) {
     case 'home':
         $vue = new VueAccueil();
@@ -123,6 +128,7 @@ $donnees = [
             if ($user && password_verify($_POST['password'], $user['password_hash'])) {
                 $_SESSION['user'] = $user;
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['avatar_url'] = $user['avatar_url'] ?? '';
                 header("Location: index.php?page=dashboard");
                 exit;
             } else {
@@ -188,6 +194,7 @@ $donnees = [
 
                 $_SESSION['user_id'] = $newUserId;
                 $_SESSION['first_name'] = $s1['first_name'];
+                $_SESSION['avatar_url'] = '';
                 
                 unset($_SESSION['temp_user']);
 
@@ -447,7 +454,7 @@ case 'cgu':
             $item = [
                 'id' => $contactId,
                 'name' => $displayName,
-                'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
+                'avatar' => !empty($conv['avatar_url']) ? $conv['avatar_url'] : 'assets/img/default-avatar.svg',
                 'online' => false,
                 'preview' => preg_replace('/^\[post_preview:\{.*?\}\]\s*/s', '', $conv['last_content']) ?: __('msg_no_message_preview'),
                 'time' => $formatConversationTime($conv['last_created_at']),
@@ -473,7 +480,7 @@ case 'cgu':
             $conversations[] = [
                 'id' => $contactId,
                 'name' => $displayName,
-                'avatar' => 'https://i.pravatar.cc/150?u=' . $contactId,
+                'avatar' => !empty($contact['avatar_url']) ? $contact['avatar_url'] : 'assets/img/default-avatar.svg',
                 'online' => false,
                 'preview' => __('msg_start_conversation'),
                 'time' => '',
@@ -497,7 +504,7 @@ case 'cgu':
                 $activeContact = [
                     'id' => $activeContactId,
                     'name' => $activeContactName,
-                    'avatar' => 'https://i.pravatar.cc/150?u=' . $activeContactId,
+                    'avatar' => !empty($activeContactRaw['avatar_url']) ? $activeContactRaw['avatar_url'] : 'assets/img/default-avatar.svg',
                     'online' => false,
                 ];
 
@@ -527,6 +534,81 @@ case 'cgu':
         $vue->afficher($donnees);
         break;
 
+
+    case 'update_profile':
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: index.php?page=login");
+            exit;
+        }
+        // CSRF check
+        if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'] ?? '')) {
+            http_response_code(403);
+            die("Invalid CSRF token");
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+        $userModel = new User($pdo);
+
+        $userModel->updateProfile($userId, [
+            'first_name'       => $_POST['first_name'] ?? '',
+            'last_name'        => $_POST['last_name'] ?? '',
+            'bio'              => $_POST['bio'] ?? '',
+            'location_name'    => $_POST['location_name'] ?? '',
+            'preferred_lang'   => $_POST['preferred_lang'] ?? null,
+            'spoken_languages' => $_POST['spoken_languages'] ?? '',
+        ]);
+
+        // Update skills
+        $skills = $_POST['skills'] ?? [];
+        $userModel->replaceUserSkills($userId, $skills);
+
+        header("Location: index.php?page=profile");
+        exit;
+
+    case 'update_media':
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: index.php?page=login");
+            exit;
+        }
+        // CSRF check
+        if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'] ?? '')) {
+            http_response_code(403);
+            die("Invalid CSRF token");
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+        $userModel = new User($pdo);
+        $uploadDir = 'assets/uploads/images/';
+
+        // Handle avatar upload
+        if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            $ext = strtolower(pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (in_array($ext, $allowed, true)) {
+                $filename = 'avatar_' . $userId . '_' . time() . '.' . $ext;
+                $dest = $uploadDir . $filename;
+                if (move_uploaded_file($_FILES['avatar']['tmp_name'], $dest)) {
+                    $userModel->updateAvatar($userId, $dest);
+                    $_SESSION['avatar_url'] = $dest;
+                }
+            }
+        }
+
+        // Handle banner upload
+        if (!empty($_FILES['banner']['tmp_name']) && $_FILES['banner']['error'] === UPLOAD_ERR_OK) {
+            $ext = strtolower(pathinfo($_FILES['banner']['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (in_array($ext, $allowed, true)) {
+                $filename = 'banner_' . $userId . '_' . time() . '.' . $ext;
+                $dest = $uploadDir . $filename;
+                if (move_uploaded_file($_FILES['banner']['tmp_name'], $dest)) {
+                    $userModel->updateBanner($userId, $dest);
+                }
+            }
+        }
+
+        header("Location: index.php?page=profile");
+        exit;
 
     default:
         http_response_code(404);

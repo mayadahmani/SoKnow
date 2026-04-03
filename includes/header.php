@@ -27,10 +27,7 @@
                 <!-- Profile section -->
                 <div class="sk-nav-profile">
                     <a href="index.php?page=profile" class="sk-nav-avatar">
-                        <svg width="28" height="28" viewBox="0 0 20 20" fill="none">
-                            <path d="M10 10C12.7614 10 15 7.76142 15 5C15 2.23858 12.7614 0 10 0C7.23858 0 5 2.23858 5 5C5 7.76142 7.23858 10 10 10Z" fill="#A0A0A0"/>
-                            <path d="M10 12C6.66667 12 0 13.6667 0 17V20H20V17C20 13.6667 13.3333 12 10 12Z" fill="#A0A0A0"/>
-                        </svg>
+                        <img src="<?= htmlspecialchars($_SESSION['avatar_url'] ?? '') ?: 'assets/img/default-avatar.svg' ?>" alt="Avatar" class="sk-nav-avatar-img">
                     </a>
                     <div class="sk-nav-profile-info">
                         <span class="sk-nav-profile-name"><?= htmlspecialchars($_SESSION['user_name'] ?? __('nav_profile')) ?></span>
@@ -130,10 +127,7 @@
             <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="sk-user-actions">
                     <a href="index.php?page=profile" title="<?= __('nav_profile') ?>" class="sk-profile-link">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M10 10C12.7614 10 15 7.76142 15 5C15 2.23858 12.7614 0 10 0C7.23858 0 5 2.23858 5 5C5 7.76142 7.23858 10 10 10Z" fill="#A0A0A0"/>
-                            <path d="M10 12C6.66667 12 0 13.6667 0 17V20H20V17C20 13.6667 13.3333 12 10 12Z" fill="#A0A0A0"/>
-                        </svg>
+                        <img src="<?= htmlspecialchars($_SESSION['avatar_url'] ?? '') ?: 'assets/img/default-avatar.svg' ?>" alt="Avatar" class="sk-profile-avatar-img">
                     </a>
                     <a href="index.php?page=logout" class="sk-logout"><?= __('nav_logout') ?></a>
                 </div>

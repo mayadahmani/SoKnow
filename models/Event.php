@@ -76,7 +76,7 @@ public function getEventsByUser($user_id) {
     // --- 5. DASHBOARD WIDGET ---
     // Returns the next N upcoming events for a given user (own + public + shared/invited)
     public function getUpcomingEvents($user_id, $limit = 3) {
-                $sql = "SELECT e.*, e.start_date AS start_datetime, e.end_date AS end_datetime, u.first_name, u.last_name 
+                $sql = "SELECT e.*, e.start_date AS start_datetime, e.end_date AS end_datetime, u.first_name, u.last_name, u.avatar_url 
                 FROM events e
                 JOIN users u ON e.organizer_id = u.id
                 LEFT JOIN event_participants ep ON e.id = ep.event_id AND ep.user_id = :user_id
