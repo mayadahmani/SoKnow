@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoKnow – Se connecter</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <a href="#" class="site-logo">SoKnow</a>
+    <button class="lang-btn" type="button">
+      FR
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+          clip-rule="evenodd"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ── TWO-COLUMN LAYOUT ── -->
+  <main class="auth-layout">
+
+    <div class="left-panel">
+      <div class="left-content">
+        <div class="left-brand">SoKnow</div>
+        <p class="left-quote">
+          "Grâce à un étudiant de SoKnow, j'ai enfin pu configurer ma
+          tablette pour voir mes petits-enfants en vidéo. Un réseau
+          vraiment bienveillant."
+        </p>
+        <span class="left-cite">- Marie, 72 ans</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: login form -->
+    <div class="right-panel">
+      <div class="form-card">
+
+        <div class="group">
+          <h1 class="form-card-title">Se connecter</h1>
+          <p class="form-card-subtitle">Heureux de vous revoir parmi nous.</p>
+        </div>
+        
+        <form method="POST" action="">
+
+          <div class="form-group">
+            <label class="form-label" for="login-email">
+              Adresse e-mail professionnelle ou personnelle
+            </label>
+            <input
+              class="form-input"
+              type="email"
+              id="login-email"
+              name="email"
+              placeholder="jgjggj@kffk"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">
+              Mot de passe (8 caractères min.)
+            </label>
+            <input
+              class="form-input"
+              type="password"
+              id="login-password"
+              name="password"
+              placeholder="fpffrffff"
+              minlength="8"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Se connecter
+          </button>
+
+        </form>
+
+        <p class="form-footer">
+          Nouveau sur SoKnow ?
+          <a href="registerStep1View.html">S'inscrire</a>
+        </p>
+
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

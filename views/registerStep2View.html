@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoKnow – Inscription (Étape 2)</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /*
+      On step 2 both bars are filled purple.
+      We override only the inactive step-item::after here.
+    */
+    .step-item::after {
+      background: var(--primary) !important;
+    }
+    .step-item {
+      color: var(--text-muted);
+    }
+    .step-item.active {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <a href="#" class="site-logo">SoKnow</a>
+    <button class="lang-btn" type="button">
+      FR
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+          clip-rule="evenodd"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ── TWO-COLUMN LAYOUT ── -->
+  <main class="auth-layout">
+
+    <div class="left-panel">
+      <div class="left-content">
+        <div class="left-brand">SoKnow</div>
+        <p class="left-quote">
+          "Grâce à un étudiant de SoKnow, j'ai enfin pu configurer ma
+          tablette pour voir mes petits-enfants en vidéo. Un réseau
+          vraiment bienveillant."
+        </p>
+        <span class="left-cite">- Marie, 72 ans</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: registration step 2 -->
+    <div class="right-panel">
+      <div class="form-card">
+        <div class="groupe">
+          <h1 class="form-card-title">Bienvenue sur SoKnow</h1>
+          <p class="form-card-subtitle">Rejoignez notre réseau professionnel d'entraide</p>
+        </div>
+        <!-- Step progress: both bars filled, step 2 label purple -->
+        <div class="step-indicator">
+          <div class="step-item">Étape 1 : Infos</div>
+          <div class="step-item active">Étape 2 : Profil</div>
+        </div>
+
+        <form method="POST" action="">
+
+          <!-- Role selection -->
+          <p class="role-section-label">Comment souhaitez-vous utiliser SoKnow ?</p>
+
+          <div class="role-cards">
+
+            <!-- Je veux aider (student) -->
+            <label class="role-card selected" id="card-student" onclick="selectRole('student', this)">
+              <input type="radio" name="role" value="student" checked>
+
+              <div class="role-icon">
+                <img src="../icons/icon-helper.svg" alt="Icône aider">
+              </div>
+              <div class="role-card-title">Je veux aider</div>
+              <div class="role-card-desc">Partagez vos compétences tech</div>
+            </label>
+
+            <!-- J'ai besoin d'aide (senior) -->
+            <label class="role-card" id="card-senior" onclick="selectRole('senior', this)">
+              <input type="radio" name="role" value="senior">
+              <div class="role-icon">
+                <img src="../icons/icon-senior.svg" alt="Icône besoin d'aide">
+              </div>
+              <div class="role-card-title">J'ai besoin d'aide</div>
+              <div class="role-card-desc">Trouvez un mentor de confiance</div>
+            </label>
+
+          </div>
+
+          <!-- Languages + Location row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="languages">Langues parlées</label>
+              <input
+                class="form-input"
+                type="text"
+                id="languages"
+                name="languages"
+                placeholder="Ex : Français, Anglais"
+              >
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="location">Localisation</label>
+              <input
+                class="form-input"
+                type="text"
+                id="location"
+                name="location"
+                placeholder="Code postal ou ville"
+              >
+            </div>
+          </div>
+
+          <!-- Skills / needs tags -->
+          <p class="skills-section-label">Quels sont vos besoins / compétences ?</p>
+          <div class="skill-tags" id="skillTags">
+            <span class="skill-tag" onclick="toggleTag(this)" data-value="Smartphone">Smartphone</span>
+            <span class="skill-tag" onclick="toggleTag(this)" data-value="Ordinateur">Ordinateur</span>
+            <span class="skill-tag" onclick="toggleTag(this)" data-value="Internet">Internet</span>
+            <span class="skill-tag" onclick="toggleTag(this)" data-value="Tablette">Tablette</span>
+            <span class="skill-tag" onclick="toggleTag(this)" data-value="tagSecurity">tagSecurity</span>
+          </div>
+
+          <!-- Hidden input accumulating selected skill values -->
+          <input type="hidden" name="skills" id="skillsInput">
+
+          <!-- Back + Submit -->
+          <div class="btn-row">
+            <a href="registerStep1View.html" class="btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z"
+                  clip-rule="evenodd"/>
+              </svg>
+              Retour
+            </a>
+            <button type="submit" class="btn-primary">
+              Terminer l'inscription
+            </button>
+          </div>
+
+        </form>
+
+        <p class="form-footer">
+          Déjà membre ? <a href="loginView.html">Se connecter</a>
+        </p>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    /* ── Role card selection ── */
+    function selectRole(role, clickedCard) {
+      document.querySelectorAll('.role-card').forEach(function(card) {
+        card.classList.remove('selected');
+        card.querySelector('input[type="radio"]').checked = false;
+      });
+      clickedCard.classList.add('selected');
+      clickedCard.querySelector('input[type="radio"]').checked = true;
+    }
+
+    /* ── Skill tag toggle ── */
+    function toggleTag(el) {
+      el.classList.toggle('selected');
+      syncSkills();
+    }
+
+    function syncSkills() {
+      var selected = [];
+      document.querySelectorAll('#skillTags .skill-tag.selected').forEach(function(tag) {
+        selected.push(tag.getAttribute('data-value'));
+      });
+      document.getElementById('skillsInput').value = selected.join(',');
+    }
+
+    syncSkills();
+  </script>
+
+</body>
+</html>
